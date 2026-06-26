@@ -1,0 +1,122 @@
+.section {
+  position: relative;
+  overflow: hidden;
+  background: var(--black);
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.35;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+  z-index: 1;
+}
+
+.inner {
+  position: relative;
+  z-index: 2;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: clamp(48px, 7vh, 72px) clamp(20px, 4vw, 40px);
+}
+
+.playerWrap {
+  position: relative;
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #000;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #000;
+}
+
+.playOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+  cursor: pointer;
+  transition: background 0.25s var(--ease);
+}
+
+.playOverlay:hover {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.25) 0%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+.playIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  position: relative;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  transition: transform 0.25s var(--ease);
+}
+
+.playOverlay:hover .playIcon {
+  transform: scale(1.06);
+}
+
+.playIcon::after {
+  content: "";
+  position: absolute;
+  left: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-style: solid;
+  border-width: 12px 0 12px 20px;
+  border-color: transparent transparent transparent var(--black);
+}
+
+.embedded {
+  background: var(--black);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.embedded .inner {
+  padding: clamp(40px, 6vh, 64px) clamp(20px, 4vw, 40px);
+}
+
+@media (max-width: 640px) {
+  .playIcon {
+    width: 58px;
+    height: 58px;
+  }
+
+  .playIcon::after {
+    left: 23px;
+    border-width: 10px 0 10px 16px;
+  }
+}

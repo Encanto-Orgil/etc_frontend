@@ -1,66 +1,79 @@
-import Image from "next/image";
+import Link from "next/link";
+import HeroSlider from "@/components/home/HeroSlider";
+import BrandTagline from "@/components/home/BrandTagline";
+import TowerFluidStack from "@/components/home/TowerFluidStack";
+import HeroSection from "@/components/HeroSection";
+import SalesContacts from "@/components/SalesContacts";
+import InquiryForm from "@/components/InquiryForm";
+import { project, towers } from "@/lib/data";
 import styles from "./page.module.css";
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <HeroSlider />
+
+      <BrandTagline />
+
+      <HeroSection
+        id="about"
+        image={project.droneImage}
+        eyebrow="Танилцуулга"
+        title={
+          <>
+            Монголын хамгийн өндөр
+            <br />
+            шилэн фасадтай металл бүтээц
+          </>
+        }
+        subtitle={project.intro}
+      >
+        <div className={styles.statsGrid}>
+          {project.heroStats.map((s) => (
+            <div key={s.label} className={styles.statItem}>
+              <span className={styles.statVal}>
+                {s.value}
+                {s.unit || ""}
+              </span>
+              <span className={styles.statLbl}>{s.label}</span>
+            </div>
+          ))}
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <p className={styles.location}>{project.location}</p>
+
+        <div className={styles.aboutActions}>
+          <Link href="/#towers" className="btn-primary">
+            Төслийн хэсгүүд
+          </Link>
+          <Link href="/#contact" className="btn-outline">
+            Холбоо барих
+          </Link>
         </div>
-      </main>
-    </div>
+      </HeroSection>
+
+      <TowerFluidStack items={towers} id="towers" />
+
+      <HeroSection
+        id="contact"
+        image="/images/drone/drone-1.jpg"
+        eyebrow="Холбоо барих"
+        title={
+          <>
+            Төслийн талаар
+            <br />
+            илүү ихийг мэдээрэй
+          </>
+        }
+        subtitle="Оффис, орон сууц, худалдаа эсвэл ёслолын танхимын талаар лавлагаа авахыг хүсвэл хүсэлтээ үлдээнэ үү."
+      >
+        <div className={styles.contactGrid}>
+          <SalesContacts scope="home" onDark className={styles.contactTeam} />
+          <div className={styles.formWrap}>
+            <InquiryForm />
+          </div>
+        </div>
+      </HeroSection>
+    </>
   );
 }

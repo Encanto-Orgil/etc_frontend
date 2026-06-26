@@ -1,0 +1,22 @@
+.wrap {
+  max-width: 760px;
+  margin-bottom: 56px;
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.title {
+  font-size: clamp(32px, 5vw, 60px);
+  margin: 18px 0 0;
+}
+
+.body {
+  margin-top: 22px;
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.8;
+  color: var(--text-dim);
+}

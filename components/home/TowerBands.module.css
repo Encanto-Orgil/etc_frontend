@@ -1,0 +1,120 @@
+.wrap {
+  width: 100%;
+}
+
+.band {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 72vh;
+  overflow: hidden;
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 1.2s var(--ease);
+}
+
+.band:hover .image {
+  transform: scale(1.04);
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.2) 45%,
+    transparent 100%
+  );
+}
+
+.bandReverse .scrim {
+  background: linear-gradient(
+    270deg,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.2) 45%,
+    transparent 100%
+  );
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  max-width: 480px;
+  margin: clamp(80px, 12vh, 140px) clamp(20px, 6vw, 80px);
+  padding: clamp(28px, 4vw, 40px);
+  border-radius: var(--radius-lg);
+  background: var(--glass-strong);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.bandReverse .content {
+  margin-left: auto;
+}
+
+.floors {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.name {
+  font-size: clamp(28px, 4vw, 44px);
+  margin: 12px 0 8px;
+  color: var(--text);
+}
+
+.tag {
+  font-size: 15px;
+  color: var(--text-dim);
+  margin: 0 0 14px;
+}
+
+.summary {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-dim);
+  margin: 0 0 20px;
+}
+
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.band:hover .more {
+  gap: 14px;
+}
+
+@media (max-width: 640px) {
+  .band {
+    min-height: 60vh;
+  }
+  .scrim,
+  .bandReverse .scrim {
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.6) 0%,
+      rgba(0, 0, 0, 0.15) 50%,
+      transparent 100%
+    );
+  }
+  .content,
+  .bandReverse .content {
+    margin: auto clamp(16px, 4vw, 24px) 32px;
+    max-width: none;
+  }
+}

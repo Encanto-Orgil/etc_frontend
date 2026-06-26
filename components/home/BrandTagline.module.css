@@ -1,0 +1,137 @@
+.section {
+  position: relative;
+  background: #ffffff;
+  overflow: visible;
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(80% 60% at 50% 0%, rgba(0, 0, 0, 0.03) 0%, transparent 70%),
+    radial-gradient(60% 40% at 100% 100%, rgba(0, 0, 0, 0.025) 0%, transparent 65%);
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1400px;
+  padding: 0 clamp(20px, 4vw, 48px);
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 clamp(28px, 4vh, 44px);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(12, 12, 12, 0.38);
+}
+
+.tagline {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.12em 0.28em;
+  font-size: clamp(36px, 7.2vw, 92px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  color: var(--black);
+}
+
+.wordGroup {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.word {
+  display: inline-block;
+  transform-origin: center bottom;
+  will-change: transform, opacity;
+}
+
+.period {
+  font-weight: 500;
+  color: rgba(12, 12, 12, 0.28);
+  margin-left: 0.02em;
+}
+
+.progressTrack {
+  position: relative;
+  width: min(420px, 72vw);
+  height: 1px;
+  margin: clamp(36px, 5vh, 52px) auto 0;
+  background: rgba(12, 12, 12, 0.08);
+  overflow: hidden;
+}
+
+.progressFill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, var(--black) 35%, var(--black) 100%);
+  transform-origin: left center;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: clamp(24px, 3vh, 32px);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(12, 12, 12, 0.12);
+  transition:
+    background 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+
+.dot[data-active="true"] {
+  background: var(--black);
+  transform: scale(1.25);
+}
+
+@media (max-width: 900px) {
+  .tagline {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.08em;
+  }
+
+  .wordGroup {
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .progressFill {
+    width: 100% !important;
+  }
+}

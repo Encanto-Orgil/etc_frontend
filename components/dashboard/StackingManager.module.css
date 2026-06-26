@@ -1,0 +1,133 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.toolbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #e8eaed;
+  background: #fff;
+  color: #0c0c0c;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.backLink:hover {
+  background: #f5f5f5;
+}
+
+.kindTitle {
+  margin: 2px 0 0 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.stats {
+  margin: 0;
+}
+
+.statCard {
+  border-radius: 14px !important;
+  border: 1px solid #e8eaed !important;
+}
+
+.tableCard {
+  border-radius: 16px !important;
+  border: 1px solid #e8eaed !important;
+}
+
+.unitGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.unitChip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #e8eaed;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.unitChip:hover {
+  border-color: #0c0c0c;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+.unitChip strong {
+  font-size: 15px;
+}
+
+.unitChip span {
+  font-size: 12px;
+  color: #667085;
+}
+
+.unitChip small {
+  font-size: 11px;
+  color: #0c0c0c;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.unitTag {
+  margin: 0 !important;
+}
+
+.unitChip[data-status="available"] {
+  border-left: 3px solid #22c55e;
+}
+
+.unitChip[data-status="rented"] {
+  border-left: 3px solid #64748b;
+}
+
+.unitChip[data-status="reserved"] {
+  border-left: 3px solid #f59e0b;
+}
+
+.unitChip[data-status="unavailable"] {
+  border-left: 3px solid #ef4444;
+}
+
+.form {
+  margin-top: 8px;
+}
+
+.modalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}

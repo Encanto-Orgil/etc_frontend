@@ -1,0 +1,248 @@
+.section {
+  padding: clamp(64px, 9vh, 96px) 0;
+  border-bottom: 1px solid var(--line);
+  background: #0c0c0c;
+  color: #fff;
+}
+
+.inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(24px, 4vw, 40px);
+  align-items: center;
+}
+
+.visual {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  border-radius: calc(var(--radius) + 4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #111;
+}
+
+.visual img {
+  width: 100%;
+  display: block;
+  aspect-ratio: 16 / 11;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.visual:hover img {
+  transform: scale(1.03);
+}
+
+.shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.55) 100%);
+  pointer-events: none;
+}
+
+.partition {
+  position: absolute;
+  inset: 12% 8%;
+  display: grid;
+  pointer-events: none;
+}
+
+.partition[data-halls="1"] {
+  grid-template-columns: 1fr;
+}
+
+.partition[data-halls="2"] {
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.partition[data-halls="3"] {
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.partition span {
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.35s ease;
+}
+
+.caption {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.caption strong {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.caption span {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.copy {
+  padding: 8px 0;
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(34px, 5vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.02;
+}
+
+.tagline {
+  margin: 14px 0 0;
+  max-width: 34ch;
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.modes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.mode,
+.modeActive {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.mode:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.modeActive {
+  border-color: rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.modeBars {
+  display: grid;
+  gap: 4px;
+  width: 42px;
+  height: 28px;
+}
+
+.modeBars[data-halls="1"] {
+  grid-template-columns: 1fr;
+}
+
+.modeBars[data-halls="2"] {
+  grid-template-columns: 1fr 1fr;
+}
+
+.modeBars[data-halls="3"] {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.modeBars i {
+  display: block;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.modeLabel {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.points {
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.points li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #c8a45c;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modes {
+    grid-template-columns: 1fr;
+  }
+
+  .mode,
+  .modeActive {
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 14px 16px;
+  }
+}

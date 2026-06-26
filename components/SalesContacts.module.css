@@ -1,0 +1,154 @@
+.wrap {
+  margin-bottom: 28px;
+}
+
+.wrapDark .heading {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.heading {
+  margin: 0 0 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card {
+  display: flex;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.cardPrimary {
+  border-color: var(--line-strong, rgba(0, 0, 0, 0.14));
+  background: var(--bg-soft);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--black);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.nameRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.badge {
+  display: inline-flex;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.role {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.links a:hover {
+  opacity: 0.72;
+}
+
+.strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-top: 24px;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--bg-soft);
+}
+
+.stripLabel {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.strip strong {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.strip a {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.strip a:hover {
+  opacity: 0.72;
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: 14px;
+  }
+
+  .avatar {
+    width: 42px;
+    height: 42px;
+    font-size: 12px;
+  }
+}

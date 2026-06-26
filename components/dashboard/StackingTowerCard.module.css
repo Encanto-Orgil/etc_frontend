@@ -1,0 +1,295 @@
+.cardLink {
+  --rx: 0deg;
+  --ry: 0deg;
+  --tz: 0px;
+  --gx: 50%;
+  --gy: 35%;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+  perspective: 1400px;
+}
+
+.cardLink.loading {
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.card {
+  height: 100%;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: linear-gradient(165deg, #ffffff 0%, #f7f8fa 100%);
+  box-shadow:
+    0 24px 60px rgba(15, 23, 42, 0.1),
+    0 8px 20px rgba(15, 23, 42, 0.05);
+  transform: rotateX(var(--rx)) rotateY(var(--ry)) translateZ(var(--tz));
+  transform-style: preserve-3d;
+  transition:
+    transform 0.18s ease-out,
+    box-shadow 0.25s ease;
+  will-change: transform;
+}
+
+.cardLink:hover .card {
+  box-shadow:
+    0 34px 80px rgba(15, 23, 42, 0.16),
+    0 12px 28px rgba(15, 23, 42, 0.08);
+}
+
+.visual {
+  position: relative;
+  height: 220px;
+  flex-shrink: 0;
+  transform: translateZ(28px);
+}
+
+.imageWrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+  transform: scale(1.08) translateZ(0);
+  transition: transform 0.45s ease;
+}
+
+.cardLink:hover .image {
+  transform: scale(1.14) translateZ(12px);
+}
+
+.imageGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--gx) var(--gy),
+    color-mix(in srgb, var(--accent) 28%, transparent),
+    transparent 52%
+  );
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+.imageShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.02) 0%,
+    rgba(0, 0, 0, 0.15) 55%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+.badgeRow {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 14px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  z-index: 2;
+}
+
+.kindBadge,
+.healthBadge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(10px);
+}
+
+.kindBadge {
+  background: rgba(255, 255, 255, 0.88);
+  color: #0c0c0c;
+}
+
+.healthBadge {
+  color: #fff;
+}
+
+.healthBadge.good {
+  background: rgba(34, 197, 94, 0.88);
+}
+
+.healthBadge.medium {
+  background: rgba(245, 158, 11, 0.9);
+}
+
+.healthBadge.attention {
+  background: rgba(59, 130, 246, 0.9);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 20px 18px;
+  flex: 1;
+  transform: translateZ(16px);
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.head h2 {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.head p {
+  margin: 0;
+  font-size: 12px;
+  color: #667085;
+  line-height: 1.45;
+}
+
+.floors {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 10%, #fff);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.metric {
+  padding: 12px 10px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #edf0f3;
+  text-align: center;
+}
+
+.metric strong {
+  display: block;
+  font-size: 22px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.metric span {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #667085;
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.barRow {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  color: #667085;
+}
+
+.barTrack {
+  height: 7px;
+  border-radius: 999px;
+  background: #edf0f3;
+  overflow: hidden;
+}
+
+.barRented,
+.barAvailable,
+.barPipeline {
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.5s ease;
+}
+
+.barRented {
+  background: #64748b;
+}
+
+.barAvailable {
+  background: #22c55e;
+}
+
+.barPipeline {
+  background: #f59e0b;
+}
+
+.insight {
+  margin-top: auto;
+  padding: 14px;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 8%, #fff),
+    #fff
+  );
+  border: 1px solid color-mix(in srgb, var(--accent) 14%, #e8eaed);
+}
+
+.insightTitle {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0c0c0c;
+}
+
+.insightHint {
+  margin: 0;
+  font-size: 12px;
+  color: #667085;
+  line-height: 1.45;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 4px;
+  font-size: 12px;
+  color: #667085;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #0c0c0c;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .card {
+    min-height: 0;
+  }
+
+  .visual {
+    height: 190px;
+  }
+}

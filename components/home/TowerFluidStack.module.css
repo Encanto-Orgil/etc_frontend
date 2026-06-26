@@ -1,0 +1,453 @@
+.section {
+  position: relative;
+  background: #fff;
+  padding: clamp(72px, 9vw, 112px) clamp(20px, 4vw, 40px)
+    clamp(88px, 10vw, 120px);
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+
+.watermark {
+  position: absolute;
+  right: clamp(-24px, -1vw, 32px);
+  bottom: clamp(-28px, -2vw, 24px);
+  z-index: 0;
+  width: clamp(260px, 36vw, 460px);
+  pointer-events: none;
+  transform: rotate(-11deg);
+  opacity: 0.055;
+}
+
+.watermark::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 112%;
+  height: 220%;
+  transform: translate(-50%, -50%);
+  border: 1.5px solid rgba(0, 0, 0, 0.06);
+  border-radius: 50%;
+}
+
+.watermark::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 126%;
+  height: 248%;
+  transform: translate(-50%, -50%);
+  border: 1px dashed rgba(0, 0, 0, 0.04);
+  border-radius: 50%;
+}
+
+.watermark img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: grayscale(1);
+}
+
+.header {
+  position: relative;
+  z-index: 1;
+  max-width: var(--maxw);
+  margin: 0 auto clamp(36px, 5vw, 56px);
+}
+
+.eyebrow {
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.title {
+  margin: 0;
+  max-width: 14ch;
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--text);
+}
+
+.stackWrap {
+  position: relative;
+  z-index: 1;
+}
+
+.stack {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  height: clamp(420px, 52vh, 560px);
+}
+
+.scrollHint {
+  display: none;
+}
+
+.card {
+  flex: 1 1 0;
+  min-width: 0;
+  border-radius: 22px;
+  overflow: hidden;
+  background: #161616;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: flex 0.58s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: flex;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card:active {
+  transform: scale(0.985);
+}
+
+.cardSurface {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  padding: clamp(18px, 2.2vw, 28px);
+  color: #fff;
+}
+
+.cardBg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.06);
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(0, 0, 0, 0.42) 42%,
+    rgba(0, 0, 0, 0.88) 100%
+  );
+  transition: opacity 0.45s var(--ease);
+}
+
+.iconWrap {
+  position: absolute;
+  top: clamp(18px, 2.2vw, 28px);
+  left: clamp(18px, 2.2vw, 28px);
+  z-index: 2;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #b69cff 0%, #8b6cf8 100%);
+  color: #fff;
+  font-size: 20px;
+  box-shadow: 0 8px 24px rgba(139, 108, 248, 0.35);
+}
+
+.cardBody {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+}
+
+.floors {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.35s var(--ease),
+    transform 0.35s var(--ease);
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: clamp(22px, 2.2vw, 30px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.expanded {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    max-height 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.4s var(--ease),
+    transform 0.45s var(--ease);
+}
+
+.summary {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.72);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  transition: background 0.25s var(--ease);
+}
+
+.ctaArrow {
+  transition: transform 0.25s var(--ease);
+}
+
+@media (hover: hover) and (min-width: 961px) {
+  .cardActive {
+    flex: 3.4 1 0;
+  }
+
+  .cardActive .cardBg {
+    transform: scale(1.02);
+  }
+
+  .cardActive .cardOverlay {
+    opacity: 0.92;
+  }
+
+  .cardActive .floors {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .cardActive .expanded {
+    max-height: 180px;
+    opacity: 1;
+    transform: translateY(0);
+    margin-top: 14px;
+  }
+
+  .card:hover .cta,
+  .card:focus-visible .cta {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  .card:hover .ctaArrow,
+  .card:focus-visible .ctaArrow {
+    transform: translateX(3px);
+  }
+}
+
+@media (max-width: 960px) {
+  .section {
+    padding: clamp(48px, 8vw, 64px) 0 clamp(52px, 7vw, 72px);
+  }
+
+  .header {
+    margin-bottom: 22px;
+    padding: 0 clamp(20px, 4vw, 40px);
+  }
+
+  .title {
+    max-width: none;
+    font-size: clamp(28px, 7vw, 40px);
+  }
+
+  .watermark {
+    width: min(52vw, 220px);
+    opacity: 0.04;
+    right: -12px;
+    bottom: 12px;
+  }
+
+  .stackWrap::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 48px;
+    height: calc(100% - 36px);
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, #fff);
+    z-index: 2;
+  }
+
+  .stack {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 14px;
+    height: auto;
+    max-width: none;
+    margin: 0;
+    padding: 0 clamp(20px, 4vw, 40px) 2px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: clamp(20px, 4vw, 40px);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .stack::-webkit-scrollbar {
+    display: none;
+  }
+
+  .card,
+  .cardActive {
+    flex: none;
+    scroll-snap-align: start;
+    width: min(82vw, 320px);
+    min-height: 380px;
+    border-radius: 20px;
+    transition: transform 0.2s var(--ease);
+  }
+
+  .card:active {
+    transform: scale(0.98);
+  }
+
+  .cardSurface {
+    padding: 20px;
+  }
+
+  .cardOverlay {
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.08) 0%,
+      rgba(0, 0, 0, 0.35) 38%,
+      rgba(0, 0, 0, 0.9) 100%
+    );
+  }
+
+  .iconWrap {
+    top: 18px;
+    left: 18px;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    border-radius: 10px;
+  }
+
+  .floors {
+    opacity: 1;
+    transform: none;
+    margin-bottom: 6px;
+    font-size: 10px;
+  }
+
+  .cardTitle {
+    white-space: normal;
+    font-size: 26px;
+  }
+
+  .expanded {
+    display: block;
+    max-height: none;
+    opacity: 1;
+    transform: none;
+    margin-top: 12px;
+  }
+
+  .summary {
+    -webkit-line-clamp: 2;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .cta {
+    margin-top: 14px;
+    padding: 11px 16px;
+    width: 100%;
+    justify-content: space-between;
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .scrollHint {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 16px clamp(20px, 4vw, 40px) 0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .scrollHintDots {
+    display: inline-flex;
+    gap: 6px;
+  }
+
+  .scrollHintDots i {
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--line);
+  }
+
+  .scrollHintDots i:first-child {
+    width: 18px;
+    border-radius: 999px;
+    background: var(--text);
+  }
+}
+
+@media (max-width: 420px) {
+  .card,
+  .cardActive {
+    width: 86vw;
+    min-height: 360px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .cardBg,
+  .expanded,
+  .floors,
+  .ctaArrow {
+    transition: none;
+  }
+
+  .card:active {
+    transform: none;
+  }
+}
