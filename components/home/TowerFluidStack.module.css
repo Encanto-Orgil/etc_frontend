@@ -42,13 +42,14 @@
   border-radius: 50%;
 }
 
-.watermark img {
+.watermark img,
+.watermarkImg {
   position: relative;
   z-index: 1;
   display: block;
   width: 100%;
   height: auto;
-  filter: grayscale(1);
+  filter: grayscale(1) brightness(0);
 }
 
 .header {

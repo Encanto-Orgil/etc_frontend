@@ -1,0 +1,3 @@
+# Large office presentation reel — host on CDN / Vercel Blob and set:
+# NEXT_PUBLIC_OFFICE_VIDEO_URL=https://...
+public/videos/office.mp4

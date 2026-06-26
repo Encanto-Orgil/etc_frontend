@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { TRADE_VIDEO_SRC } from "@/lib/media";
 import TowerHero from "@/components/tower/TowerHero";
 import HeroSection from "@/components/HeroSection";
 import SalesContacts from "@/components/SalesContacts";
@@ -46,7 +47,7 @@ export default async function TowerPage({
       <>
         <TowerHero
           image={data.heroImage}
-          video="/videos/trade.mp4"
+          video={TRADE_VIDEO_SRC}
           showContent={false}
         />
         <OfficePage tower={data} others={others} />

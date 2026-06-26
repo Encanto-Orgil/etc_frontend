@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ENCHANTO_LOGO_ASPECT, ENCHANTO_LOGO_SRC } from "@/lib/branding";
 import styles from "./Logo.module.css";
 
 type Props = {
@@ -7,6 +8,8 @@ type Props = {
   height?: number;
   priority?: boolean;
   onClick?: () => void;
+  /** Dark silhouette for light backgrounds (e.g. section watermarks) */
+  variant?: "default" | "dark";
 };
 
 export default function Logo({
@@ -14,17 +17,18 @@ export default function Logo({
   height = 40,
   priority = false,
   onClick,
+  variant = "default",
 }: Props) {
-  const width = Math.round(height * 2.85);
+  const width = Math.round(height * ENCHANTO_LOGO_ASPECT);
 
   return (
     <Link href="/" className={`${styles.logo} ${className || ""}`} onClick={onClick}>
       <Image
-        src="/images/cento-logo.webp"
+        src={ENCHANTO_LOGO_SRC}
         alt="Encanto Trade Center"
         width={width}
         height={height}
-        className={styles.img}
+        className={`${styles.img} ${variant === "dark" ? styles.dark : ""}`}
         style={{ height }}
         priority={priority}
       />

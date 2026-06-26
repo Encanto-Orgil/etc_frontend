@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { OFFICE_VIDEO_SRC } from "@/lib/media";
 import styles from "./OfficePresentationVideo.module.css";
 
 export default function OfficePresentationVideo({ embedded = false }: { embedded?: boolean }) {
@@ -37,7 +38,7 @@ export default function OfficePresentationVideo({ embedded = false }: { embedded
           <video
             ref={videoRef}
             className={styles.video}
-            src="/videos/office.mp4"
+            src={OFFICE_VIDEO_SRC}
             poster="/images/renders/render-8.jpg"
             playsInline
             controls

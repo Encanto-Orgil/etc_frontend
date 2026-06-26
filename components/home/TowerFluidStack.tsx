@@ -8,6 +8,7 @@ import {
   HomeOutlined,
   ShopOutlined,
 } from "@ant-design/icons";
+import { ENCHANTO_LOGO_SRC } from "@/lib/branding";
 import type { Tower } from "@/lib/data";
 import styles from "./TowerFluidStack.module.css";
 
@@ -31,7 +32,7 @@ export default function TowerFluidStack({ items, id = "towers" }: Props) {
   return (
     <section className={styles.section} id={id} aria-label="Төслийн хэсгүүд">
       <div className={styles.watermark} aria-hidden>
-        <img src="/images/cento-logo.webp" alt="" />
+        <img src={ENCHANTO_LOGO_SRC} alt="" className={styles.watermarkImg} />
       </div>
 
       <div className={styles.header}>
