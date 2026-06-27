@@ -7,18 +7,11 @@ import styles from "./HeroSlider.module.css";
 
 const slides = [
   {
-    image: "/images/drone/drone-3.jpg",
-    tag: "Encanto Trade Center",
+    image: "/images/renders/render-34.jpg",
+    tag: "Premium Offices • Luxury Residences • Retail & Lifestyle",
     title: "ENCANTO",
     titleLine2: "TRADE CENTER",
-    subtitle: "Баянзүрх дүүрэгт өсөн нэмэгдэж буй хотын шинэ дүр төрх.",
-  },
-  {
-    image: "/images/renders/render-8.jpg",
-    tag: "Encanto Trade Center",
-    title: "ENCANTO",
-    titleLine2: "TRADE CENTER",
-    subtitle: "Оффис · Mall · Ballroom · Sky Residence — нэг цогцолбор.",
+    subtitle: "Худалдаа үйлчилгээ, оффисын хэрэгцээг нэг дор төвлөрүүлсэн premium зэрэглэлийн шинэ бизнес төв",
   }
 ];
 

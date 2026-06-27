@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Drawer } from "antd";
-import { MenuOutlined } from "@ant-design/icons";
+import { MenuOutlined, PhoneOutlined } from "@ant-design/icons";
 import Logo from "@/components/Logo";
 import { HOME_ANCHOR_NAV, SITE_SECTION_NAV } from "@/lib/site-nav";
 import styles from "./Navbar.module.css";
@@ -124,8 +124,9 @@ export default function Navbar() {
             </nav>
 
             <div className={styles.actions}>
-              <Link href={contactHref} className={styles.cta}>
-                Холбоо барих
+              <Link href={contactHref} className={styles.cta} aria-label="Холбоо барих">
+                <PhoneOutlined className={styles.ctaIcon} aria-hidden />
+                <span>Холбоо барих</span>
               </Link>
             </div>
 
@@ -174,8 +175,10 @@ export default function Navbar() {
             href={contactHref}
             onClick={() => setOpen(false)}
             className={styles.drawerCta}
+            aria-label="Холбоо барих"
           >
-            Холбоо барих
+            <PhoneOutlined className={styles.ctaIcon} aria-hidden />
+            <span>Холбоо барих</span>
           </Link>
         </div>
       </Drawer>
