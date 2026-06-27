@@ -10,6 +10,7 @@ import {
 } from "@ant-design/icons";
 import { ENCHANTO_LOGO_SRC } from "@/lib/branding";
 import type { Tower } from "@/lib/data";
+import { getSectionNavLabel } from "@/lib/site-nav";
 import styles from "./TowerFluidStack.module.css";
 
 const ICONS = {
@@ -45,6 +46,7 @@ export default function TowerFluidStack({ items, id = "towers" }: Props) {
           {items.map((tower, index) => {
             const Icon = ICONS[tower.kind];
             const isActive = active === index;
+            const sectionLabel = getSectionNavLabel(tower.slug);
 
             return (
               <Link
@@ -53,7 +55,7 @@ export default function TowerFluidStack({ items, id = "towers" }: Props) {
                 className={`${styles.card} ${isActive ? styles.cardActive : ""}`}
                 onMouseEnter={() => setActive(index)}
                 onFocus={() => setActive(index)}
-                aria-label={`${tower.name} — дэлгэрэнгүй үзэх`}
+                aria-label={`${sectionLabel} — дэлгэрэнгүй үзэх`}
               >
                 <div className={styles.cardSurface}>
                   <div
@@ -69,7 +71,7 @@ export default function TowerFluidStack({ items, id = "towers" }: Props) {
 
                   <div className={styles.cardBody}>
                     <p className={styles.floors}>{tower.floors}</p>
-                    <h3 className={styles.cardTitle}>{tower.name}</h3>
+                    <h3 className={styles.cardTitle}>{sectionLabel}</h3>
 
                     <div className={styles.expanded}>
                       <p className={styles.summary}>{tower.summary}</p>

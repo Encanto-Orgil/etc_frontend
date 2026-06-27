@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import HeroSlider from "@/components/home/HeroSlider";
 import BrandTagline from "@/components/home/BrandTagline";
@@ -5,12 +6,17 @@ import TowerFluidStack from "@/components/home/TowerFluidStack";
 import HeroSection from "@/components/HeroSection";
 import SalesContacts from "@/components/SalesContacts";
 import InquiryForm from "@/components/InquiryForm";
+import JsonLd from "@/components/JsonLd";
 import { project, towers } from "@/lib/data";
+import { homeListingJsonLd, homeMetadata } from "@/lib/seo";
 import styles from "./page.module.css";
+
+export const metadata: Metadata = homeMetadata();
 
 export default function Home() {
   return (
     <>
+      <JsonLd data={homeListingJsonLd()} />
       <HeroSlider />
 
       <BrandTagline />

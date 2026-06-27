@@ -6,15 +6,17 @@ import { useCallback, useEffect, useState } from "react";
 import { Drawer } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import Logo from "@/components/Logo";
+import { HOME_ANCHOR_NAV, SITE_SECTION_NAV } from "@/lib/site-nav";
 import styles from "./Navbar.module.css";
 
 const links = [
-  { href: "/#about", label: "Танилцуулга" },
-  { href: "/office", label: "Office" },
-  { href: "/mall", label: "Mall" },
-  { href: "/ballroom", label: "Ballroom" },
-  { href: "/apartment", label: "Apartment" },
-];
+  { href: HOME_ANCHOR_NAV[0].href, label: HOME_ANCHOR_NAV[0].label },
+  ...SITE_SECTION_NAV.map((item) => ({
+    href: item.href,
+    label: item.navLabel ?? item.label,
+    title: item.label,
+  })),
+] as const;
 
 const SCROLL_THRESHOLD = 48;
 
@@ -101,7 +103,7 @@ export default function Navbar() {
           <div className={styles.inner}>
             <Logo
               priority
-              height={48}
+              height={52}
               className={styles.logo}
               onClick={() => setOpen(false)}
             />
@@ -111,6 +113,7 @@ export default function Navbar() {
                 <Link
                   key={l.href}
                   href={l.href}
+                  title={"title" in l ? l.title : undefined}
                   className={`${styles.navLink} ${
                     isLinkActive(l.href, pathname, activeSection) ? styles.active : ""
                   }`}
@@ -151,12 +154,13 @@ export default function Navbar() {
         }}
       >
         <div className={styles.drawer}>
-          <Logo height={48} onClick={() => setOpen(false)} className={styles.drawerLogo} />
-          <nav className={styles.drawerNav}>
+          <Logo height={52} onClick={() => setOpen(false)} className={styles.drawerLogo} />
+          <nav className={styles.drawerNav} aria-label="Үндсэн цэс">
             {links.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
+                title={"title" in l ? l.title : undefined}
                 onClick={() => setOpen(false)}
                 className={`${styles.drawerLink} ${
                   isLinkActive(l.href, pathname, activeSection) ? styles.active : ""

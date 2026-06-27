@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { project } from "@/lib/data";
+import { HOME_ANCHOR_NAV, SITE_SECTION_NAV } from "@/lib/site-nav";
 import styles from "./Footer.module.css";
 
 export default function Footer() {
@@ -14,20 +15,24 @@ export default function Footer() {
           <p className={styles.tag}>{project.tagline}</p>
         </div>
 
-        <div className={styles.col}>
+        <nav className={styles.col} aria-label="Төслийн хэсгүүд">
           <h4>Төсөл</h4>
-          <Link href="/office">Office</Link>
-          <Link href="/mall">Mall</Link>
-          <Link href="/ballroom">Ballroom</Link>
-          <Link href="/apartment">Apartment</Link>
-        </div>
+          {SITE_SECTION_NAV.map((item) => (
+            <Link key={item.href} href={item.href}>
+              {item.label}
+            </Link>
+          ))}
+        </nav>
 
-        <div className={styles.col}>
+        <nav className={styles.col} aria-label="Компани">
           <h4>Компани</h4>
-          <Link href="/#about">Танилцуулга</Link>
+          {HOME_ANCHOR_NAV.map((item) => (
+            <Link key={item.href} href={item.href}>
+              {item.label}
+            </Link>
+          ))}
           <Link href="/#towers">Төслийн хэсгүүд</Link>
-          <Link href="/#contact">Холбоо барих</Link>
-        </div>
+        </nav>
 
         <div className={styles.col}>
           <h4>Холбоо барих</h4>

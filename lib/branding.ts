@@ -1,4 +1,4 @@
 export const ENCHANTO_LOGO_SRC = "/images/encanto-logo.png";
 
-/** Source asset: 591 × 230 */
-export const ENCHANTO_LOGO_ASPECT = 591 / 230;
+/** Source asset: 487 × 188 */
+export const ENCHANTO_LOGO_ASPECT = 487 / 188;

@@ -8,7 +8,9 @@ import SalesContacts from "@/components/SalesContacts";
 import InquiryForm from "@/components/InquiryForm";
 import OfficePage from "@/components/office/OfficePage";
 import BallroomPage from "@/components/ballroom/BallroomPage";
+import JsonLd from "@/components/JsonLd";
 import { getTower, towers } from "@/lib/data";
+import { towerMetadata, towerWebPageJsonLd } from "@/lib/seo";
 import styles from "./tower.module.css";
 
 export function generateStaticParams() {
@@ -23,11 +25,7 @@ export async function generateMetadata({
   const { tower } = await params;
   const data = getTower(tower);
   if (!data) return { title: "Encanto Trade Center" };
-  return {
-    title: `${data.name} — Encanto Trade Center`,
-    description: data.summary,
-    openGraph: { images: [data.heroImage] },
-  };
+  return towerMetadata(data);
 }
 
 export default async function TowerPage({
@@ -42,9 +40,12 @@ export default async function TowerPage({
   const others = towers.filter((t) => t.slug !== data.slug);
   const featureImage = data.features[0]?.image || data.heroImage;
 
+  const jsonLd = <JsonLd data={towerWebPageJsonLd(data)} />;
+
   if (data.slug === "office") {
     return (
       <>
+        {jsonLd}
         <TowerHero
           image={data.heroImage}
           video={TRADE_VIDEO_SRC}
@@ -58,6 +59,7 @@ export default async function TowerPage({
   if (data.slug === "ballroom") {
     return (
       <>
+        {jsonLd}
         <TowerHero
           image={data.heroImage}
           title="Encanto Trade Center - Ballroom"
@@ -72,6 +74,7 @@ export default async function TowerPage({
 
   return (
     <>
+      {jsonLd}
       <TowerHero
         image={data.heroImage}
         eyebrow={`${data.name} · ${data.floors}`}

@@ -8,8 +8,8 @@ type Props = {
   height?: number;
   priority?: boolean;
   onClick?: () => void;
-  /** Dark silhouette for light backgrounds (e.g. section watermarks) */
-  variant?: "default" | "dark";
+  /** White logo on dark backgrounds (header). Use "muted" for light section watermarks. */
+  variant?: "white" | "muted";
 };
 
 export default function Logo({
@@ -17,7 +17,7 @@ export default function Logo({
   height = 40,
   priority = false,
   onClick,
-  variant = "default",
+  variant = "white",
 }: Props) {
   const width = Math.round(height * ENCHANTO_LOGO_ASPECT);
 
@@ -28,7 +28,7 @@ export default function Logo({
         alt="Encanto Trade Center"
         width={width}
         height={height}
-        className={`${styles.img} ${variant === "dark" ? styles.dark : ""}`}
+        className={`${styles.img} ${variant === "muted" ? styles.muted : styles.white}`}
         style={{ height }}
         priority={priority}
       />

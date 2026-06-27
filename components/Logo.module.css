@@ -11,6 +11,13 @@
   object-fit: contain;
 }
 
-.dark {
+/* White logo on dark backgrounds (header / drawer) */
+.white {
+  filter: none;
+}
+
+/* Stamp on white sections — full mark as a subtle silhouette */
+.muted {
   filter: grayscale(1) brightness(0);
+  opacity: 0.9;
 }
