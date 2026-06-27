@@ -14,14 +14,6 @@ const slides = [
     subtitle: "Баянзүрх дүүрэгт өсөн нэмэгдэж буй хотын шинэ дүр төрх.",
   },
   {
-    image: "/images/renders/render-35.jpg",
-    tag: "Encanto Trade Center",
-    title: "ХОТЫН ШИНЭ",
-    titleLine2: "ДҮР ТӨРХ",
-    subtitle:
-      "Монголын хамгийн өндөр шилэн фасадтай металл бүтээц — 35 давхар, 135 метр.",
-  },
-  {
     image: "/images/renders/render-8.jpg",
     tag: "Encanto Trade Center",
     title: "ENCANTO",

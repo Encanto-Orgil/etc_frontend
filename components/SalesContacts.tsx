@@ -59,7 +59,6 @@ export default function SalesContacts({
                   <p className={styles.name}>{person.name}</p>
                   {primary ? <span className={styles.badge}>Таны хариуцагч</span> : null}
                 </div>
-                <p className={styles.role}>{person.role}</p>
                 <div className={styles.links}>
                   {person.phones.map((phone) => (
                     <a key={phone} href={`tel:+976${phone.replace(/-/g, "")}`}>

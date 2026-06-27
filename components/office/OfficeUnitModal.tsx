@@ -50,7 +50,6 @@ export default function OfficeUnitModal({ open, onClose, floor, unit }: Props) {
         <div className={styles.avatar}>{initials}</div>
         <div className={styles.salesInfo}>
           <p className={styles.salesName}>{officeSales.name}</p>
-          <p className={styles.salesTitle}>{officeSales.title}</p>
           <p className={styles.salesDept}>{officeSales.department}</p>
           <div className={styles.contacts}>
             {officeSales.phones.map((phone) => (

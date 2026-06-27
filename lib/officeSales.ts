@@ -4,7 +4,6 @@ const primary = getPrimarySalesContact("office");
 
 export const officeSales = {
   name: primary.name,
-  title: primary.role,
   department: "Encanto Trade Center — Борлуулалтын алба",
   phone: primary.phones[0],
   phones: primary.phones,

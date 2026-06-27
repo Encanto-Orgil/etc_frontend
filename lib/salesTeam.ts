@@ -3,7 +3,6 @@ export type SalesScope = "office" | "mall" | "ballroom" | "apartment" | "home";
 export type SalesPerson = {
   id: string;
   name: string;
-  role: string;
   phones: string[];
   email: string;
   scopes: SalesScope[];
@@ -13,7 +12,6 @@ export const SALES_TEAM: SalesPerson[] = [
   {
     id: "hetbold",
     name: "Хэтболд",
-    role: "Office & Mall — гол хариуцагч",
     phones: ["9919-1522"],
     email: "office@encanto.mn",
     scopes: ["office", "mall"],
@@ -21,7 +19,6 @@ export const SALES_TEAM: SalesPerson[] = [
   {
     id: "nomin-erdene",
     name: "Номин-Эрдэнэ",
-    role: "Ballroom хариуцагч · Орон сууцны борлуулалт",
     phones: ["9401-8858"],
     email: "ballroom@encanto.mn",
     scopes: ["ballroom", "apartment"],
@@ -29,7 +26,6 @@ export const SALES_TEAM: SalesPerson[] = [
   {
     id: "rolomjav",
     name: "Роломжав",
-    role: "Орон сууцны борлуулалт",
     phones: ["9405-8858"],
     email: "apartment@encanto.mn",
     scopes: ["apartment"],
