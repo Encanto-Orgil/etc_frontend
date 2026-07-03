@@ -34,7 +34,7 @@ type PageMetaInput = {
 };
 
 const TOWER_PAGE_TITLES: Partial<Record<string, string>> = {
-  office: "Office — Таны бизнесийн үнэ цэнийг тодорхойлно - Encanto Trade Center",
+  office: "Office — Define Your Business Value — Encanto Trade Center",
   mall: "Mall — Шилдэг брэндүүд нэг дор — Encanto Trade Center",
   ballroom: "Encanto Grand Ballroom",
 };
@@ -169,7 +169,7 @@ export function towerMetadata(tower: Tower): Metadata {
     ...DEFAULT_KEYWORDS,
     tower.name,
     tower.nameMn,
-    tower.kind === "office" ? "A зэрэглэлийн оффис" : "",
+    tower.kind === "office" ? "Grade-A office" : "",
     tower.kind === "mall" ? "luxury mall" : "",
     tower.kind === "ballroom" ? "хурим танхим" : "",
     tower.kind === "apartment" ? "premium орон сууц" : "",

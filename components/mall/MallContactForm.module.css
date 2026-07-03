@@ -1,0 +1,70 @@
+.form :global(.ant-form-item-label > label) {
+  color: rgba(255, 255, 255, 0.72) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+.form :global(.ant-input),
+.form :global(.ant-select-selector) {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #fff !important;
+}
+
+.form :global(.ant-input::placeholder),
+.form :global(.ant-select-selection-placeholder) {
+  color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.form :global(.ant-select-selection-item) {
+  color: #fff !important;
+}
+
+.form :global(.ant-input:hover),
+.form :global(.ant-select-selector:hover) {
+  border-color: rgba(201, 169, 98, 0.35) !important;
+}
+
+.form :global(.ant-input:focus),
+.form :global(.ant-select-focused .ant-select-selector) {
+  border-color: rgba(201, 169, 98, 0.55) !important;
+  box-shadow: 0 0 0 2px rgba(201, 169, 98, 0.12) !important;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.submit:global(.ant-btn-primary) {
+  width: 100%;
+  margin-top: 8px;
+  background: #c9a962 !important;
+  border-color: #c9a962 !important;
+  color: #0c0c0e !important;
+  font-weight: 600 !important;
+}
+
+.done {
+  text-align: center;
+  color: #fff;
+}
+
+.done h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 300;
+}
+
+.done p {
+  margin: 0 0 20px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}

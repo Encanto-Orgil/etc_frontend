@@ -34,6 +34,18 @@ export async function fetchOfficeStackingPlan(): Promise<import("./officeStackin
   }
 }
 
+export async function fetchApartmentStackingPlan(): Promise<import("./officeStacking").OfficeStackingPlan | null> {
+  try {
+    const res = await fetch(`${API_BASE}/apartment/stacking-plan/`, {
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchBallroomAvailability(
   year: number,
   month: number,

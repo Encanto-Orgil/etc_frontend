@@ -22,7 +22,9 @@ export const project = {
   name: "Encanto Trade Center",
   shortName: "ETC",
   tagline: "Монголын хамгийн өндөр шилэн фасадтай металл бүтээц",
-  location: "Улаанбаатар хот, Баянзүрх дүүрэг",
+  location: "26th Khoroo, Bayanzurkh District, Ulaanbaatar",
+  mapUrl:
+    "https://www.google.com/maps/search/?api=1&query=Encanto+Trade+Center+26th+khoroo+Bayanzurkh+Ulaanbaatar",
   heroImage: "/images/renders/render-8.jpg",
   duskImage: "/images/renders/render-35.jpg",
   droneImage: "/images/drone/drone-3.jpg",
@@ -47,37 +49,37 @@ export const towers: Tower[] = [
     slug: "office",
     name: "Office",
     nameMn: "Office",
-    tagline: "Таны бизнесийн үнэ цэнийг тодорхойлох",
-    floors: "24 давхар",
+    tagline: "Define your business value",
+    floors: "24 floors",
     heroImage: "/images/renders/render-8.jpg",
     accent: "#C8A45C",
     summary:
-      "Монголын хамгийн өндөр барилга — 4.5 м тааз, YUANDA шилэн фасад, FUJITEC ухаалаг лифт, 1500 зогсоолтой A зэрэглэлийн оффис.",
+      "Mongolia's tallest building — Grade-A office with 4.5 m ceilings, YUANDA glass facade, FUJITEC smart elevators, and 1,500 parking spaces.",
     description:
-      "Улаанбаатар хотын хамгийн үнэ цэнэтэй бүсэд байрлах Монгол улсын хамгийн өндөр барилга Encanto Trade Center - Office. 4.5 метрийн тааз, панорам үзэмж, 7 лифт, 1500 автомашины зогсоол, шилэн гүүрээр mall болон sport complex руу шууд холбогдсон орчин.",
+      "Encanto Trade Center - Office is Mongolia's tallest building in Ulaanbaatar's most valuable district. Features 4.5 m ceilings, panoramic views, 7 elevators, 1,500 parking spaces, and direct glass-bridge access to the mall and sport complex.",
     stats: [
-      { label: "Давхар", value: "24" },
-      { label: "Давхарын өндөр", value: "4.5", unit: "м" },
-      { label: "Лифт", value: "7" },
-      { label: "Зогсоол", value: "1500" },
+      { label: "Floors", value: "24" },
+      { label: "Ceiling height", value: "4.5", unit: "m" },
+      { label: "Elevators", value: "7" },
+      { label: "Parking", value: "1500" },
     ],
     features: [
       {
-        title: "YUANDA шилэн фасад",
+        title: "YUANDA glass facade",
         description:
-          "Дэлхийн №1 YUANDA брэнд — UV, дуу, тоос тусгаарлалт, дулааны алдалт багасгасан битүүмж бүхий панорам үзэмж.",
+          "World #1 YUANDA brand — panoramic views with UV, acoustic, and dust insulation and reduced thermal loss.",
         image: "/images/renders/render-3.jpg",
       },
       {
-        title: "FUJITEC EZ Shuttle лифт",
+        title: "FUJITEC EZ Shuttle elevators",
         description:
-          "Зорчигчийг оновчтой лифт рүү хуваарилдаг ухаалаг систем — хүлээлгийн хугацаа багасна, 6 зорчигч + 1 ачааны лифт.",
+          "Smart routing system reduces wait times — 6 passenger lifts plus 1 freight elevator.",
         image: "/images/renders/render-12.jpg",
       },
       {
-        title: "Шилэн гүүр, нэгдсэн үйлчилгээ",
+        title: "Glass bridge & integrated services",
         description:
-          "Encanto Mall, Sport Complex, «Оргил» төв, дулаан зогсоол руу гадагш гаралгүй шууд холбогдоно.",
+          "Direct connection to Encanto Mall, Sport Complex, Orgil Shopping Center, and heated parking without going outside.",
         image: "/images/renders/render-18.jpg",
       },
     ],
@@ -96,7 +98,7 @@ export const towers: Tower[] = [
     name: "Mall",
     nameMn: "Mall",
     tagline: "Дэлхийн брэндүүдийн уулзвар",
-    floors: "6 давхар",
+    floors: "6 floors",
     heroImage: "/images/renders/render-40.jpg",
     accent: "#B98E4C",
     summary:
@@ -144,7 +146,7 @@ export const towers: Tower[] = [
     name: "Ballroom",
     nameMn: "Ballroom",
     tagline: "Дурсамжийн тансаг орчин",
-    floors: "7, 8 давхар",
+    floors: "7–8 floors",
     heroImage: "/images/ballroom/ballroom-1.jpg",
     accent: "#A87E3E",
     summary:
@@ -192,7 +194,7 @@ export const towers: Tower[] = [
     name: "Apartment",
     nameMn: "Apartment",
     tagline: "Тэнгэрийн өндөрт амьдрах урлаг",
-    floors: "34 давхар",
+    floors: "34 floors",
     heroImage: "/images/renders/render-20.jpg",
     accent: "#C8A45C",
     summary:

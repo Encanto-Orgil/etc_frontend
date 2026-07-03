@@ -4,6 +4,7 @@ import { Modal } from "antd";
 import { PhoneOutlined, MailOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import InquiryForm from "@/components/InquiryForm";
 import type { OfficeFloor, OfficeUnit } from "@/lib/officeStacking";
+import { STATUS_META } from "@/lib/officeStacking";
 import { buildOfficeInquiryMessage, officeSales } from "@/lib/officeSales";
 import styles from "./OfficeUnitModal.module.css";
 
@@ -17,7 +18,8 @@ type Props = {
 export default function OfficeUnitModal({ open, onClose, floor, unit }: Props) {
   if (!floor || !unit) return null;
 
-  const floorLabel = floor.label || `${floor.floor_number} давхар`;
+  const floorLabel = floor.label || `Floor ${floor.floor_number}`;
+  const statusMeta = STATUS_META[unit.status];
   const defaultMessage = buildOfficeInquiryMessage(floorLabel, unit.unit_code, unit.area_sqm);
   const initials = officeSales.name
     .split(/\s+/)
@@ -39,11 +41,11 @@ export default function OfficeUnitModal({ open, onClose, floor, unit }: Props) {
       closeIcon={<span className={styles.close}>×</span>}
     >
       <div className={styles.header}>
-        <span className={styles.badge}>Түрээслэх боломжтой</span>
+        <span className={styles.badge}>{statusMeta.label}</span>
         <h2 className={styles.title}>
-          {floorLabel} · Оффис {unit.unit_code}
+          {floorLabel} · Office {unit.unit_code}
         </h2>
-        <p className={styles.meta}>{unit.area_sqm} м² · Office Tower</p>
+        <p className={styles.meta}>{unit.area_sqm} sqm · Office Tower</p>
       </div>
 
       <div className={styles.salesCard}>
@@ -68,15 +70,16 @@ export default function OfficeUnitModal({ open, onClose, floor, unit }: Props) {
       </div>
 
       <div className={styles.formBlock}>
-        <h3 className={styles.formTitle}>Түрээсийн хүсэлт илгээх</h3>
+        <h3 className={styles.formTitle}>Send a leasing inquiry</h3>
         <p className={styles.formSub}>
-          Маягтыг бөглөж илгээнэ үү. Борлуулалтын алба тантай холбогдоно.
+          Fill out the form below. Our sales team will contact you shortly.
         </p>
         <InquiryForm
           key={`${floor.id}-${unit.id}`}
           defaultInterest="office"
           defaultMessage={defaultMessage}
           hideInterest
+          locale="en"
           onSuccess={onClose}
         />
       </div>

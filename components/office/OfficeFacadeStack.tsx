@@ -57,7 +57,7 @@ export default function OfficeFacadeStack(props: Props) {
           className={styles.calibrateBtn}
           onClick={() => setCalibrateMode(true)}
         >
-          Давхар тохируулах
+          Calibrate floors
         </button>
       </div>
       <BuildingFacadeOverlay {...props} calibration={calibration} />

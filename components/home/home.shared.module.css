@@ -1,0 +1,120 @@
+.section {
+  padding: clamp(80px, 10vw, 128px) 0;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin: 0 0 16px;
+}
+
+.eyebrowLight {
+  composes: eyebrow;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(2.25rem, 4.8vw, 3.75rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+}
+
+.titleLight {
+  composes: title;
+  color: #fff;
+}
+
+.lead {
+  margin: 18px 0 0;
+  max-width: 56ch;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.75;
+  color: var(--text-dim);
+}
+
+.leadLight {
+  composes: lead;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.darkSection {
+  background: var(--luxury-black);
+  color: #fff;
+}
+
+.glassCard {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #fff;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.06);
+  transition: background 0.3s var(--ease), transform 0.3s var(--ease);
+}
+
+.btnGhost:hover {
+  background: rgba(255, 255, 255, 0.14);
+  transform: translateY(-1px);
+}
+
+.btnDark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #fff;
+  border-radius: 12px;
+  background: var(--luxury-black);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.3s var(--ease), background 0.3s var(--ease);
+}
+
+.btnOutline {
+  composes: btnDark;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--line-strong);
+}
+
+.btnOutline:hover {
+  background: var(--luxury-cream);
+}
+
+.btnDark:hover {
+  background: #1a1a1a;
+  transform: translateY(-1px);
+}

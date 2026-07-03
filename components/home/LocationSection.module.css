@@ -1,0 +1,233 @@
+.section {
+  background: var(--bg-soft);
+}
+
+.header {
+  margin-bottom: clamp(28px, 4vw, 40px);
+}
+
+.locationLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(12, 12, 14, 0.22);
+  transition:
+    color 0.25s var(--ease),
+    border-color 0.25s var(--ease);
+}
+
+.locationLinkIcon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  opacity: 0.72;
+  transition:
+    opacity 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+
+.locationLink:hover {
+  color: var(--text);
+  border-color: var(--text);
+}
+
+.locationLink:hover .locationLinkIcon {
+  opacity: 1;
+  transform: translate(1px, -1px);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.4fr 0.6fr;
+  gap: 24px;
+}
+
+.map {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  min-height: 420px;
+  background: #ddd;
+  border: 1px solid var(--line);
+}
+
+.mapFrame {
+  position: absolute;
+  inset: 0;
+}
+
+.mapImage {
+  object-fit: cover;
+}
+
+.map:hover .mapImage {
+  transform: scale(1.03);
+  transition: transform 0.55s var(--ease);
+}
+
+.mapOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.42) 100%);
+  pointer-events: none;
+}
+
+.mapCaption {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 18px;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  color: #fff;
+  pointer-events: none;
+}
+
+.mapCaptionName {
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.mapCaptionDistance {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.nearby {
+  padding: clamp(24px, 3vw, 32px);
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  min-height: 420px;
+}
+
+.nearbyLabel {
+  margin: 0 0 18px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.nearbyList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+.nearbyList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.nearbyList::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 999px;
+}
+
+.nearby h3 {
+  margin: 0 0 10px;
+  font-size: 1.35rem;
+  font-family: var(--font-heading);
+  font-weight: 400;
+}
+
+.nearby li {
+  border-bottom: 1px solid var(--line);
+}
+
+.nearby li:last-child {
+  border-bottom: none;
+}
+
+.nearbyItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+  padding: 12px 10px;
+  margin: 0 -10px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+
+.nearbyItem:hover,
+.nearbyItem:focus-visible,
+.nearbyItemActive {
+  background: var(--bg-soft);
+  outline: none;
+}
+
+.nearbyItem:focus-visible {
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+
+.nearbyName {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.nearbyItem strong {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.nearbyItemActive strong,
+.nearbyItem:hover strong,
+.nearbyItem:focus-visible strong {
+  color: var(--text);
+}
+
+.nearby a {
+  margin-top: 20px;
+  width: fit-content;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

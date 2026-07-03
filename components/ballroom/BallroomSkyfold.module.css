@@ -1,8 +1,9 @@
 .section {
-  padding: clamp(64px, 9vh, 96px) 0;
-  border-bottom: 1px solid var(--line);
-  background: #0c0c0c;
-  color: #fff;
+  position: relative;
+  overflow: hidden;
+  padding: clamp(80px, 11vh, 120px) 0;
+  background: var(--luxury-cream);
+  color: var(--luxury-black);
 }
 
 .inner {
@@ -14,7 +15,7 @@
 .grid {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: clamp(24px, 4vw, 40px);
+  gap: clamp(32px, 5vw, 56px);
   align-items: center;
 }
 
@@ -23,8 +24,9 @@
   margin: 0;
   overflow: hidden;
   border-radius: calc(var(--radius) + 4px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   background: #111;
+  box-shadow: 0 28px 72px rgba(0, 0, 0, 0.12);
 }
 
 .visual img {
@@ -90,6 +92,7 @@
   font-size: 18px;
   font-weight: 800;
   letter-spacing: -0.02em;
+  color: #fff;
 }
 
 .caption span {
@@ -103,35 +106,38 @@
 
 .eyebrow {
   display: inline-block;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.48);
+  color: var(--luxury-gold);
 }
 
 .title {
   margin: 0;
-  font-size: clamp(34px, 5vw, 52px);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1.02;
+  font-family: var(--font-body);
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.04;
+  color: var(--luxury-black);
 }
 
 .tagline {
-  margin: 14px 0 0;
-  max-width: 34ch;
-  font-size: 15px;
-  line-height: 1.65;
-  color: rgba(255, 255, 255, 0.72);
+  margin: 16px 0 0;
+  max-width: 38ch;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: rgba(0, 0, 0, 0.58);
 }
 
 .modes {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  margin-top: 28px;
+  margin-top: 32px;
 }
 
 .mode,
@@ -142,24 +148,27 @@
   gap: 10px;
   padding: 14px 10px;
   border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
-  color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+  color: var(--luxury-black);
   cursor: pointer;
   transition:
     background 0.2s ease,
     border-color 0.2s ease,
-    transform 0.2s ease;
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .mode:hover {
-  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(0, 0, 0, 0.14);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 .modeActive {
-  border-color: rgba(255, 255, 255, 0.42);
-  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(212, 175, 55, 0.55);
+  background: rgba(212, 175, 55, 0.1);
   transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(212, 175, 55, 0.12);
 }
 
 .modeBars {
@@ -184,7 +193,11 @@
 .modeBars i {
   display: block;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.modeActive .modeBars i {
+  background: var(--luxury-gold);
 }
 
 .modeLabel {
@@ -193,7 +206,7 @@
 }
 
 .points {
-  margin: 24px 0 0;
+  margin: 28px 0 0;
   padding: 0;
   list-style: none;
   display: flex;
@@ -205,7 +218,7 @@
   position: relative;
   padding-left: 18px;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.68);
+  color: rgba(0, 0, 0, 0.58);
 }
 
 .points li::before {
@@ -216,7 +229,7 @@
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: #c8a45c;
+  background: var(--luxury-gold);
 }
 
 @keyframes fadeIn {

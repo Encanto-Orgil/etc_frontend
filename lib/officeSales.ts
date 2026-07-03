@@ -1,14 +1,17 @@
-import { getPrimarySalesContact, getSalesPhones } from "@/lib/salesTeam";
+import { getPrimarySalesContact } from "@/lib/salesTeam";
+import { getOfficeSalesProfile, OFFICE_SALES_DEPARTMENT } from "@/lib/officeSalesDisplay";
 
 const primary = getPrimarySalesContact("office");
+const primaryProfile = getOfficeSalesProfile(primary.id, primary.name);
 
 export const officeSales = {
-  name: primary.name,
-  department: "Encanto Trade Center — Борлуулалтын алба",
+  name: primaryProfile.displayName,
+  department: OFFICE_SALES_DEPARTMENT.name,
   phone: primary.phones[0],
   phones: primary.phones,
   email: primary.email,
-  hours: "Даваа–Баасан · 09:00–18:00",
+  hours: OFFICE_SALES_DEPARTMENT.hours,
+  addressLines: OFFICE_SALES_DEPARTMENT.addressLines,
 };
 
 export function buildOfficeInquiryMessage(
@@ -16,7 +19,5 @@ export function buildOfficeInquiryMessage(
   unitCode: string,
   areaSqm: string,
 ) {
-  return `${floorLabel}, ${unitCode} оффис (${areaSqm} м²)-ийн түрээсийн талаар лавлахыг хүсч байна.`;
+  return `I would like to inquire about leasing Office ${unitCode} on ${floorLabel} (${areaSqm} sqm).`;
 }
-
-export const officeSalesPhones = getSalesPhones("office");

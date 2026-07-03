@@ -1,0 +1,279 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(12, 12, 14, 0.04);
+  border: 1px solid var(--line);
+}
+
+.toolbarTitle {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.toolbarSub {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  max-width: 520px;
+}
+
+.toolbarActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.btnGhost,
+.btnPrimary,
+.btnActive {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--line);
+}
+
+.btnGhost {
+  background: #fff;
+  color: var(--text);
+}
+
+.btnGhost:hover {
+  background: var(--bg-soft);
+}
+
+.btnActive {
+  border-color: rgba(200, 164, 92, 0.8);
+  background: rgba(200, 164, 92, 0.14);
+  color: var(--text);
+}
+
+.btnPrimary {
+  background: var(--luxury-black);
+  color: #fff;
+  border-color: var(--luxury-black);
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 16px;
+  align-items: start;
+}
+
+.stage {
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #111;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+}
+
+.svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.svgAddMode {
+  cursor: crosshair;
+}
+
+.zoneShape {
+  fill: rgba(255, 255, 255, 0.08);
+  stroke: rgba(255, 255, 255, 0.28);
+  stroke-width: 1.5;
+  vector-effect: non-scaling-stroke;
+  cursor: pointer;
+}
+
+.zoneActive {
+  fill: rgba(200, 164, 92, 0.22);
+  stroke: rgba(200, 164, 92, 0.95);
+  stroke-width: 2.5;
+}
+
+.edgePath {
+  fill: none;
+  stroke: rgba(200, 164, 92, 0.95);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 6 4;
+  pointer-events: none;
+}
+
+.handle {
+  fill: #fff;
+  stroke: rgba(200, 164, 92, 0.95);
+  stroke-width: 2;
+  cursor: grab;
+}
+
+.handleActive {
+  fill: rgba(200, 164, 92, 0.95);
+  stroke: #fff;
+}
+
+.pointIndex {
+  fill: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.zoneLabel {
+  fill: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: rgba(0, 0, 0, 0.75);
+  stroke-width: 4px;
+}
+
+.sidebar {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.sideLabel {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.zoneList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.zoneBtn,
+.zoneBtnActive {
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--text-dim);
+}
+
+.zoneBtnActive {
+  background: var(--luxury-black);
+  border-color: var(--luxury-black);
+  color: #fff;
+}
+
+.pointList {
+  display: grid;
+  gap: 6px;
+}
+
+.pointRow,
+.pointRowActive {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.pointRowActive {
+  border-color: rgba(200, 164, 92, 0.8);
+  background: rgba(200, 164, 92, 0.08);
+}
+
+.pointRow code,
+.pointRowActive code {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.pointActions {
+  display: flex;
+  gap: 8px;
+}
+
+.nudge {
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+}
+
+.nudgeRow {
+  display: flex;
+  gap: 6px;
+}
+
+.nudge button,
+.nudgeCenter,
+.nudgeAll {
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  cursor: pointer;
+}
+
+.nudgeCenter {
+  min-width: 44px;
+}
+
+.nudgeAll {
+  width: 100%;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tips {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+
+@media (max-width: 960px) {
+  .body {
+    grid-template-columns: 1fr;
+  }
+}

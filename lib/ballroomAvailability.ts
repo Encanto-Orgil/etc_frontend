@@ -96,10 +96,61 @@ export function dayAvailabilitySummary(slots: BallroomTimeSlot[]) {
 
 export function slotPeriodLabel(label: string) {
   const map: Record<string, string> = {
-    "Өглөөний үе": "Өглөө",
-    "Өдрийн үе": "Өдөр",
-    "Оройн үе": "Орой",
-    "Оройн үe": "Орой",
+    "Өглөөний үе": "Morning",
+    "Өдрийн үе": "Afternoon",
+    "Оройн үе": "Evening",
+    "Оройн үe": "Evening",
+    "Өглөө": "Morning",
+    "Өдөр": "Afternoon",
+    "Орой": "Evening",
+    Morning: "Morning",
+    Afternoon: "Afternoon",
+    Evening: "Evening",
   };
   return map[label] || label;
+}
+
+export function displaySlotStatus(status: string, statusLabel?: string) {
+  const byStatus: Record<string, string> = {
+    available: "Available",
+    reserved: "Reserved",
+    booked: "Fully Booked",
+    blocked: "Closed",
+  };
+  if (byStatus[status]) return byStatus[status];
+
+  const byLabel: Record<string, string> = {
+    Боломжтой: "Available",
+    Захиалсан: "Reserved",
+    "Бүрэн захиалсан": "Fully Booked",
+    Хаалттай: "Closed",
+  };
+  if (statusLabel && byLabel[statusLabel]) return byLabel[statusLabel];
+  return statusLabel || status;
+}
+
+export const ballroomBookingEventTypes = [
+  { value: "wedding", label: "Wedding" },
+  { value: "corporate", label: "Corporate Event" },
+  { value: "gala", label: "Gala Dinner" },
+  { value: "conference", label: "Conference" },
+  { value: "other", label: "Other" },
+] as const;
+
+export function translateCheckTimeMessage(message: string) {
+  const exact: Record<string, string> = {
+    "Сонгосон цаг боломжтой.": "Selected time is available.",
+    "Эхлэх цаг дуусах цагаас өмнө байх ёстой.":
+      "Start time must be before end time.",
+    "Цаг 09:00–23:00 хооронд байх ёстой.":
+      "Time must be between 09:00 and 23:00.",
+  };
+  if (exact[message]) return exact[message];
+
+  const conflictMatch = message.match(/^Сонгосон цаг давхцаж байна: (.+)$/);
+  if (conflictMatch) {
+    return `Selected time conflicts with: ${conflictMatch[1]}`;
+  }
+
+  return message;
 }

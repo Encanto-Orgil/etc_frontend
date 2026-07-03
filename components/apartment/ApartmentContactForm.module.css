@@ -1,0 +1,48 @@
+.form :global(.ant-form-item-label > label) {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+.form :global(.ant-input),
+.form :global(.ant-select-selector) {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #fff !important;
+}
+
+.form :global(.ant-input::placeholder),
+.form :global(.ant-select-selection-placeholder) {
+  color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.submit:global(.ant-btn-primary) {
+  width: 100%;
+  margin-top: 8px;
+  background: #c8a45c !important;
+  border-color: #c8a45c !important;
+  color: #0a0a0c !important;
+  font-weight: 600 !important;
+}
+
+.done {
+  text-align: center;
+  color: #fff;
+}
+
+.done h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 300;
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}

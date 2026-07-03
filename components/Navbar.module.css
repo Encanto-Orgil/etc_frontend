@@ -17,6 +17,10 @@
   pointer-events: none;
 }
 
+.headerScrollAway {
+  position: absolute;
+}
+
 .bar {
   position: relative;
   pointer-events: auto;
@@ -31,6 +35,54 @@
 
 .header.scrolled .bar {
   background-color: var(--nav-glass-bg-scrolled);
+}
+
+.headerHome .bar {
+  transition:
+    background-color 0.55s var(--nav-transition),
+    border-color 0.55s var(--nav-transition),
+    box-shadow 0.55s var(--nav-transition);
+}
+
+.headerTransparent .bar {
+  background-color: transparent;
+  border-bottom-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+}
+
+.headerTransparent .shine {
+  opacity: 0;
+}
+
+.headerTransparent .nav {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.headerTransparent .cta {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.headerHome.scrolled .bar {
+  background: transparent;
+  border-bottom: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+}
+
+.innerPill {
+  max-width: var(--nav-pill-max-width);
+  margin-top: var(--nav-top-offset);
+  padding: 8px clamp(12px, 2vw, 18px);
+  border-radius: var(--nav-pill-radius);
+  background: var(--nav-glass-bg-scrolled);
+  backdrop-filter: var(--nav-glass-blur);
+  -webkit-backdrop-filter: var(--nav-glass-blur);
+  border: 1px solid var(--nav-glass-border);
+  box-shadow: var(--nav-glass-shadow), var(--nav-glass-inset);
 }
 
 .shine {

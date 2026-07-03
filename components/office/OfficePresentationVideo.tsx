@@ -2,9 +2,10 @@
 
 import { useRef, useState } from "react";
 import { OFFICE_VIDEO_SRC } from "@/lib/media";
+import { officeVideoSection } from "@/lib/officeContent";
 import styles from "./OfficePresentationVideo.module.css";
 
-export default function OfficePresentationVideo({ embedded = false }: { embedded?: boolean }) {
+export default function OfficePresentationVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
 
@@ -21,20 +22,20 @@ export default function OfficePresentationVideo({ embedded = false }: { embedded
   };
 
   return (
-    <section
-      className={`${styles.section} ${embedded ? styles.embedded : ""}`}
-      id="video"
-      aria-label="Office Tower видео"
-    >
-      {!embedded ? (
-        <>
-          <div className={styles.bg} style={{ backgroundImage: "url(/images/renders/render-8.jpg)" }} />
-          <div className={styles.overlay} />
-        </>
-      ) : null}
+    <section className={styles.section} id="video" aria-label="Encanto Trade Center project film">
+      <div className={styles.bg} style={{ backgroundImage: "url(/images/renders/render-8.jpg)" }} />
+      <div className={styles.overlay} />
 
       <div className={styles.inner}>
-        <div className={styles.playerWrap}>
+        <header className={styles.header} data-office-reveal>
+          <div className={styles.headerCopy}>
+            <p className={styles.eyebrow}>{officeVideoSection.eyebrow}</p>
+            <h2 className={styles.title}>{officeVideoSection.title}</h2>
+          </div>
+          <p className={styles.lead}>{officeVideoSection.lead}</p>
+        </header>
+
+        <div className={styles.playerWrap} data-office-reveal>
           <video
             ref={videoRef}
             className={styles.video}
@@ -47,7 +48,7 @@ export default function OfficePresentationVideo({ embedded = false }: { embedded
             onPause={() => setPlaying(false)}
           />
           {!playing ? (
-            <button type="button" className={styles.playOverlay} onClick={toggle} aria-label="Тоглуулах">
+            <button type="button" className={styles.playOverlay} onClick={toggle} aria-label="Play video">
               <span className={styles.playIcon} aria-hidden />
             </button>
           ) : null}

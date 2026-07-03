@@ -5,6 +5,7 @@ import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
 import SiteShell from "@/components/SiteShell";
 import SiteSchema from "@/components/SiteSchema";
+import { fontDisplay } from "@/lib/fonts";
 import { rootMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = rootMetadata;
@@ -13,7 +14,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="mn">
+    <html lang="mn" className={fontDisplay.variable}>
       <body>
         <SiteSchema />
         <AntdRegistry>

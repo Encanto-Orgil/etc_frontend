@@ -17,6 +17,7 @@ import {
 } from "@/lib/officeZones";
 import OfficeFacadeStack from "./OfficeFacadeStack";
 import OfficeUnitModal from "./OfficeUnitModal";
+import { officeLegend, officeStackingIntro } from "@/lib/officeContent";
 import styles from "./OfficeStackingPlan.module.css";
 
 const UNIT_ORDER = ["A", "B", "C", "D"];
@@ -95,31 +96,31 @@ export default function OfficeStackingPlan() {
 
       <div className={styles.inner}>
         <div className={styles.heroCopy}>
-          <span className={styles.eyebrow}>Stacking Plan</span>
-          <h2 className={styles.title}>
-            Давхарын
-            <br />
-            төлөвлөлт
-          </h2>
-          <p className={styles.sub}>
-            Зүүн оффис барилга дээр давхар сонгоод, баруун талаас тухайн давхрын 4 оффисыг
-            хараарай.
-          </p>
+          <span className={styles.eyebrow}>{officeStackingIntro.eyebrow}</span>
+          <h2 className={styles.title}>{officeStackingIntro.title}</h2>
+          <p className={styles.sub}>{officeStackingIntro.subtitle}</p>
+          <ul className={styles.legend}>
+            {officeLegend.map((item) => (
+              <li key={item.label}>
+                <span className={styles.legendDot} style={{ background: item.color }} />
+                {item.label}
+              </li>
+            ))}
+          </ul>
         </div>
 
         {loading ? (
-          <p className={styles.loading}>Ачааллаж байна...</p>
+          <p className={styles.loading}>Loading...</p>
         ) : !data || floors.length === 0 ? (
           <p className={styles.loading}>
-            Stacking plan мэдээлэл байхгүй. <code>python manage.py seed_office</code>
+            No stacking plan data. Run <code>python manage.py seed_office</code>
           </p>
         ) : (
           <div className={styles.workspace}>
             <div className={styles.diagramCard}>
-              <h3 className={styles.cardTitle}>Давхарын интерактив хуваарилалт</h3>
+              <h3 className={styles.cardTitle}>Interactive floor allocation</h3>
               <p className={styles.cardSub}>
-                Бодит render дээр давхар бүр ногоон (боломжит) эсвэл улаан (бүрэн түрээслэгдсэн)
-                өнгөөр тодорно.
+                Each floor on the render appears green (available) or red (fully leased).
               </p>
               <OfficeFacadeStack
                 floors={floors}
@@ -155,7 +156,7 @@ export default function OfficeStackingPlan() {
                   onClick={() => setAvailableOnly((v) => !v)}
                 >
                   <span className={styles.zoneRange}>Filter</span>
-                  <span className={styles.zoneName}>Боломжит л</span>
+                  <span className={styles.zoneName}>Available only</span>
                 </button>
               </div>
 
@@ -180,8 +181,8 @@ export default function OfficeStackingPlan() {
               ) : filteredUnits.length === 0 ? (
                 <p className={styles.empty}>
                   {availableOnly
-                    ? "Энэ давхарт боломжит оффис байхгүй."
-                    : "Оффисын мэдээлэл байхгүй."}
+                    ? "No available offices on this floor."
+                    : "No office data available."}
                 </p>
               ) : (
                 <>
@@ -193,11 +194,11 @@ export default function OfficeStackingPlan() {
                         <>
                           <div className={styles.chipTop}>
                             <strong>{unit.unit_code}</strong>
-                            <span>{unit.area_sqm} м²</span>
+                            <span>{unit.area_sqm} sqm</span>
                           </div>
-                          <span style={{ color: meta.color }}>{unit.status_label}</span>
+                          <span style={{ color: meta.color }}>{meta.label}</span>
                           {isAvailable ? (
-                            <small className={styles.chipHint}>Дарж хүсэлт илгээнэ үү</small>
+                            <small className={styles.chipHint}>Click to send inquiry</small>
                           ) : unit.tenant_name ? (
                             <small>{unit.tenant_name}</small>
                           ) : null}
@@ -233,20 +234,32 @@ export default function OfficeStackingPlan() {
                   </div>
 
                   <div className={styles.metaRow}>
-                    <span>{availableCount(activeFloor)}/4 чөлөөт</span>
-                    <span>{selectedZone.label} бүс · {zoneAvailable} боломжит</span>
+                    <span>{availableCount(activeFloor)}/4 available</span>
+                    <span>{selectedZone.label} zone · {zoneAvailable} available</span>
                   </div>
                 </>
               )}
 
               <div className={styles.detailFoot}>
                 <Link href="#contact" className="btn-primary">
-                  Түрээсийн лавлагаа
+                  Book Tour
                 </Link>
               </div>
             </div>
           </div>
         )}
+
+        {!loading && data && floors.length > 0 ? (
+          <div className={styles.sectionFoot}>
+            <div>
+              <h3>{officeStackingIntro.footerTitle}</h3>
+              <p>{officeStackingIntro.footerBody}</p>
+            </div>
+            <Link href="#contact" className="btn-primary">
+              Contact Sales
+            </Link>
+          </div>
+        ) : null}
       </div>
 
       <OfficeUnitModal

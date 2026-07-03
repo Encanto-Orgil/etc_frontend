@@ -78,7 +78,7 @@ export default function BuildingFacadeOverlay({
           preserveAspectRatio="xMidYMid meet"
           aria-hidden={false}
           role="img"
-          aria-label="Office Tower давхарын интерактив зураг"
+          aria-label="Office Tower interactive floor map"
         >
           {sorted.map((floor) => {
             const state = floorState(floor, selectedFloor, selectedZone, availableOnly);
@@ -122,28 +122,28 @@ export default function BuildingFacadeOverlay({
 
         {focusData ? (
           <div className={styles.callout} aria-live="polite">
-            <strong>{focusData.floor_number} давхар</strong>
-            <span>{availableCount(focusData)}/4 боломжит</span>
+            <strong>Floor {focusData.floor_number}</strong>
+            <span>{availableCount(focusData)}/4 available</span>
           </div>
         ) : null}
       </div>
 
       <div className={styles.legend}>
         <span>
-          <i className={styles.dotGreen} /> Боломжит
+          <i className={styles.dotGreen} /> Available
         </span>
         <span>
-          <i className={styles.dotRed} /> Бүрэн түрээслэгдсэн
+          <i className={styles.dotRed} /> Fully leased
         </span>
         <span>
-          <i className={styles.dotBlue} /> Сонгогдсон бүс
+          <i className={styles.dotBlue} /> Selected zone
         </span>
       </div>
 
       <p className={styles.hint}>
         {selectedFloor
-          ? `${selectedFloor} давхар сонгогдсон — баруун талаас оффис хараарай`
-          : "Зүүн оффис барилга дээр давхар дарж сонгоно уу"}
+          ? `Floor ${selectedFloor} selected — view offices on the right`
+          : "Click a floor on the office tower to select"}
       </p>
     </div>
   );

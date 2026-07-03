@@ -26,9 +26,11 @@
 
 .monthLabel {
   margin: 0;
+  font-family: var(--font-body);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 .navBtn {
@@ -112,8 +114,10 @@
 }
 
 .dayNum {
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 .dayDot {
@@ -178,9 +182,11 @@
 .detailHead h3,
 .successBox h4 {
   margin: 0;
+  font-family: var(--font-body);
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
 .placeholder p,
@@ -349,12 +355,33 @@
   padding: 12px 14px;
   border-radius: 10px;
   background: var(--bg-soft);
+  font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .submitBtn {
   width: 100%;
+}
+
+/* ── Embedded in contact panel (lighter nested chrome) ── */
+.wrapEmbedded .layout {
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.wrapEmbedded .calendarPanel,
+.wrapEmbedded .detailPanel {
+  border-color: rgba(0, 0, 0, 0.06);
+  background: rgba(0, 0, 0, 0.02);
+  padding: clamp(16px, 2vw, 22px);
+}
+
+@media (min-width: 960px) {
+  .wrapEmbedded .layout {
+    grid-template-columns: minmax(240px, 1fr) minmax(0, 1.2fr);
+  }
 }
 
 @media (max-width: 960px) {
@@ -365,4 +392,131 @@
   .formRow {
     grid-template-columns: 1fr;
   }
+}
+
+/* ── Dark embedded theme (ballroom contact section) ── */
+.wrapDark .layout {
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.wrapDark .calendarPanel,
+.wrapDark .detailPanel {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  color: #fff;
+}
+
+.wrapDark .monthLabel,
+.wrapDark .placeholder h3,
+.wrapDark .detailHead h3,
+.wrapDark .successBox h4 {
+  color: #fff;
+}
+
+.wrapDark .placeholder p,
+.wrapDark .detailHead p,
+.wrapDark .successBox p,
+.wrapDark .legend,
+.wrapDark .customHint,
+.wrapDark .emptySlots,
+.wrapDark .slotLabel,
+.wrapDark .weekdays span {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.wrapDark .navBtn {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.wrapDark .navBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.wrapDark .dayCell {
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+}
+
+.wrapDark .dayCell[data-summary="available"] {
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.wrapDark .dayCell[data-summary="full"] {
+  background: rgba(148, 163, 184, 0.12);
+}
+
+.wrapDark .dayCell[data-summary="blocked"] {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.wrapDark .dayCell[data-selected="true"] {
+  border-color: var(--luxury-gold);
+  background: rgba(212, 175, 55, 0.15);
+}
+
+.wrapDark .modeTab {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.wrapDark .modeTab[data-active="true"] {
+  border-color: var(--luxury-gold);
+  background: rgba(212, 175, 55, 0.12);
+  color: #fff;
+}
+
+.wrapDark .slotBtn {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.wrapDark .slotBtn[data-status="available"]:hover,
+.wrapDark .slotBtn[data-selected="true"] {
+  border-color: var(--luxury-gold);
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.wrapDark .slotTime {
+  color: #fff;
+}
+
+.wrapDark .selectedSummary {
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.wrapDark .timeField {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.wrapDark .timeField input {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.wrapDark :global(.ant-form-item-label > label) {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+.wrapDark :global(.ant-input),
+.wrapDark :global(.ant-input-number),
+.wrapDark :global(.ant-input-number-input),
+.wrapDark :global(.ant-select-selector) {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #fff !important;
+}
+
+.wrapDark :global(.ant-btn-primary) {
+  background: var(--luxury-gold) !important;
+  border-color: var(--luxury-gold) !important;
+  color: #0a0a0a !important;
 }

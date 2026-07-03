@@ -14,7 +14,7 @@ export default function BallroomSkyfold() {
     <section className={styles.section} id="skyfold">
       <div className={styles.inner}>
         <div className={styles.grid}>
-          <figure className={styles.visual}>
+          <figure className={styles.visual} data-ballroom-reveal>
             <img src={ballroomSkyfold.image} alt={ballroomSkyfold.imageAlt} />
             <div className={styles.shade} />
             <div className={styles.partition} data-halls={activeMode.halls} aria-hidden>
@@ -28,12 +28,12 @@ export default function BallroomSkyfold() {
             </figcaption>
           </figure>
 
-          <div className={styles.copy}>
+          <div className={styles.copy} data-ballroom-reveal>
             <span className={styles.eyebrow}>{ballroomSkyfold.subtitle}</span>
             <h2 className={styles.title}>{ballroomSkyfold.title}</h2>
             <p className={styles.tagline}>{ballroomSkyfold.tagline}</p>
 
-            <div className={styles.modes} role="tablist" aria-label="Skyfold хуваалтын горим">
+            <div className={styles.modes} role="tablist" aria-label="Skyfold partition modes">
               {ballroomSkyfold.modes.map((mode) => (
                 <button
                   key={mode.id}
@@ -54,9 +54,9 @@ export default function BallroomSkyfold() {
             </div>
 
             <ul className={styles.points}>
-              <li>Таазнаас буух автомат хана</li>
-              <li>Дуу, гэрэл бүрэн тусгаарлагдана</li>
-              <li>Зэрэгцээ 2–3 арга хэмжээ</li>
+              {ballroomSkyfold.points.map((point) => (
+                <li key={point}>{point}</li>
+              ))}
             </ul>
           </div>
         </div>

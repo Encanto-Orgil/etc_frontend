@@ -1,13 +1,14 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { TRADE_VIDEO_SRC } from "@/lib/media";
 import TowerHero from "@/components/tower/TowerHero";
 import HeroSection from "@/components/HeroSection";
 import SalesContacts from "@/components/SalesContacts";
 import InquiryForm from "@/components/InquiryForm";
 import OfficePage from "@/components/office/OfficePage";
 import BallroomPage from "@/components/ballroom/BallroomPage";
+import MallPage from "@/components/mall/MallPage";
+import ApartmentPage from "@/components/apartment/ApartmentPage";
 import JsonLd from "@/components/JsonLd";
 import { getTower, towers } from "@/lib/data";
 import { towerMetadata, towerWebPageJsonLd } from "@/lib/seo";
@@ -46,11 +47,6 @@ export default async function TowerPage({
     return (
       <>
         {jsonLd}
-        <TowerHero
-          image={data.heroImage}
-          video={TRADE_VIDEO_SRC}
-          showContent={false}
-        />
         <OfficePage tower={data} others={others} />
       </>
     );
@@ -60,14 +56,25 @@ export default async function TowerPage({
     return (
       <>
         {jsonLd}
-        <TowerHero
-          image={data.heroImage}
-          title="Encanto Trade Center - Ballroom"
-          subtitle={data.tagline}
-          showEyebrow={false}
-          showActions={false}
-        />
         <BallroomPage tower={data} others={others} />
+      </>
+    );
+  }
+
+  if (data.slug === "mall") {
+    return (
+      <>
+        {jsonLd}
+        <MallPage tower={data} others={others} />
+      </>
+    );
+  }
+
+  if (data.slug === "apartment") {
+    return (
+      <>
+        {jsonLd}
+        <ApartmentPage tower={data} others={others} />
       </>
     );
   }

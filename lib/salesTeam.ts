@@ -3,31 +3,53 @@ export type SalesScope = "office" | "mall" | "ballroom" | "apartment" | "home";
 export type SalesPerson = {
   id: string;
   name: string;
+  title: string;
+  focus: string;
   phones: string[];
   email: string;
+  image: string;
   scopes: SalesScope[];
+};
+
+export const SALES_DEPARTMENT = {
+  name: "Борлуулалтын алба",
+  addressLines: [
+    "Улаанбаатар хот, Баянзүрх дүүрэг,",
+    "26-р хороо Их Монгол Улсын гудамж",
+    "Энканто оффис 4 давхар",
+  ],
+  hours: "Даваа - Баасан: 09:00 - 18:00",
 };
 
 export const SALES_TEAM: SalesPerson[] = [
   {
     id: "hetbold",
-    name: "Хэтболд",
+    name: "А.Хэтболд",
+    title: "Ерөнхий менежер",
+    focus: "Оффис, Үйлчилгээний талбайн түрээс",
     phones: ["9919-1522"],
-    email: "office@encanto.mn",
+    email: "khetbold@orgil.mn",
+    image: "https://pub-6af6c7ad6eb64cf98a65d7fd500730d9.r2.dev/sales/hetbold.jpg",
     scopes: ["office", "mall"],
   },
   {
     id: "nomin-erdene",
-    name: "Номин-Эрдэнэ",
-    phones: ["9401-8858"],
-    email: "ballroom@encanto.mn",
-    scopes: ["ballroom", "apartment"],
+    name: "Т.Номин-Эрдэнэ",
+    title: "Борлуулалтын менежер",
+    focus: "Байрны борлуулалт",
+    phones: ["9405-8858"],
+    email: "nominerdene@orgil.mn",
+    image: "https://pub-6af6c7ad6eb64cf98a65d7fd500730d9.r2.dev/sales/nomin.jpg",
+    scopes: ["apartment", "ballroom"],
   },
   {
     id: "rolomjav",
     name: "Роломжав",
-    phones: ["9405-8858"],
-    email: "apartment@encanto.mn",
+    title: "Борлуулалтын менежер",
+    focus: "Байрны борлуулалт",
+    phones: ["9401-8858"],
+    email: "encantotown1@gmail.com",
+    image: "https://pub-6af6c7ad6eb64cf98a65d7fd500730d9.r2.dev/sales/rolomjav.jpg",
     scopes: ["apartment"],
   },
 ];
@@ -75,7 +97,9 @@ export function getSalesPhones(scope: SalesScope): string[] {
 }
 
 export function salesInitials(name: string): string {
-  return name
+  const normalized = name.replace(/\./g, " ").trim();
+
+  return normalized
     .split(/[\s-]+/)
     .slice(0, 2)
     .map((part) => part[0])

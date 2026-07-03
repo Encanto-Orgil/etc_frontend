@@ -73,8 +73,20 @@
   border-top: 1px solid var(--line);
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 16px;
   font-size: 13px;
   color: var(--text-faint);
+}
+
+.bottomLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.subHeading {
+  margin-top: 12px !important;
 }
 
 @media (max-width: 800px) {

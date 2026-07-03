@@ -7,17 +7,19 @@ import {
   fetchBallroomAvailability,
   submitBallroomBooking,
 } from "@/lib/api";
-import { ballroomEventTypes } from "@/lib/ballroomBrochure";
 import type { BallroomTimeSlot } from "@/lib/ballroomAvailability";
 import {
+  ballroomBookingEventTypes,
   dayAvailabilitySummary,
+  displaySlotStatus,
   formatSlotTime,
   groupSlotsByDate,
   slotPeriodLabel,
+  translateCheckTimeMessage,
 } from "@/lib/ballroomAvailability";
 import styles from "./BallroomAvailability.module.css";
 
-const WEEKDAYS = ["Да", "Мя", "Лх", "Пү", "Ба", "Бя", "Ня"];
+const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
 type TimeMode = "preset" | "custom";
 
@@ -42,7 +44,13 @@ function getMonthMatrix(year: number, month: number) {
   return cells;
 }
 
-export default function BallroomAvailability() {
+export default function BallroomAvailability({
+  variant = "light",
+  embedded = false,
+}: {
+  variant?: "light" | "dark";
+  embedded?: boolean;
+}) {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
@@ -104,19 +112,22 @@ export default function BallroomAvailability() {
         end_time: customEnd,
       });
       if (!result) {
-        message.error("Цаг шалгахад алдаа гарлаа.");
+        message.error("Unable to check availability. Please try again.");
         return;
       }
+      const translated = translateCheckTimeMessage(result.message);
       setCustomChecked(true);
       setCustomAvailable(result.available);
-      setCustomMessage(result.message);
+      setCustomMessage(translated);
       if (result.available) {
-        message.success(result.message);
+        message.success(translated);
       } else {
-        message.warning(result.message);
+        message.warning(translated);
       }
     } catch (error) {
-      message.error(error instanceof Error ? error.message : "Цаг шалгахад алдаа гарлаа.");
+      message.error(
+        error instanceof Error ? error.message : "Unable to check availability. Please try again.",
+      );
     } finally {
       setCheckingCustom(false);
     }
@@ -132,18 +143,18 @@ export default function BallroomAvailability() {
     phone: string;
     email?: string;
     guest_count: number;
-    event_type: (typeof ballroomEventTypes)[number]["value"];
+    event_type: (typeof ballroomBookingEventTypes)[number]["value"];
     message?: string;
   }) => {
     if (!selectedDate) return;
 
     if (timeMode === "preset" && !selectedSlotId) {
-      message.warning("Эхлээд Өглөө / Өдөр / Орой цагаас сонгоно уу.");
+      message.warning("Please select a Morning, Afternoon, or Evening slot first.");
       return;
     }
 
     if (timeMode === "custom" && !canSubmit) {
-      message.warning("Эхлээд тусгай цагаа шалгана уу.");
+      message.warning("Please check your custom time before submitting.");
       return;
     }
 
@@ -161,30 +172,32 @@ export default function BallroomAvailability() {
 
       await submitBallroomBooking(payload);
       setDone(true);
-      message.success("Захиалгын хүсэлт амжилттай илгээгдлээ.");
+      message.success("Your booking request has been submitted.");
       form.resetFields();
       setSelectedSlotId(null);
       resetCustomCheck();
       await loadAvailability();
     } catch (error) {
-      message.error(error instanceof Error ? error.message : "Илгээхэд алдаа гарлаа.");
+      message.error(error instanceof Error ? error.message : "Unable to submit. Please try again.");
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className={styles.wrap}>
+    <div
+      className={`${styles.wrap} ${variant === "dark" ? styles.wrapDark : ""} ${embedded ? styles.wrapEmbedded : ""}`}
+    >
       <div className={styles.layout}>
         <div className={styles.calendarPanel}>
           <div className={styles.calendarHead}>
-            <button type="button" className={styles.navBtn} onClick={() => shiftMonth(-1)}>
+            <button type="button" className={styles.navBtn} onClick={() => shiftMonth(-1)} aria-label="Previous month">
               ←
             </button>
             <h3 className={styles.monthLabel}>
               {year}.{String(month).padStart(2, "0")}
             </h3>
-            <button type="button" className={styles.navBtn} onClick={() => shiftMonth(1)}>
+            <button type="button" className={styles.navBtn} onClick={() => shiftMonth(1)} aria-label="Next month">
               →
             </button>
           </div>
@@ -233,23 +246,23 @@ export default function BallroomAvailability() {
           </div>
 
           <div className={styles.legend}>
-            <span><i data-status="available" /> Боломжтой</span>
-            <span><i data-status="full" /> Дүүрсэн</span>
-            <span><i data-status="blocked" /> Хаалттай</span>
+            <span><i data-status="available" /> Available</span>
+            <span><i data-status="full" /> Fully booked</span>
+            <span><i data-status="blocked" /> Closed</span>
           </div>
         </div>
 
         <div className={styles.detailPanel}>
           {!selectedDate ? (
             <div className={styles.placeholder}>
-              <h3>Өдөр сонгох</h3>
-              <p>Календар дээрээс өдөр сонгоод цагаа шалгаж, хүсэлт илгээнэ үү.</p>
+              <h3>Select a Date</h3>
+              <p>Choose a date on the calendar, then pick a time slot and submit your request.</p>
             </div>
           ) : (
             <>
               <div className={styles.detailHead}>
                 <h3>{selectedDate}</h3>
-                <p>Цаг сонгох</p>
+                <p>Select a Time</p>
               </div>
 
               <div className={styles.modeTabs}>
@@ -262,7 +275,7 @@ export default function BallroomAvailability() {
                     resetCustomCheck();
                   }}
                 >
-                  Өглөө · Өдөр · Орой
+                  Morning · Afternoon · Evening
                 </button>
                 <button
                   type="button"
@@ -273,14 +286,14 @@ export default function BallroomAvailability() {
                     setSelectedSlotId(null);
                   }}
                 >
-                  Тусгай цаг
+                  Custom Time
                 </button>
               </div>
 
               {timeMode === "preset" ? (
                 <div className={styles.slotList}>
                   {selectedSlots.length === 0 ? (
-                    <p className={styles.emptySlots}>Энэ өдөр цагийн хуваарь байхгүй.</p>
+                    <p className={styles.emptySlots}>No time slots are available for this date.</p>
                   ) : (
                     selectedSlots.map((slot) => (
                       <button
@@ -299,7 +312,9 @@ export default function BallroomAvailability() {
                           {formatSlotTime(slot.start_time)} – {formatSlotTime(slot.end_time)}
                         </span>
                         <span className={styles.slotLabel}>{slotPeriodLabel(slot.label)}</span>
-                        <span className={styles.slotStatus}>{slot.status_label}</span>
+                        <span className={styles.slotStatus}>
+                          {displaySlotStatus(slot.status, slot.status_label)}
+                        </span>
                       </button>
                     ))
                   )}
@@ -307,12 +322,12 @@ export default function BallroomAvailability() {
               ) : (
                 <div className={styles.customPanel}>
                   <p className={styles.customHint}>
-                    09:00 – 23:00 хооронд эхлэх, дуусах цагаа сонгоод шалгана уу.
+                    Choose a start and end time between 09:00 and 23:00, then check availability.
                   </p>
 
                   <div className={styles.customTimeRow}>
                     <label className={styles.timeField}>
-                      <span>Эхлэх</span>
+                      <span>Start</span>
                       <input
                         type="time"
                         value={customStart}
@@ -325,7 +340,7 @@ export default function BallroomAvailability() {
                       />
                     </label>
                     <label className={styles.timeField}>
-                      <span>Дуусах</span>
+                      <span>End</span>
                       <input
                         type="time"
                         value={customEnd}
@@ -345,7 +360,7 @@ export default function BallroomAvailability() {
                     loading={checkingCustom}
                     className={styles.checkBtn}
                   >
-                    Цаг шалгах
+                    Check Availability
                   </Button>
 
                   {customChecked ? (
@@ -361,9 +376,9 @@ export default function BallroomAvailability() {
 
               {done ? (
                 <div className={styles.successBox}>
-                  <h4>Хүсэлт илгээгдлээ</h4>
-                  <p>Бид таны сонгосон өдөр, цагийг шалгаад удахгүй холбогдоно.</p>
-                  <Button onClick={() => setDone(false)}>Шинэ хүсэлт</Button>
+                  <h4>Request Submitted</h4>
+                  <p>We will review your selected date and time and contact you shortly.</p>
+                  <Button onClick={() => setDone(false)}>Submit Another Request</Button>
                 </div>
               ) : (
                 <Form
@@ -375,21 +390,21 @@ export default function BallroomAvailability() {
                 >
                   <Form.Item
                     name="name"
-                    label="Нэр"
-                    rules={[{ required: true, message: "Нэрээ оруулна уу" }]}
+                    label="Name"
+                    rules={[{ required: true, message: "Please enter your name" }]}
                   >
-                    <Input size="large" placeholder="Таны нэр" />
+                    <Input size="large" placeholder="Your name" />
                   </Form.Item>
 
                   <div className={styles.formRow}>
                     <Form.Item
                       name="phone"
-                      label="Утас"
-                      rules={[{ required: true, message: "Утас оруулна уу" }]}
+                      label="Phone"
+                      rules={[{ required: true, message: "Please enter your phone number" }]}
                     >
                       <Input size="large" placeholder="99xxxxxx" />
                     </Form.Item>
-                    <Form.Item name="email" label="И-мэйл">
+                    <Form.Item name="email" label="Email">
                       <Input size="large" placeholder="name@example.com" />
                     </Form.Item>
                   </div>
@@ -397,23 +412,23 @@ export default function BallroomAvailability() {
                   <div className={styles.formRow}>
                     <Form.Item
                       name="guest_count"
-                      label="Зочдын тоо"
-                      rules={[{ required: true, message: "Зочдын тоо оруулна уу" }]}
+                      label="Guest Count"
+                      rules={[{ required: true, message: "Please enter guest count" }]}
                     >
                       <InputNumber min={20} max={1200} size="large" style={{ width: "100%" }} />
                     </Form.Item>
-                    <Form.Item name="event_type" label="Арга хэмжээний төрөл">
-                      <Select size="large" options={[...ballroomEventTypes]} />
+                    <Form.Item name="event_type" label="Event Type">
+                      <Select size="large" options={[...ballroomBookingEventTypes]} />
                     </Form.Item>
                   </div>
 
-                  <Form.Item name="message" label="Нэмэлт мэдээлэл">
-                    <Input.TextArea rows={3} placeholder="Setup, catering, тусгай хүсэлт..." />
+                  <Form.Item name="message" label="Additional Details">
+                    <Input.TextArea rows={3} placeholder="Setup, catering, special requests..." />
                   </Form.Item>
 
                   {timeMode === "preset" && selectedSlot ? (
                     <p className={styles.selectedSummary}>
-                      Сонгосон: {selectedDate} · {slotPeriodLabel(selectedSlot.label)} (
+                      Selected: {selectedDate} · {slotPeriodLabel(selectedSlot.label)} (
                       {formatSlotTime(selectedSlot.start_time)}–
                       {formatSlotTime(selectedSlot.end_time)})
                     </p>
@@ -421,7 +436,7 @@ export default function BallroomAvailability() {
 
                   {timeMode === "custom" && customChecked && customAvailable ? (
                     <p className={styles.selectedSummary}>
-                      Сонгосон: {selectedDate} · {customStart}–{customEnd} (тусгай цаг)
+                      Selected: {selectedDate} · {customStart}–{customEnd} (custom time)
                     </p>
                   ) : null}
 
@@ -433,7 +448,7 @@ export default function BallroomAvailability() {
                     disabled={!canSubmit}
                     className={styles.submitBtn}
                   >
-                    Захиалгын хүсэлт илгээх
+                    Submit Booking Request
                   </Button>
                 </Form>
               )}

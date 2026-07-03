@@ -35,30 +35,36 @@ export const ballroomCapacitySetups = [
 ] as const;
 
 export const ballroomSkyfold = {
-  title: "1 → 3 танхим",
-  subtitle: "Skyfold автомат тусгаарлах систем",
-  tagline: "1600 м² танхимыг автоматаар хувааж, нэг өдөрт олон арга зохион байгуулна.",
+  title: "1 → 3 Halls",
+  subtitle: "Skyfold Automatic Partition System",
+  tagline:
+    "Automatically divide the 1,600 m² ballroom to host multiple events in a single day.",
   image: "/images/ballroom/ballroom-12.jpg",
-  imageAlt: "Encanto Grand Ballroom — Skyfold тусгаарлалт",
+  imageAlt: "Encanto Grand Ballroom — Skyfold partition",
   modes: [
     {
       id: "full",
-      label: "Бүтэн танхим",
+      label: "Full Ballroom",
       halls: 1,
-      hint: "Хурим · Gala · Reception",
+      hint: "Wedding · Gala · Reception",
     },
     {
       id: "split",
-      label: "2 хэсэг",
+      label: "2 Sections",
       halls: 2,
-      hint: "Уулзалт + Үдэшлэг",
+      hint: "Meeting + Evening Event",
     },
     {
       id: "triple",
-      label: "3 танхим",
+      label: "3 Halls",
       halls: 3,
-      hint: "Параллель арга хэмжээ",
+      hint: "Parallel Events",
     },
+  ],
+  points: [
+    "Motorized partitions descend from the ceiling",
+    "Full acoustic and lighting isolation",
+    "Host 2–3 simultaneous events",
   ],
 } as const;
 
@@ -66,49 +72,50 @@ export const ballroomKeyAdvantages = [
   {
     id: "vip",
     title: "VIP өрөө",
-    detail: "Хүндэт зочдод зориулсан тусгай хүлээн авалтын орчин.",
+    detail: "Тусгайлан уригдсан хүндэт зочдод зориулсан VIP өрөө.",
     image: "/images/ballroom/ballroom-15.jpg",
     size: "hero" as const,
   },
   {
     id: "terrace",
     title: "9-р давхрын Open Terrace",
-    detail: "Хуримын ёслол, коктейль, хүлээн авалт.",
+    detail:
+      "Хуримын ёслол, хүлээн авалт, коктейль арга хэмжээ зохион байгуулах боломжтой талбай.",
     image: "/images/ballroom/ballroom-20.jpg",
     size: "wide" as const,
   },
   {
     id: "bridal",
     title: "Bridal Room",
-    detail: "Сүйт хосуудад зориулсан тохилог бэлтгэлийн өрөө.",
+    detail: "Сүйт хосуудад зориулсан тохилог Bridal Room.",
     image: "/images/ballroom/ballroom-1.jpg",
     size: "standard" as const,
   },
   {
     id: "makeup",
     title: "Make-up & wardrobe",
-    detail: "Хувцас солих, make-up, өлгөөний өрөө.",
+    detail: "Зочдын тав тухыг хангах хувцас солих өрөө, make-up room, хувцасны өлгүүр.",
     image: "/images/ballroom/ballroom-5.jpg",
     size: "standard" as const,
   },
   {
     id: "mother",
     title: "Mother & Baby Room",
-    detail: "Хүүхэд асрах, хөхүүлэх тухтай орчин.",
+    detail: "Хүүхэд асрах, хөхүүлэх зориулалттай Mother & Baby Room.",
     image: "/images/ballroom/ballroom-12.jpg",
     size: "standard" as const,
   },
   {
     id: "smoking",
     title: "Тамхины өрөө",
-    detail: "Ёслолын зочдод зориулсан тусдаа өрөө.",
+    detail: "Ёслолын зочдод зориулсан тусдаа тамхины өрөө.",
     image: "/images/ballroom/ballroom-8.jpg",
     size: "standard" as const,
   },
   {
     id: "parking",
     title: "Зогсоол",
-    detail: "Арга хэмжээний зочдод зориулсан зогсоол.",
+    detail: "Ballroom арга хэмжээний зочдод зориулсан авто машины зогсоол.",
     image: "/images/renders/render-40.jpg",
     size: "standard" as const,
   },

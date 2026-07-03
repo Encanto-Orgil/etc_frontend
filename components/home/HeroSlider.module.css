@@ -26,6 +26,14 @@
   z-index: 1;
 }
 
+.light {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  transition: background 0.2s linear;
+}
+
 .bottom {
   position: absolute;
   bottom: 0;
@@ -49,6 +57,10 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
     0 24px 64px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .tag {
@@ -66,100 +78,135 @@
 }
 
 .title {
-  font-size: clamp(32px, 5.5vw, 56px);
+  font-family: var(--font-heading);
+  font-size: clamp(2.75rem, 6vw, 4.75rem);
   font-weight: 300;
-  line-height: 1.08;
-  letter-spacing: 0.12em;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
   color: #fff;
   margin: 0;
-  text-transform: uppercase;
-  max-width: 18ch;
+  text-transform: none;
+  max-width: 14ch;
 }
 
 .sub {
   margin: 18px 0 0;
-  max-width: 48ch;
+  max-width: 52ch;
+  font-family: var(--font-body);
   font-size: clamp(14px, 1.4vw, 17px);
-  line-height: 1.65;
-  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.78);
 }
 
-/* ── Bottom center dots ── */
-.dots {
-  position: absolute;
-  bottom: clamp(28px, 4vh, 40px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 3;
+.actions {
   display: flex;
-  gap: 8px;
-  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
 }
 
-.dot {
-  position: relative;
-  width: 40px;
-  height: 2px;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 2px;
-  overflow: hidden;
-  transition: width 0.3s var(--ease);
-}
-
-.dotActive {
-  width: 56px;
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.dotProgress {
-  position: absolute;
-  inset: 0;
-  background: #fff;
-  transform-origin: left center;
-  transform: scaleX(0);
-  border-radius: inherit;
-}
-
-/* ── Bottom right controls ── */
-.controls {
-  position: absolute;
-  bottom: clamp(24px, 3.5vh, 36px);
-  right: clamp(20px, 4vw, 40px);
-  z-index: 3;
-}
-
-.arrows {
-  display: flex;
-  gap: 8px;
-}
-
-.arrowBtn {
-  width: 44px;
-  height: 44px;
-  display: flex;
+.ctaPrimary,
+.ctaSecondary {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 50%;
-  background: rgba(12, 12, 14, 0.45);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  color: #fff;
-  font-size: 14px;
-  cursor: pointer;
-  transition:
-    background 0.25s var(--ease),
-    border-color 0.25s var(--ease),
-    transform 0.25s var(--ease);
+  padding: 14px 24px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: 12px;
+  transition: transform 0.3s var(--ease), background 0.3s var(--ease);
 }
 
-.arrowBtn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.35);
+.ctaPrimary {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.ctaPrimary:hover {
+  background: rgba(255, 255, 255, 0.22);
   transform: translateY(-1px);
+}
+
+.ctaSecondary {
+  color: #fff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.ctaSecondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.scrollDown {
+  position: absolute;
+  bottom: clamp(18px, 2.5vh, 28px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  transition: color 0.25s var(--ease);
+}
+
+.scrollDown:hover {
+  color: #fff;
+}
+
+.scrollDownText {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.scrollDownTrack {
+  position: relative;
+  width: 1px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.22);
+  overflow: hidden;
+}
+
+.scrollDownMarker {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 10px;
+  transform: translateX(-50%);
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
+  animation: scrollDownMarker 1.8s var(--ease) infinite;
+}
+
+@keyframes scrollDownMarker {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  85% {
+    opacity: 1;
+  }
+
+  100% {
+    top: calc(100% - 10px);
+    opacity: 0;
+  }
 }
 
 @media (max-width: 768px) {
@@ -174,12 +221,7 @@
 }
 
 @media (max-width: 480px) {
-  .dots {
-    left: clamp(20px, 4vw, 40px);
-    transform: none;
-  }
-
-  .controls {
-    right: clamp(20px, 4vw, 40px);
+  .scrollDown {
+    bottom: clamp(14px, 2vh, 22px);
   }
 }

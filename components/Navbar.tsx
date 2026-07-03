@@ -2,39 +2,70 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Drawer } from "antd";
-import { MenuOutlined, PhoneOutlined } from "@ant-design/icons";
+import { CalendarOutlined, MenuOutlined } from "@ant-design/icons";
 import Logo from "@/components/Logo";
-import { HOME_ANCHOR_NAV, SITE_SECTION_NAV } from "@/lib/site-nav";
+import {
+  GLOBAL_HEADER_NAV,
+  getContactHref,
+  isLandingPath,
+  resolveNavHref,
+} from "@/lib/site-nav";
 import styles from "./Navbar.module.css";
-
-const links = [
-  { href: HOME_ANCHOR_NAV[0].href, label: HOME_ANCHOR_NAV[0].label },
-  ...SITE_SECTION_NAV.map((item) => ({
-    href: item.href,
-    label: item.navLabel ?? item.label,
-    title: item.label,
-  })),
-] as const;
 
 const SCROLL_THRESHOLD = 48;
 
-const hashLinks = links.filter((l) => l.href.startsWith("/#"));
-
-function isLinkActive(href: string, pathname: string, activeSection: string) {
-  if (href.startsWith("/#")) {
+function isLinkActive(
+  resolvedHref: string,
+  pathname: string,
+  activeSection: string,
+) {
+  if (resolvedHref.startsWith("/#")) {
     if (pathname !== "/") return false;
-    return activeSection === href.slice(2);
+    return activeSection === resolvedHref.slice(2);
   }
-  return pathname === href;
+
+  if (resolvedHref.includes("#")) {
+    const [path, hash] = resolvedHref.split("#");
+    if (pathname === path || pathname === `${path}/`) {
+      return activeSection === hash;
+    }
+    return false;
+  }
+
+  if (pathname === resolvedHref || pathname.startsWith(`${resolvedHref}/`)) {
+    return true;
+  }
+
+  return false;
 }
 
 export default function Navbar() {
   const pathname = usePathname();
+  const isLanding = isLandingPath(pathname);
+  const isScrollAwayHeader = pathname === "/ballroom";
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+
+  const links = useMemo(
+    () =>
+      GLOBAL_HEADER_NAV.map((item) => {
+        const href = resolveNavHref(item, pathname);
+        return {
+          href,
+          label: item.navLabel ?? item.label,
+          title: item.label,
+          sectionId: item.sectionId,
+        };
+      }),
+    [pathname],
+  );
+
+  const contactHref = getContactHref(pathname);
+  const ctaLabel = "Book Tour";
+  const CtaIcon = CalendarOutlined;
 
   const updateScroll = useCallback(() => {
     setScrolled(window.scrollY > SCROLL_THRESHOLD);
@@ -58,12 +89,18 @@ export default function Navbar() {
   }, [updateScroll]);
 
   useEffect(() => {
-    if (pathname !== "/") {
+    if (!isLanding) {
       setActiveSection("");
       return;
     }
 
-    const sectionIds = hashLinks.map((l) => l.href.slice(2));
+    const sectionIds =
+      pathname === "/"
+        ? links.filter((l) => l.href.startsWith("/#")).map((l) => l.href.slice(2))
+        : links
+            .filter((l) => l.href.includes("#") && !l.href.startsWith("/#"))
+            .map((l) => l.href.split("#")[1])
+            .filter(Boolean);
 
     const updateActiveSection = () => {
       const marker = window.scrollY + window.innerHeight * 0.35;
@@ -91,16 +128,20 @@ export default function Navbar() {
       window.removeEventListener("scroll", updateActiveSection);
       window.removeEventListener("hashchange", updateActiveSection);
     };
-  }, [pathname]);
-
-  const contactHref = "/#contact";
+  }, [isLanding, links, pathname]);
 
   return (
     <>
-      <header className={`${styles.header} ${scrolled ? styles.scrolled : ""}`}>
+      <header
+        className={`${styles.header} ${scrolled ? styles.scrolled : ""} ${
+          isLanding ? styles.headerHome : ""
+        } ${isLanding && !scrolled ? styles.headerTransparent : ""} ${
+          isScrollAwayHeader ? styles.headerScrollAway : ""
+        }`}
+      >
         <div className={styles.bar}>
           <div className={styles.shine} aria-hidden />
-          <div className={styles.inner}>
+          <div className={`${styles.inner} ${isLanding && scrolled ? styles.innerPill : ""}`}>
             <Logo
               priority
               height={52}
@@ -108,12 +149,12 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
             />
 
-            <nav className={styles.nav} aria-label="Үндсэн цэс">
+            <nav className={styles.nav} aria-label="Main navigation">
               {links.map((l) => (
                 <Link
                   key={l.href}
                   href={l.href}
-                  title={"title" in l ? l.title : undefined}
+                  title={l.title}
                   className={`${styles.navLink} ${
                     isLinkActive(l.href, pathname, activeSection) ? styles.active : ""
                   }`}
@@ -124,16 +165,16 @@ export default function Navbar() {
             </nav>
 
             <div className={styles.actions}>
-              <Link href={contactHref} className={styles.cta} aria-label="Холбоо барих">
-                <PhoneOutlined className={styles.ctaIcon} aria-hidden />
-                <span>Холбоо барих</span>
+              <Link href={contactHref} className={styles.cta} aria-label={ctaLabel}>
+                <CtaIcon className={styles.ctaIcon} aria-hidden />
+                <span>{ctaLabel}</span>
               </Link>
             </div>
 
             <button
               type="button"
               className={styles.burger}
-              aria-label="Цэс нээх"
+              aria-label="Open menu"
               onClick={() => setOpen(true)}
             >
               <MenuOutlined />
@@ -146,7 +187,7 @@ export default function Navbar() {
         open={open}
         onClose={() => setOpen(false)}
         placement="right"
-        width={300}
+        size={300}
         className={styles.drawerRoot}
         styles={{
           header: { display: "none" },
@@ -156,12 +197,12 @@ export default function Navbar() {
       >
         <div className={styles.drawer}>
           <Logo height={52} onClick={() => setOpen(false)} className={styles.drawerLogo} />
-          <nav className={styles.drawerNav} aria-label="Үндсэн цэс">
+          <nav className={styles.drawerNav} aria-label="Main navigation">
             {links.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                title={"title" in l ? l.title : undefined}
+                title={l.title}
                 onClick={() => setOpen(false)}
                 className={`${styles.drawerLink} ${
                   isLinkActive(l.href, pathname, activeSection) ? styles.active : ""
@@ -175,10 +216,10 @@ export default function Navbar() {
             href={contactHref}
             onClick={() => setOpen(false)}
             className={styles.drawerCta}
-            aria-label="Холбоо барих"
+            aria-label={ctaLabel}
           >
-            <PhoneOutlined className={styles.ctaIcon} aria-hidden />
-            <span>Холбоо барих</span>
+            <CtaIcon className={styles.ctaIcon} aria-hidden />
+            <span>{ctaLabel}</span>
           </Link>
         </div>
       </Drawer>

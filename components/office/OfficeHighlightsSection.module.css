@@ -1,0 +1,299 @@
+.section {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(72px, 10vw, 120px) 0;
+  background: var(--luxury-black);
+  color: #fff;
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 10% 0%, rgba(200, 164, 92, 0.12), transparent 40%),
+    radial-gradient(circle at 92% 100%, rgba(255, 255, 255, 0.05), transparent 44%);
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--luxury-gold);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: end;
+  margin-bottom: clamp(36px, 5vw, 52px);
+}
+
+.headerCopy {
+  max-width: clamp(280px, 34vw, 520px);
+}
+
+.lead {
+  margin: 0;
+  max-width: 48ch;
+  justify-self: end;
+  font-family: var(--font-body);
+  font-size: clamp(0.98rem, 1.35vw, 1.08rem);
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.metricsRail {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1px;
+  margin-bottom: clamp(28px, 4vw, 40px);
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(18px, 2.5vw, 24px) clamp(14px, 2vw, 20px);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.metricValue {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 6px;
+  font-family: var(--font-heading);
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.metricUnit {
+  font-size: 0.72em;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.metricNote {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--luxury-gold);
+  background: rgba(200, 164, 92, 0.14);
+  border: 1px solid rgba(200, 164, 92, 0.24);
+}
+
+.metricLabel {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.48);
+  line-height: 1.35;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 18px);
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  padding: clamp(22px, 2.5vw, 28px);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+  transition:
+    transform 0.35s var(--ease),
+    border-color 0.35s var(--ease),
+    background 0.35s var(--ease),
+    box-shadow 0.35s var(--ease);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--luxury-gold), transparent);
+  opacity: 0;
+  transform: scaleX(0.6);
+  transition:
+    opacity 0.35s var(--ease),
+    transform 0.35s var(--ease);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 20px 48px rgba(0, 0, 0, 0.28);
+}
+
+.card:hover::before {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.index {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  font-family: var(--font-heading);
+  font-size: clamp(1.75rem, 2.5vw, 2.25rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+  transition: color 0.35s var(--ease);
+}
+
+.card:hover .index {
+  color: rgba(200, 164, 92, 0.22);
+}
+
+.cardTop {
+  margin-bottom: 18px;
+}
+
+.iconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.92);
+  transition:
+    background 0.35s var(--ease),
+    border-color 0.35s var(--ease),
+    color 0.35s var(--ease),
+    transform 0.35s var(--ease);
+}
+
+.card:hover .iconWrap {
+  background: var(--luxury-gold-soft);
+  border-color: rgba(200, 164, 92, 0.35);
+  color: #f3e2bc;
+  transform: translateY(-1px);
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+  font-size: 22px;
+}
+
+.cardBody {
+  margin-top: auto;
+}
+
+.cardBody h3 {
+  margin: 0 0 10px;
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 1.6vw, 1.4rem);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+.cardBody p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.64);
+  line-height: 1.65;
+  font-size: 0.94rem;
+}
+
+@media (max-width: 1100px) {
+  .metricsRail {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .lead {
+    justify-self: start;
+  }
+
+  .headerCopy {
+    max-width: none;
+  }
+
+  .metricsRail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    min-height: 0;
+  }
+
+  .metricsRail {
+    grid-template-columns: 1fr;
+  }
+}

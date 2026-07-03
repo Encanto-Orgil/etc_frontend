@@ -107,7 +107,7 @@ export default function BuildingFacadeCalibrator({
       try {
         onImport(String(reader.result));
       } catch {
-        alert("JSON файлыг уншиж чадсангүй.");
+        alert("Could not read JSON file.");
       }
     };
     reader.readAsText(file);
@@ -124,10 +124,9 @@ export default function BuildingFacadeCalibrator({
     <div className={styles.wrap}>
       <div className={styles.toolbar}>
         <div>
-          <strong className={styles.toolbarTitle}>Давхар тохируулах</strong>
+          <strong className={styles.toolbarTitle}>Calibrate floors</strong>
           <p className={styles.toolbarSub}>
-            Олон цэг үүсгэж холбоно. Ирмэг дээр дарвал шинэ цэг нэмэгдэнэ — цэгүүд дарааллаар
-            холбогдоно.
+            Create and connect multiple points. Click near an edge to add a point — points connect in order.
           </p>
         </div>
         <div className={styles.toolbarActions}>
@@ -136,7 +135,7 @@ export default function BuildingFacadeCalibrator({
             className={addMode ? styles.btnActive : styles.btnGhost}
             onClick={() => setAddMode((v) => !v)}
           >
-            {addMode ? "Цэг тавих…" : "+ Цэг нэмэх"}
+            {addMode ? "Place point…" : "+ Add point"}
           </button>
           <button type="button" className={styles.btnGhost} onClick={() => fileRef.current?.click()}>
             Import
@@ -152,7 +151,7 @@ export default function BuildingFacadeCalibrator({
             Reset
           </button>
           <button type="button" className={styles.btnPrimary} onClick={onDone}>
-            Дуусгах
+            Done
           </button>
         </div>
         <input
@@ -241,7 +240,7 @@ export default function BuildingFacadeCalibrator({
         </div>
 
         <aside className={styles.sidebar}>
-          <p className={styles.sideLabel}>Давхар</p>
+          <p className={styles.sideLabel}>Floor</p>
           <div className={styles.floorGrid}>
             {Array.from({ length: FACADE_FLOOR_COUNT }, (_, i) => FACADE_FLOOR_COUNT - i).map(
               (n) => (
@@ -261,7 +260,7 @@ export default function BuildingFacadeCalibrator({
           </div>
 
           <p className={styles.sideLabel}>
-            Цэг {activePoint + 1} / {activePoly.length}
+            Point {activePoint + 1} / {activePoly.length}
           </p>
           <div className={styles.pointList}>
             {activePoly.map((pt, i) => (
@@ -289,11 +288,11 @@ export default function BuildingFacadeCalibrator({
                 setActivePoint(Math.max(0, activePoint - 1));
               }}
             >
-              Цэг устгах
+              Remove point
             </button>
           </div>
 
-          <p className={styles.sideLabel}>Нарийвчлах</p>
+          <p className={styles.sideLabel}>Fine-tune</p>
           <div className={styles.nudge}>
             <button type="button" onClick={() => onNudgePoint(activeFloor, activePoint, 0, -2)}>
               ↑
@@ -305,7 +304,7 @@ export default function BuildingFacadeCalibrator({
               <button
                 type="button"
                 className={styles.nudgeCenter}
-                title="Бүхэл давхрыг зөөнө"
+                title="Move entire floor"
                 onPointerDown={(e) => {
                   if (!svgRef.current) return;
                   const pt = clientToSvg(svgRef.current, e.clientX, e.clientY);
@@ -333,14 +332,14 @@ export default function BuildingFacadeCalibrator({
             className={styles.nudgeAll}
             onClick={() => onNudgeFloor(activeFloor, 0, -2)}
           >
-            Бүхэл давхар ↑
+            Move floor ↑
           </button>
 
           <ul className={styles.tips}>
-            <li>«+ Цэг нэмэх» → зураг дээр дарна (ирмэг ойролцоо бол холбогдоно)</li>
-            <li>Цэгүүд 1→2→3… дарааллаар хаалттай polygon болно</li>
-            <li>⊕ — бүх цэгүүдийг хамтад нь зөөнө</li>
-            <li>Хамгийн багадаа {MIN_POLYGON_POINTS} цэг үлдэнэ</li>
+            <li>«+ Add point» → click on the image (near an edge to connect)</li>
+            <li>Points 1→2→3… form a closed polygon in order</li>
+            <li>⊕ — move all points together</li>
+            <li>At least {MIN_POLYGON_POINTS} points must remain</li>
           </ul>
         </aside>
       </div>

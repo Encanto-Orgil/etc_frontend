@@ -12,7 +12,7 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
           colorPrimary: "#0c0c0c",
           colorBgBase: "#ffffff",
           colorTextBase: "#0c0c0c",
-          fontFamily: '"Inter Variable", "Inter", system-ui, sans-serif',
+          fontFamily: '"Inter Variable", "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif',
           borderRadius: 8,
           colorBorder: "#e8e8e8",
           controlHeight: 44,

@@ -1,0 +1,93 @@
+.header {
+  margin-bottom: clamp(28px, 4vw, 40px);
+}
+
+.section {
+  overflow: hidden;
+}
+
+.marquee {
+  overflow: hidden;
+  padding: 8px 0 12px;
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 6%,
+    #000 94%,
+    transparent
+  );
+}
+
+.marqueeTrack {
+  display: flex;
+  gap: 18px;
+  width: max-content;
+  animation: amenitiesMarquee 48s linear infinite;
+  will-change: transform;
+}
+
+.marquee:hover .marqueeTrack {
+  animation-play-state: paused;
+}
+
+.card {
+  position: relative;
+  flex: 0 0 clamp(240px, 28vw, 320px);
+  aspect-ratio: 3 / 4;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--bg-soft);
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease);
+}
+
+.card:hover img {
+  transform: scale(1.05);
+}
+
+.cardOverlay {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 20px;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
+}
+
+.cardOverlay h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+@keyframes amenitiesMarquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow-x: auto;
+    mask-image: none;
+    padding: 0 clamp(20px, 4vw, 40px) 8px;
+    scrollbar-width: none;
+  }
+
+  .marquee::-webkit-scrollbar {
+    display: none;
+  }
+
+  .marqueeTrack {
+    animation: none;
+    padding-right: clamp(20px, 4vw, 40px);
+  }
+}

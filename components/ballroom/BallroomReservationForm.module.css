@@ -1,0 +1,147 @@
+.form {
+  padding: 0;
+}
+
+.form :global(.ant-form-item-label > label) {
+  color: rgba(0, 0, 0, 0.55) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em;
+}
+
+.form :global(.ant-input),
+.form :global(.ant-input-number),
+.form :global(.ant-input-number-input),
+.form :global(.ant-picker),
+.form :global(.ant-select-selector),
+.form :global(.ant-input-affix-wrapper) {
+  background: #fff !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  color: var(--luxury-black) !important;
+}
+
+.form :global(.ant-input::placeholder),
+.form :global(.ant-picker-input input::placeholder),
+.form :global(.ant-select-selection-placeholder) {
+  color: rgba(0, 0, 0, 0.32) !important;
+}
+
+.form :global(.ant-picker-input input) {
+  color: var(--luxury-black) !important;
+  font-family: var(--font-body) !important;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.form :global(.ant-select-selection-item) {
+  color: var(--luxury-black) !important;
+}
+
+.form :global(.ant-picker-suffix),
+.form :global(.ant-select-arrow) {
+  color: rgba(0, 0, 0, 0.38) !important;
+}
+
+.form :global(.ant-input:hover),
+.form :global(.ant-input-number:hover),
+.form :global(.ant-picker:hover),
+.form :global(.ant-select-selector:hover) {
+  border-color: rgba(0, 0, 0, 0.22) !important;
+}
+
+.form :global(.ant-input:focus),
+.form :global(.ant-input-focused),
+.form :global(.ant-picker-focused),
+.form :global(.ant-select-focused .ant-select-selector) {
+  border-color: var(--luxury-gold) !important;
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.14) !important;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.datePicker,
+.guests {
+  width: 100%;
+}
+
+.datePopup :global(.ant-picker-panel),
+.datePopup :global(.ant-picker-header),
+.datePopup :global(.ant-picker-header-view),
+.datePopup :global(.ant-picker-content th),
+.datePopup :global(.ant-picker-cell-inner) {
+  font-family: var(--font-body) !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.submit:global(.ant-btn-primary) {
+  min-width: 180px;
+  background: var(--luxury-black) !important;
+  border-color: var(--luxury-black) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+
+.submit:global(.ant-btn-primary:hover) {
+  background: #222 !important;
+  border-color: #222 !important;
+}
+
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  color: rgba(0, 0, 0, 0.68);
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: background 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+
+.secondary:hover {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.2);
+  color: var(--luxury-black);
+}
+
+.done {
+  padding: 32px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  text-align: center;
+}
+
+.done h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 300;
+  color: var(--luxury-black);
+}
+
+.done p {
+  margin: 0 0 20px;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}

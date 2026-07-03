@@ -3,32 +3,32 @@ import { getSalesPhones } from "./salesTeam";
 export type OfficeLandmark = { name: string; distance: string };
 
 export const officeLocation = {
-  address: "Баянзүрх дүүрэг, 26-р хороо, Энканто таун",
-  zone: "А зэрэглэлийн бүс",
-  fromCenter: "900 м",
+  address: "Bayanzurkh District, 26th Khoroo, Encanto Town",
+  zone: "Grade-A district",
+  fromCenter: "900 m",
   intro:
-    "Encanto Trade Center нь Чингисийн талбайгаас 900 м зайд, БЗД-ийн 26-р хороонд Энканто таун хотхонд байрладаг. 24 давхар оффис, 34 давхар өндөр зэрэглэлийн орон сууц бүхий Монголын хамгийн өндөр төмөр каркасан барилга. Төрийн болон хувийн том байгууллага, худалдаа үйлчилгээний төв, сургууль, цэцэрлэгүүдтэй хамгийн ойр.",
+    "Encanto Trade Center is located in Encanto Town, 26th Khoroo, Bayanzurkh District — 900 m from Sukhbaatar Square. Mongolia's tallest steel-frame building, with 24 floors of office space and 34 floors of premium residential. Surrounded by government and private institutions, retail, schools, and kindergartens.",
   landmarks: [
-    { name: "Сүхбаатарын талбай", distance: "900 м" },
-    { name: "Үндэсний соёл амралтын хүрээлэн", distance: "500 м" },
-    { name: "Үндэсний цэцэрлэгт хүрээлэн", distance: "500 м" },
-    { name: "Цэнгэлдэх хүрээлэн", distance: "800 м" },
+    { name: "Sukhbaatar Square", distance: "900 m" },
+    { name: "National Culture and Recreation Center", distance: "500 m" },
+    { name: "National Garden Park", distance: "500 m" },
+    { name: "National Stadium of Mongolia", distance: "800 m" },
   ] satisfies OfficeLandmark[],
   schools: [
-    { name: "Орчлон сургууль", distance: "100 м" },
-    { name: "International School of Mongolia", distance: "300 м" },
-    { name: "130-р сургууль", distance: "300 м" },
-    { name: "Hobby сургууль", distance: "700 м" },
-    { name: "Олонлог сургууль", distance: "700 м" },
-    { name: "Global Innova", distance: "900 м" },
+    { name: "Orchlon School", distance: "100 m" },
+    { name: "International School of Mongolia", distance: "300 m" },
+    { name: "School No. 130", distance: "300 m" },
+    { name: "Hobby School", distance: "700 m" },
+    { name: "Olonlog School", distance: "700 m" },
+    { name: "Global Innova", distance: "900 m" },
   ] satisfies OfficeLandmark[],
 };
 
 export const officeIntro = {
   name: "Encanto Trade Center - Office",
   lead:
-    "Улаанбаатар хотын хамгийн үнэ цэнэтэй бүсэд байрлах Монгол улсын хамгийн өндөр барилга Encanto Trade Center - Office-г танилцуулъя.",
-  closing: "Таны бизнесийн үнэ цэнийг тодорхойлох Encanto Trade Center - Office.",
+    "Introducing Encanto Trade Center - Office — Mongolia's tallest building in Ulaanbaatar's most valuable district.",
+  closing: "Encanto Trade Center - Office — where your business defines its value.",
 };
 
 export type OfficeStoryPoint = {
@@ -38,77 +38,77 @@ export type OfficeStoryPoint = {
 
 export const officeStoryPoints: OfficeStoryPoint[] = [
   {
-    title: "Панорам үзэмж, инженерийн цогц шийдэл",
-    body: "Энэ барилга дээр ярих маш олон давуу тал, онцлогууд байгаа. Мэдээж хамгийн өндөр барилга учраас оффисийн цонхоороо улаанбаатар хотыг бүхэлд нь харах боломжтой. 4.5 метрийн өндөр таазай, өндөрлөгөөний шал, орчин үеийн халаалтын шийдэл, бүрэн агааржуулалт, галын спринклер систем зэрэг инженерийн цогц шийдлээр тоноглогдсон.",
+    title: "Panoramic views & integrated engineering",
+    body: "This building offers many distinctive advantages. As Mongolia's tallest tower, office windows frame the entire city skyline. Features include 4.5 m ceiling heights, raised flooring, modern heating, full ventilation, and sprinkler fire protection — a complete engineering package.",
   },
   {
-    title: "1500 автомашины зогсоол",
-    body: "Төслийн хүрээнд нийт 1500 автомашины зогсоолтой ба зөвхөн оффисын ажилтнуудад зориулсан 400 автомашины зогсоолыг бүтээн байгуулсан.",
+    title: "1,500 parking spaces",
+    body: "The project includes 1,500 parking spaces in total, with 400 dedicated for office tenants.",
   },
   {
-    title: "Доод давхарын үйлчилгээний төвлөрөл",
-    body: "Барилгын доод хэсэгт байрлах 8 давхар худалдаа, үйлчилгээний төвд ресторан, кофе шоп, food court болон өдөр тутмын бүх төрлийн үйлчилгээ төвлөрсөн. Encanto Mall, Оргил Худалдааны төв болон Encanto Sport Complex, Саун-тай гүүрэн холболтоор холбогдсон тул таны бизнес болон ажилтнуудын өдөр тутмын хэрэгцээг нэг дор бүрэн хангах боломжтой.",
+    title: "Podium-level services",
+    body: "An 8-floor retail and services podium at the base houses restaurants, coffee shops, a food court, and everyday amenities. Connected via Encanto Mall, Orgil Shopping Center, Encanto Sport Complex, and a glass bridge with sauna access — meeting daily needs for your business and staff in one place.",
   },
   {
-    title: "YUANDA дэлхийн №1 шилэн фасад",
-    body: "Япон, Австрали зэрэг орнуудын өндөр зэрэглэлийн барилгуудад хэрэглэгддэг Yuanda брэндийн дэлхийн №1 шилэн технологиор хийгдсэн шилэн фасадтай. Энэхүү технологийн шийдэл нь Монголд анх удаа Encanto Trade Center - Office-д нэвтэрч байгаа өндөр стандартын шийдэл болж байна. Зундаа хэт халалтыг бууруулж, өвөлдөө дулаан алдагдлыг багасгадаг, дээд түвшний дуу тусгаарлалттай, жилийн дөрвөн улиралд тогтвортой тав тухтай ажиллах орчныг бүрдүүлнэ.",
+    title: "YUANDA world #1 glass facade",
+    body: "The glass facade uses Yuanda — the world's leading curtain wall brand, also specified on premium towers in Japan and Australia. This technology debuts in Mongolia at Encanto Trade Center - Office. It reduces summer heat gain and winter heat loss, with superior acoustic insulation for comfortable work year-round.",
   },
   {
-    title: "Ган хийц, уян хатан төлөвлөлт",
-    body: "Ган хийц бүхий энэхүү барилга нь газар хөдлөлтөнд өндөр тэсвэртэй бөгөөд урт хугацааны найдвартай, аюулгүй ашиглалтыг бүрдүүлж байна. Ган хийцлэлийн хамгийн том онцлог бол том зайтай, багана багатай төлөвлөлт хийх боломжийг олгодог. Ингэснээр оффис, худалдаа, олон нийтийн үйлчилгээний орон зайг илүү цэлгэр, уян хатан байдлаар зохион байгуулах боломжийг бүрдүүлж өгдөг.",
+    title: "Steel structure & flexible planning",
+    body: "The steel-frame structure offers high seismic resilience and long-term reliability. Its greatest advantage is large, column-free spans — enabling open, flexible layouts for office, retail, and public spaces.",
   },
   {
-    title: "FUJITEC ухаалаг лифт",
-    body: "Мөн хиймэл оюун ухаанаар ажилладаг Fujitec ухаалаг лифтний систем нь аюулгүй байдлыг хангахын зэрэгцээ лифт хүлээх хугацааг мэдэгдэхүйц хэмжээгээр бууруулна.",
+    title: "FUJITEC smart elevators",
+    body: "Fujitec AI-driven elevator systems improve safety while significantly reducing wait times.",
   },
   {
-    title: "Дээд түвшний аюулгүй байдал",
-    body: "Оффисын барилга маань аюулгүй байдлыг дээд түвшинд хангаж нийт 7 лифт, 2 зугтах шат, тусгай ослын лифт, нисдэг тэрэг хүлээн авах боломжийг бий болгосон.",
+    title: "Premium security & access",
+    body: "Security is prioritized with 7 elevators, 2 escape staircases, a dedicated emergency lift, and helipad access.",
   },
   {
-    title: "2026 оны 4-р улирал — түрээс нээгдлээ",
-    body: "2026 оны 4-р улиралд ашиглалтад орох Encanto Trade Center - Office-н түрээсийн захиалга нээгдэж байна. Та өнөөдрөөс захиалгаа өгч, дотоод заслаа хүссэнээрээ зохион байгуулах боломжтой.",
+    title: "Q4 2026 — leasing now open",
+    body: "Leasing for Encanto Trade Center - Office, opening in Q4 2026, is now available. Reserve today and customize your interior fit-out to your specifications.",
   },
 ];
 
 export const officeHighlights = [
-  { label: "Давхарын өндөр", value: "4.5", unit: "м" },
-  { label: "Лифт", value: "7" },
-  { label: "Авто зогсоол", value: "1500" },
-  { label: "Нисдэг тэрэг", value: "Helipad" },
-  { label: "Давхар", value: "24" },
-  { label: "Ашиглалт", value: "2026", note: "4-р улирал" },
+  { label: "Floor-to-ceiling height", value: "4.5", unit: "m" },
+  { label: "Elevators", value: "7" },
+  { label: "Parking spaces", value: "1500" },
+  { label: "Helipad", value: "Yes" },
+  { label: "Office floors", value: "24" },
+  { label: "Handover", value: "2026", note: "Q4" },
 ];
 
 export const officeTimeline = [
   {
-    label: "Түрээсийн захиалга",
-    value: "Одоо нээлттэй",
-    detail: "Өнөөдрөөс захиалга өгч, дотоод заслаа зохион байгуулах боломжтой.",
+    label: "Leasing",
+    value: "Open now",
+    detail: "Reserve today and plan your interior fit-out.",
   },
   {
-    label: "Ашиглалтад орох",
-    value: "2026 оны 4-р улирал",
-    detail: "Encanto Trade Center - Office ашиглалтад орно.",
+    label: "Handover",
+    value: "Q4 2026",
+    detail: "Encanto Trade Center - Office enters operation.",
   },
 ];
 
 export const officeFloorPlans = [
   {
-    level: "10–14 давхар",
-    note: "Дунд давхар — олон талбайн сонголт",
-    sizes: ["344 м²", "333 м²", "340 м²", "308 м²"],
-    parking: "10 дулаан зогсоол түрээслэх эрх",
+    level: "Floors 10–14",
+    note: "Mid-rise — multiple layout options",
+    sizes: ["344 sqm", "333 sqm", "340 sqm", "308 sqm"],
+    parking: "Includes 10 heated parking spaces",
   },
   {
-    level: "15–22 давхар",
-    note: "Дээд давхар — том талбай",
+    level: "Floors 15–22",
+    note: "Upper floors — large floorplates",
     plans: [
-      { name: "Plan A", size: "1,565.07 м²" },
-      { name: "Plan B", size: "784.34 м²" },
-      { name: "Plan C", size: "749.49 м²" },
+      { name: "Plan A", size: "1,565.07 sqm" },
+      { name: "Plan B", size: "784.34 sqm" },
+      { name: "Plan C", size: "749.49 sqm" },
     ],
-    parking: "5 дулаан зогсоол түрээслэх эрх",
+    parking: "Includes 5 heated parking spaces",
   },
 ];
 
@@ -125,62 +125,62 @@ export const officeRentalFeatures: OfficeFeatureCard[] = officeStoryPoints.map((
 
 export const officeStandards = [
   {
-    title: "Эргийн хамгаалалт",
+    title: "Perimeter protection",
     description:
-      "14 метр урт 532 ширхэг төмөр бетон шонгуудыг инженерийн зургийн дагуу байршуулж, олон улсын стандартад нийцсэн эргийн хамгаалалтын систем бий болгосон.",
+      "532 reinforced concrete piles, 14 m deep, installed to engineering drawings — meeting international perimeter protection standards.",
   },
   {
-    title: "Хөрсний ус хамгаалалт",
+    title: "Groundwater protection",
     description:
-      "Температурын хэлбэлзэлд тэсвэртэй шингэн мембранаар хөрсний уснаас бүрэн хамгаалсан суурь.",
+      "Foundation fully sealed with temperature-resistant liquid membrane against groundwater ingress.",
   },
   {
-    title: "Газар хөдлөлтийн тэсвэр",
+    title: "Seismic resilience",
     description:
-      "Q345B, Q235 маркийн ган төмөр каркас, A500С арматур, Premium Building Materials бетон — 8 баллын газар хөдлөлтөд тэсвэртэй.",
+      "Q345B and Q235 steel frame, A500S rebar, Premium Building Materials concrete — rated for magnitude 8 earthquakes.",
   },
   {
-    title: "Бат бөх шалны систем",
+    title: "High-density flooring",
     description:
-      "Ердийн шалнаас 2–3 дахин нягт (1 м³ = 1650 кг) — даац, чичиргээ, дуу чимээг сайн шингээдэг.",
+      "2–3× denser than standard slabs (1 m³ = 1,650 kg) — excellent load bearing, vibration, and noise absorption.",
   },
   {
-    title: "Шилэн фасад",
+    title: "Curtain wall facade",
     description:
-      "Дэлхийн №1 YUANDA брэнд — UV, дуу, тоос тусгаарлалт, дулааны алдалт багасгасан битүүмж.",
+      "World #1 YUANDA brand — UV, acoustic, and dust insulation with reduced thermal loss.",
   },
   {
-    title: "Ухаалаг лифт",
+    title: "Smart elevators",
     description:
-      "FUJITEC EZ Shuttle — зорчигчийг оновчтой лифт рүү хуваарилж, хүлээлгийн хугацааг багасгана.",
+      "FUJITEC EZ Shuttle — optimizes passenger routing to reduce wait times.",
   },
 ];
 
 export const glassBridge = {
-  title: "Шилэн гүүр",
+  title: "Glass bridge",
   description:
-    "Ухаалаг шийдэл бүхий шилэн гүүрээр Encanto Mall, Encanto Sport Complex, «Оргил» худалдааны төв, дулаан автозогсоол руу гадагш гаралгүй шууд үйлчлүүлэх боломжтой.",
+    "A smart glass bridge connects Encanto Mall, Encanto Sport Complex, Orgil Shopping Center, and heated parking — access without stepping outside.",
   destinations: [
     "Encanto Mall",
     "Encanto Sport Complex",
-    "«Оргил» худалдааны төв",
-    "Дулаан автозогсоол",
+    "Orgil Shopping Center",
+    "Heated parking",
   ],
 };
 
 export const officeServices = [
-  "Хайпермаркет",
-  "Молл",
-  "Ресторан",
-  "Лоунж",
-  "Ballroom (1000 хүн)",
-  "Кино театр",
-  "Саун, спа",
-  "Фитнесс",
-  "Усан бассейн",
-  "Банк",
-  "Хүүхдийн тоглоомын төв",
-  "Хүүхдийн цэцэрлэг",
+  "Hypermarket",
+  "Mall",
+  "Restaurant",
+  "Lounge",
+  "Ballroom (1,000 guests)",
+  "Cinema",
+  "Sauna & spa",
+  "Fitness",
+  "Swimming pool",
+  "Bank",
+  "Children's play center",
+  "Kindergarten",
 ];
 
 export const officeSalesPhones = getSalesPhones("office");

@@ -54,7 +54,7 @@ export default function BuildingStackDiagram({
                 onClick={() => onSelectFloor(floor.floor_number)}
                 onMouseEnter={() => onHoverFloor(floor.floor_number)}
                 onMouseLeave={() => onHoverFloor(null)}
-                aria-label={`${floor.label || floor.floor_number} давхар`}
+                aria-label={floor.label || `Floor ${floor.floor_number}`}
                 aria-pressed={selectedFloor === floor.floor_number}
               >
                 <span className={styles.bandFill} />
@@ -67,14 +67,14 @@ export default function BuildingStackDiagram({
       </div>
 
       <div className={styles.legend}>
-        <span><i className={styles.dotGreen} /> Боломжит</span>
-        <span><i className={styles.dotRed} /> Бүрэн түрээслэгдсэн</span>
+        <span><i className={styles.dotGreen} /> Available</span>
+        <span><i className={styles.dotRed} /> Fully leased</span>
       </div>
 
       <div className={styles.hint}>
         {selectedFloor
-          ? `${selectedFloor} давхар сонгогдсон`
-          : "Давхар дээр дарж дэлгэрэнгүй хараарай"}
+          ? `Floor ${selectedFloor} selected`
+          : "Click a floor to view details"}
       </div>
     </div>
   );
