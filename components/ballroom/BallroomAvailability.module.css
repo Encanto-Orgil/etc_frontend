@@ -201,37 +201,6 @@
   margin-bottom: 18px;
 }
 
-.slotList {
-  display: grid;
-  gap: 10px;
-  margin-bottom: 22px;
-}
-
-.modeTabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.modeTab {
-  flex: 1;
-  padding: 12px 14px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    border-color 0.2s var(--ease),
-    background 0.2s var(--ease);
-}
-
-.modeTab[data-active="true"] {
-  border-color: var(--black);
-  background: var(--bg-soft);
-}
-
 .customPanel {
   margin-bottom: 22px;
 }
@@ -292,56 +261,6 @@
 .checkResult[data-available="false"] {
   background: rgba(239, 68, 68, 0.08);
   color: #b91c1c;
-}
-
-.emptySlots {
-  margin: 0;
-  color: var(--text-dim);
-}
-
-.slotBtn {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 4px 12px;
-  align-items: center;
-  padding: 14px 16px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #fff;
-  text-align: left;
-  cursor: pointer;
-  transition:
-    border-color 0.2s var(--ease),
-    background 0.2s var(--ease);
-}
-
-.slotBtn[data-status="available"]:hover,
-.slotBtn[data-selected="true"] {
-  border-color: var(--black);
-  background: var(--bg-soft);
-}
-
-.slotBtn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.slotTime {
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.slotLabel {
-  grid-column: 1;
-  font-size: 13px;
-  color: var(--text-dim);
-}
-
-.slotStatus {
-  grid-row: 1 / span 2;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-faint);
 }
 
 .formRow {
@@ -420,8 +339,6 @@
 .wrapDark .successBox p,
 .wrapDark .legend,
 .wrapDark .customHint,
-.wrapDark .emptySlots,
-.wrapDark .slotLabel,
 .wrapDark .weekdays span {
   color: rgba(255, 255, 255, 0.55);
 }
@@ -456,34 +373,6 @@
 .wrapDark .dayCell[data-selected="true"] {
   border-color: var(--luxury-gold);
   background: rgba(212, 175, 55, 0.15);
-}
-
-.wrapDark .modeTab {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.75);
-}
-
-.wrapDark .modeTab[data-active="true"] {
-  border-color: var(--luxury-gold);
-  background: rgba(212, 175, 55, 0.12);
-  color: #fff;
-}
-
-.wrapDark .slotBtn {
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #fff;
-}
-
-.wrapDark .slotBtn[data-status="available"]:hover,
-.wrapDark .slotBtn[data-selected="true"] {
-  border-color: var(--luxury-gold);
-  background: rgba(212, 175, 55, 0.1);
-}
-
-.wrapDark .slotTime {
-  color: #fff;
 }
 
 .wrapDark .selectedSummary {

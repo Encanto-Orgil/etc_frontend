@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import "@fontsource-variable/inter";
 import { dashboardMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = dashboardMetadata;

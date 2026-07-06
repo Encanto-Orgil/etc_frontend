@@ -6,9 +6,9 @@ import Navbar from "@/components/Navbar";
 
 export default function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isDashboard = pathname.startsWith("/dashboard");
+  const isAppShell = pathname.startsWith("/dashboard") || pathname.startsWith("/portal");
 
-  if (isDashboard) {
+  if (isAppShell) {
     return <>{children}</>;
   }
 

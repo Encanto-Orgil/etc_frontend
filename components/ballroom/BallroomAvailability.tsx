@@ -11,17 +11,12 @@ import type { BallroomTimeSlot } from "@/lib/ballroomAvailability";
 import {
   ballroomBookingEventTypes,
   dayAvailabilitySummary,
-  displaySlotStatus,
-  formatSlotTime,
   groupSlotsByDate,
-  slotPeriodLabel,
   translateCheckTimeMessage,
 } from "@/lib/ballroomAvailability";
 import styles from "./BallroomAvailability.module.css";
 
 const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-
-type TimeMode = "preset" | "custom";
 
 function toDateKey(year: number, month: number, day: number) {
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -57,8 +52,6 @@ export default function BallroomAvailability({
   const [slots, setSlots] = useState<BallroomTimeSlot[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [timeMode, setTimeMode] = useState<TimeMode>("preset");
-  const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
   const [customStart, setCustomStart] = useState("10:00");
   const [customEnd, setCustomEnd] = useState("14:00");
   const [customChecked, setCustomChecked] = useState(false);
@@ -82,8 +75,6 @@ export default function BallroomAvailability({
 
   const slotsByDate = useMemo(() => groupSlotsByDate(slots), [slots]);
   const monthCells = useMemo(() => getMonthMatrix(year, month), [year, month]);
-  const selectedSlots = selectedDate ? slotsByDate[selectedDate] ?? [] : [];
-  const selectedSlot = selectedSlots.find((slot) => slot.id === selectedSlotId) ?? null;
 
   const resetCustomCheck = () => {
     setCustomChecked(false);
@@ -96,7 +87,6 @@ export default function BallroomAvailability({
     setYear(next.getFullYear());
     setMonth(next.getMonth() + 1);
     setSelectedDate(null);
-    setSelectedSlotId(null);
     resetCustomCheck();
     setDone(false);
   };
@@ -133,10 +123,7 @@ export default function BallroomAvailability({
     }
   };
 
-  const canSubmit =
-    timeMode === "preset"
-      ? Boolean(selectedSlotId)
-      : customChecked && customAvailable === true;
+  const canSubmit = customChecked && customAvailable === true;
 
   const onSubmit = async (values: {
     name: string;
@@ -148,33 +135,24 @@ export default function BallroomAvailability({
   }) => {
     if (!selectedDate) return;
 
-    if (timeMode === "preset" && !selectedSlotId) {
-      message.warning("Please select a Morning, Afternoon, or Evening slot first.");
-      return;
-    }
-
-    if (timeMode === "custom" && !canSubmit) {
+    if (!canSubmit) {
       message.warning("Please check your custom time before submitting.");
       return;
     }
 
     setSubmitting(true);
     try {
-      const payload =
-        timeMode === "preset" && selectedSlotId
-          ? { slot: selectedSlotId, ...values }
-          : {
-              date: selectedDate,
-              start_time: customStart,
-              end_time: customEnd,
-              ...values,
-            };
+      const payload = {
+        date: selectedDate,
+        start_time: customStart,
+        end_time: customEnd,
+        ...values,
+      };
 
       await submitBallroomBooking(payload);
       setDone(true);
       message.success("Your booking request has been submitted.");
       form.resetFields();
-      setSelectedSlotId(null);
       resetCustomCheck();
       await loadAvailability();
     } catch (error) {
@@ -230,10 +208,9 @@ export default function BallroomAvailability({
                   data-summary={summary}
                   data-selected={isSelected ? "true" : "false"}
                   data-past={isPast ? "true" : "false"}
-                  disabled={isPast || summary === "none" || summary === "blocked"}
+                  disabled={isPast}
                   onClick={() => {
                     setSelectedDate(dateKey);
-                    setSelectedSlotId(null);
                     resetCustomCheck();
                     setDone(false);
                   }}
@@ -256,123 +233,67 @@ export default function BallroomAvailability({
           {!selectedDate ? (
             <div className={styles.placeholder}>
               <h3>Select a Date</h3>
-              <p>Choose a date on the calendar, then pick a time slot and submit your request.</p>
+              <p>Choose a date on the calendar, then enter your preferred start and end time.</p>
             </div>
           ) : (
             <>
               <div className={styles.detailHead}>
                 <h3>{selectedDate}</h3>
-                <p>Select a Time</p>
+                <p>Enter a custom time</p>
               </div>
 
-              <div className={styles.modeTabs}>
-                <button
-                  type="button"
-                  className={styles.modeTab}
-                  data-active={timeMode === "preset" ? "true" : "false"}
-                  onClick={() => {
-                    setTimeMode("preset");
-                    resetCustomCheck();
-                  }}
-                >
-                  Morning · Afternoon · Evening
-                </button>
-                <button
-                  type="button"
-                  className={styles.modeTab}
-                  data-active={timeMode === "custom" ? "true" : "false"}
-                  onClick={() => {
-                    setTimeMode("custom");
-                    setSelectedSlotId(null);
-                  }}
-                >
-                  Custom Time
-                </button>
-              </div>
+              <div className={styles.customPanel}>
+                <p className={styles.customHint}>
+                  Choose a start and end time between 09:00 and 23:00, then check availability.
+                </p>
 
-              {timeMode === "preset" ? (
-                <div className={styles.slotList}>
-                  {selectedSlots.length === 0 ? (
-                    <p className={styles.emptySlots}>No time slots are available for this date.</p>
-                  ) : (
-                    selectedSlots.map((slot) => (
-                      <button
-                        key={slot.id}
-                        type="button"
-                        className={styles.slotBtn}
-                        data-status={slot.status}
-                        data-selected={selectedSlotId === slot.id ? "true" : "false"}
-                        disabled={slot.status !== "available"}
-                        onClick={() => {
-                          setSelectedSlotId(slot.id);
-                          setDone(false);
-                        }}
-                      >
-                        <span className={styles.slotTime}>
-                          {formatSlotTime(slot.start_time)} – {formatSlotTime(slot.end_time)}
-                        </span>
-                        <span className={styles.slotLabel}>{slotPeriodLabel(slot.label)}</span>
-                        <span className={styles.slotStatus}>
-                          {displaySlotStatus(slot.status, slot.status_label)}
-                        </span>
-                      </button>
-                    ))
-                  )}
+                <div className={styles.customTimeRow}>
+                  <label className={styles.timeField}>
+                    <span>Start</span>
+                    <input
+                      type="time"
+                      value={customStart}
+                      min="09:00"
+                      max="23:00"
+                      onChange={(event) => {
+                        setCustomStart(event.target.value);
+                        resetCustomCheck();
+                      }}
+                    />
+                  </label>
+                  <label className={styles.timeField}>
+                    <span>End</span>
+                    <input
+                      type="time"
+                      value={customEnd}
+                      min="09:00"
+                      max="23:00"
+                      onChange={(event) => {
+                        setCustomEnd(event.target.value);
+                        resetCustomCheck();
+                      }}
+                    />
+                  </label>
                 </div>
-              ) : (
-                <div className={styles.customPanel}>
-                  <p className={styles.customHint}>
-                    Choose a start and end time between 09:00 and 23:00, then check availability.
-                  </p>
 
-                  <div className={styles.customTimeRow}>
-                    <label className={styles.timeField}>
-                      <span>Start</span>
-                      <input
-                        type="time"
-                        value={customStart}
-                        min="09:00"
-                        max="23:00"
-                        onChange={(event) => {
-                          setCustomStart(event.target.value);
-                          resetCustomCheck();
-                        }}
-                      />
-                    </label>
-                    <label className={styles.timeField}>
-                      <span>End</span>
-                      <input
-                        type="time"
-                        value={customEnd}
-                        min="09:00"
-                        max="23:00"
-                        onChange={(event) => {
-                          setCustomEnd(event.target.value);
-                          resetCustomCheck();
-                        }}
-                      />
-                    </label>
-                  </div>
+                <Button
+                  size="large"
+                  onClick={onCheckCustomTime}
+                  loading={checkingCustom}
+                  className={styles.checkBtn}
+                >
+                  Check Availability
+                </Button>
 
-                  <Button
-                    size="large"
-                    onClick={onCheckCustomTime}
-                    loading={checkingCustom}
-                    className={styles.checkBtn}
+                {customChecked ? (
+                  <p
+                    className={styles.checkResult}
+                    data-available={customAvailable ? "true" : "false"}
                   >
-                    Check Availability
-                  </Button>
-
-                  {customChecked ? (
-                    <p
-                      className={styles.checkResult}
-                      data-available={customAvailable ? "true" : "false"}
-                    >
-                      {customMessage}
-                    </p>
-                  ) : null}
-                </div>
-              )}
+                    {customMessage}
+                  </p>
+                ) : null}
+              </div>
 
               {done ? (
                 <div className={styles.successBox}>
@@ -426,15 +347,7 @@ export default function BallroomAvailability({
                     <Input.TextArea rows={3} placeholder="Setup, catering, special requests..." />
                   </Form.Item>
 
-                  {timeMode === "preset" && selectedSlot ? (
-                    <p className={styles.selectedSummary}>
-                      Selected: {selectedDate} · {slotPeriodLabel(selectedSlot.label)} (
-                      {formatSlotTime(selectedSlot.start_time)}–
-                      {formatSlotTime(selectedSlot.end_time)})
-                    </p>
-                  ) : null}
-
-                  {timeMode === "custom" && customChecked && customAvailable ? (
+                  {customChecked && customAvailable ? (
                     <p className={styles.selectedSummary}>
                       Selected: {selectedDate} · {customStart}–{customEnd} (custom time)
                     </p>

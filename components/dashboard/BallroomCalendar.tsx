@@ -1,0 +1,617 @@
+"use client";
+
+import {
+  CalendarOutlined,
+  LeftOutlined,
+  PhoneOutlined,
+  ReloadOutlined,
+  RightOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { Button, Card, Empty, Form, Input, InputNumber, Segmented, Select, Spin, Tag, message } from "antd";
+import dayjs, { type Dayjs } from "dayjs";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  createDashboardBallroomBooking,
+  fetchDashboardBallroomBookings,
+  type DashboardBallroomBooking,
+} from "@/lib/ballroomManagement";
+import {
+  ballroomBookingEventTypes,
+  formatSlotTime,
+  type BallroomSlotStatus,
+} from "@/lib/ballroomAvailability";
+import styles from "./BallroomCalendar.module.css";
+
+const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const DAY_HOURS = Array.from({ length: 14 }, (_, index) => index + 9);
+const CALENDAR_START_MINUTES = 9 * 60;
+const CALENDAR_END_MINUTES = 23 * 60;
+const TIME_STEP_MINUTES = 15;
+
+type CalendarView = "day" | "week" | "month";
+type BallroomEventType = (typeof ballroomBookingEventTypes)[number]["value"];
+type BookingFormValues = {
+  start_time: string;
+  end_time: string;
+  name: string;
+  phone: string;
+  email?: string;
+  guest_count: number;
+  event_type: BallroomEventType;
+  message?: string;
+};
+type DraftSelection = {
+  date: string;
+  start: string;
+  end: string;
+};
+type DragStart = {
+  date: string;
+  minutes: number;
+};
+
+const BOOKING_STATUS_META: Record<DashboardBallroomBooking["status"], { label: string; color: string }> = {
+  pending: { label: "Pending", color: "gold" },
+  confirmed: { label: "Confirmed", color: "green" },
+  declined: { label: "Declined", color: "red" },
+  cancelled: { label: "Cancelled", color: "default" },
+};
+
+function calendarStart(month: Dayjs) {
+  const firstDay = month.startOf("month");
+  const mondayOffset = (firstDay.day() + 6) % 7;
+  return firstDay.subtract(mondayOffset, "day");
+}
+
+function weekStart(day: Dayjs) {
+  return day.subtract((day.day() + 6) % 7, "day").startOf("day");
+}
+
+function formatTimeRange(start: string, end: string) {
+  return `${formatSlotTime(start)}-${formatSlotTime(end)}`;
+}
+
+function groupBookingsByDate(bookings: DashboardBallroomBooking[]) {
+  return bookings.reduce<Record<string, DashboardBallroomBooking[]>>((acc, booking) => {
+    if (!acc[booking.slot_date]) acc[booking.slot_date] = [];
+    acc[booking.slot_date].push(booking);
+    return acc;
+  }, {});
+}
+
+function sortBookingsByStart(bookings: DashboardBallroomBooking[]) {
+  return [...bookings].sort((a, b) => a.slot_start.localeCompare(b.slot_start));
+}
+
+function minutesFromTime(value: string) {
+  const [hourText, minuteText] = value.split(":");
+  return Number(hourText) * 60 + Number(minuteText || 0);
+}
+
+function formatMinutes(value: number) {
+  const hour = Math.floor(value / 60);
+  const minute = value % 60;
+  return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+}
+
+function clampMinutes(value: number, max = CALENDAR_END_MINUTES) {
+  return Math.min(Math.max(value, CALENDAR_START_MINUTES), max);
+}
+
+function roundToStep(value: number) {
+  return Math.round(value / TIME_STEP_MINUTES) * TIME_STEP_MINUTES;
+}
+
+function pointerMinutes(clientY: number, element: HTMLElement, max = CALENDAR_END_MINUTES) {
+  const rect = element.getBoundingClientRect();
+  const ratio = Math.min(Math.max((clientY - rect.top) / rect.height, 0), 1);
+  const rawMinutes = CALENDAR_START_MINUTES + ratio * (CALENDAR_END_MINUTES - CALENDAR_START_MINUTES);
+  return clampMinutes(roundToStep(rawMinutes), max);
+}
+
+function eventPosition(start: string, end: string) {
+  const totalMinutes = CALENDAR_END_MINUTES - CALENDAR_START_MINUTES;
+  const startMinutes = Math.max(CALENDAR_START_MINUTES, minutesFromTime(start));
+  const endMinutes = Math.min(CALENDAR_END_MINUTES, minutesFromTime(end));
+  const heightPercent = ((endMinutes - startMinutes) / totalMinutes) * 100;
+  return {
+    top: `${((startMinutes - CALENDAR_START_MINUTES) / totalMinutes) * 100}%`,
+    height: `${Math.max(4, heightPercent)}%`,
+  };
+}
+
+function dedupeById<T extends { id: number }>(rows: T[]) {
+  return Array.from(new Map(rows.map((row) => [row.id, row])).values());
+}
+
+export default function BallroomCalendar() {
+  const [calendarView, setCalendarView] = useState<CalendarView>("month");
+  const [selectedDate, setSelectedDate] = useState(() => dayjs().format("YYYY-MM-DD"));
+  const [bookings, setBookings] = useState<DashboardBallroomBooking[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [error, setError] = useState("");
+  const [draftSelection, setDraftSelection] = useState<DraftSelection | null>(null);
+  const [dragStart, setDragStart] = useState<DragStart | null>(null);
+  const [bookingForm] = Form.useForm<BookingFormValues>();
+
+  const selectedDay = useMemo(() => dayjs(selectedDate), [selectedDate]);
+
+  const visibleDays = useMemo(() => {
+    if (calendarView === "day") return [selectedDay];
+    if (calendarView === "week") {
+      const start = weekStart(selectedDay);
+      return Array.from({ length: 7 }, (_, index) => start.add(index, "day"));
+    }
+
+    const start = calendarStart(selectedDay.startOf("month"));
+    return Array.from({ length: 42 }, (_, index) => start.add(index, "day"));
+  }, [calendarView, selectedDay]);
+
+  const visibleMonths = useMemo(() => {
+    const months = new Map<string, { year: number; month: number }>();
+    visibleDays.forEach((day) => {
+      const key = day.format("YYYY-MM");
+      months.set(key, { year: day.year(), month: day.month() + 1 });
+    });
+    return Array.from(months.values());
+  }, [visibleDays]);
+
+  const visibleMonthKey = visibleMonths.map((item) => `${item.year}-${item.month}`).join("|");
+
+  const loadCalendar = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const results = await Promise.all(
+        visibleMonths.map(({ year, month }) => fetchDashboardBallroomBookings({ year, month })),
+      );
+
+      setBookings(dedupeById(results.flat()));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load ballroom calendar.");
+      setBookings([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [visibleMonthKey]);
+
+  useEffect(() => {
+    void loadCalendar();
+  }, [loadCalendar]);
+
+  const bookingsByDate = useMemo(() => groupBookingsByDate(bookings), [bookings]);
+
+  const selectedBookings = bookingsByDate[selectedDate] ?? [];
+  const visibleDateKeys = useMemo(() => new Set(visibleDays.map((day) => day.format("YYYY-MM-DD"))), [visibleDays]);
+  const visibleBookings = bookings.filter((booking) => visibleDateKeys.has(booking.slot_date));
+  const pendingCount = visibleBookings.filter((booking) => booking.status === "pending").length;
+  const confirmedCount = visibleBookings.filter((booking) => booking.status === "confirmed").length;
+  const totalCount = visibleBookings.length;
+
+  const moveCalendar = (offset: number) => {
+    const nextDay =
+      calendarView === "day"
+        ? selectedDay.add(offset, "day")
+        : calendarView === "week"
+          ? selectedDay.add(offset, "week")
+          : selectedDay.add(offset, "month").startOf("month");
+    setSelectedDate(nextDay.format("YYYY-MM-DD"));
+  };
+
+  const selectDay = (day: Dayjs) => {
+    setSelectedDate(day.format("YYYY-MM-DD"));
+  };
+
+  const setDraftBookingRange = (date: string, anchorMinutes: number, focusMinutes: number) => {
+    const startMinutes = Math.min(anchorMinutes, focusMinutes);
+    let endMinutes = Math.max(anchorMinutes, focusMinutes);
+
+    if (endMinutes === startMinutes) {
+      endMinutes = Math.min(startMinutes + 60, CALENDAR_END_MINUTES);
+    }
+
+    const start = formatMinutes(startMinutes);
+    const end = formatMinutes(endMinutes);
+    setDraftSelection({ date, start, end });
+    bookingForm.setFieldsValue({ start_time: start, end_time: end });
+  };
+
+  const goToday = () => {
+    setSelectedDate(dayjs().format("YYYY-MM-DD"));
+  };
+
+  const calendarTitle = useMemo(() => {
+    if (calendarView === "day") return selectedDay.format("MMMM D, YYYY");
+    if (calendarView === "week") {
+      const start = visibleDays[0];
+      const end = visibleDays[visibleDays.length - 1];
+      if (start.isSame(end, "month")) return `${start.format("MMM D")}-${end.format("D, YYYY")}`;
+      return `${start.format("MMM D")}-${end.format("MMM D, YYYY")}`;
+    }
+    return selectedDay.format("MMMM YYYY");
+  }, [calendarView, selectedDay, visibleDays]);
+
+  const createBooking = async (values: BookingFormValues) => {
+    if (values.start_time >= values.end_time) {
+      message.warning("Start time must be before end time.");
+      return;
+    }
+
+    setCreating(true);
+    try {
+      await createDashboardBallroomBooking({
+        date: selectedDate,
+        start_time: values.start_time,
+        end_time: values.end_time,
+        name: values.name,
+        phone: values.phone,
+        email: values.email || "",
+        guest_count: values.guest_count,
+        event_type: values.event_type,
+        message: values.message || "",
+      });
+      message.success("Booking marked on the calendar.");
+      setDraftSelection(null);
+      bookingForm.resetFields();
+      await loadCalendar();
+    } catch (err) {
+      message.error(err instanceof Error ? err.message : "Unable to create booking.");
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const renderTimedEvents = (day: Dayjs) => {
+    const dateKey = day.format("YYYY-MM-DD");
+    const dayBookings = bookingsByDate[dateKey] ?? [];
+    const rows = dayBookings.map((booking) => ({
+      id: `booking-${booking.id}`,
+      start: booking.slot_start,
+      end: booking.slot_end,
+      title: booking.event_type_label,
+      status: booking.status === "confirmed" ? "booked" : ("reserved" as BallroomSlotStatus),
+      booking,
+    }));
+
+    return rows.map((row) => {
+      const position = eventPosition(row.start, row.end);
+      return (
+        <button
+          key={row.id}
+          type="button"
+          className={`${styles.timeEvent} ${styles[`timeEvent_${row.status}`]}`}
+          style={position}
+          onClick={() => selectDay(day)}
+        >
+          <strong>{row.title}</strong>
+          <span>{formatTimeRange(row.start, row.end)}</span>
+          <small>{row.booking.name}</small>
+        </button>
+      );
+    });
+  };
+
+  const renderDraftSelection = (day: Dayjs) => {
+    const dateKey = day.format("YYYY-MM-DD");
+    if (!draftSelection || draftSelection.date !== dateKey) return null;
+
+    return (
+      <div className={styles.draftEvent} style={eventPosition(draftSelection.start, draftSelection.end)}>
+        <strong>New booking</strong>
+        <span>{formatTimeRange(draftSelection.start, draftSelection.end)}</span>
+        <small>Fill the form to register</small>
+      </div>
+    );
+  };
+
+  const renderDayColumns = () => (
+    <div className={styles.timeGrid}>
+      <div className={styles.timeAxis}>
+        <span />
+        {DAY_HOURS.map((hour) => (
+          <span key={hour}>{`${String(hour).padStart(2, "0")}:00`}</span>
+        ))}
+      </div>
+      <div
+        className={styles.timeColumns}
+        style={{ gridTemplateColumns: `repeat(${visibleDays.length}, minmax(0, 1fr))` }}
+      >
+        {visibleDays.map((day) => {
+          const dateKey = day.format("YYYY-MM-DD");
+          const isSelected = dateKey === selectedDate;
+          const isToday = day.isSame(dayjs(), "day");
+
+          return (
+            <section
+              key={dateKey}
+              className={`${styles.timeDayColumn} ${isSelected ? styles.timeDaySelected : ""}`}
+              onClick={() => selectDay(day)}
+            >
+              <button type="button" className={styles.timeDayHead} onClick={() => selectDay(day)}>
+                <span>{day.format("ddd")}</span>
+                <strong className={isToday ? styles.todayNumber : ""}>{day.format("D")}</strong>
+              </button>
+              <div
+                className={styles.timeDayBody}
+                onPointerDown={(event) => {
+                  if (event.button !== 0) return;
+                  if ((event.target as HTMLElement).closest(`.${styles.timeEvent}`)) return;
+
+                  event.currentTarget.setPointerCapture(event.pointerId);
+                  const startMinutes = pointerMinutes(
+                    event.clientY,
+                    event.currentTarget,
+                    CALENDAR_END_MINUTES - TIME_STEP_MINUTES,
+                  );
+                  setDragStart({ date: dateKey, minutes: startMinutes });
+                  selectDay(day);
+                  setDraftBookingRange(
+                    dateKey,
+                    startMinutes,
+                    Math.min(startMinutes + 60, CALENDAR_END_MINUTES),
+                  );
+                }}
+                onPointerMove={(event) => {
+                  if (!dragStart || dragStart.date !== dateKey) return;
+                  const focusMinutes = pointerMinutes(event.clientY, event.currentTarget);
+                  setDraftBookingRange(dateKey, dragStart.minutes, focusMinutes);
+                }}
+                onPointerUp={(event) => {
+                  if (dragStart?.date === dateKey) {
+                    const focusMinutes = pointerMinutes(event.clientY, event.currentTarget);
+                    setDraftBookingRange(dateKey, dragStart.minutes, focusMinutes);
+                    setDragStart(null);
+                  }
+                  if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+                    event.currentTarget.releasePointerCapture(event.pointerId);
+                  }
+                }}
+                onPointerCancel={() => setDragStart(null)}
+              >
+                {DAY_HOURS.map((hour) => (
+                  <span
+                    key={hour}
+                    className={styles.hourLine}
+                  />
+                ))}
+                {renderTimedEvents(day)}
+                {renderDraftSelection(day)}
+              </div>
+            </section>
+          );
+        })}
+      </div>
+    </div>
+  );
+
+  return (
+    <section className={styles.shell} aria-label="Ballroom calendar">
+      <header className={styles.header}>
+        <div>
+          <span className={styles.eyebrow}>Ballroom Management</span>
+          <h1>Reservation Calendar</h1>
+          <p>Synced with the public Ballroom Contact & Reservation form.</p>
+        </div>
+        <div className={styles.actions}>
+          <Button onClick={() => moveCalendar(-1)} icon={<LeftOutlined />}>
+            Prev
+          </Button>
+          <Button onClick={goToday}>
+            Today
+          </Button>
+          <Button onClick={() => moveCalendar(1)} icon={<RightOutlined />}>
+            Next
+          </Button>
+          <Segmented
+            value={calendarView}
+            onChange={(value) => setCalendarView(value as CalendarView)}
+            options={[
+              { label: "Day", value: "day" },
+              { label: "Week", value: "week" },
+              { label: "Month", value: "month" },
+            ]}
+          />
+          <Button onClick={() => void loadCalendar()} icon={<ReloadOutlined />}>
+            Refresh
+          </Button>
+        </div>
+      </header>
+
+      <div className={styles.summaryGrid}>
+        <Card className={styles.summaryCard}>
+          <span>Reservations</span>
+          <strong>{totalCount}</strong>
+        </Card>
+        <Card className={styles.summaryCard}>
+          <span>Selected day</span>
+          <strong>{selectedBookings.length}</strong>
+        </Card>
+        <Card className={styles.summaryCard}>
+          <span>Pending requests</span>
+          <strong>{pendingCount}</strong>
+        </Card>
+        <Card className={styles.summaryCard}>
+          <span>Confirmed events</span>
+          <strong>{confirmedCount}</strong>
+        </Card>
+      </div>
+
+      {error ? (
+        <Card className={styles.errorCard}>{error}</Card>
+      ) : (
+        <Spin spinning={loading}>
+          <div className={styles.workspace}>
+            <Card
+              className={styles.calendarCard}
+              title={
+                <span className={styles.monthTitle}>
+                  <CalendarOutlined />
+                  {calendarTitle}
+                </span>
+              }
+            >
+              {calendarView === "month" ? (
+                <>
+                  <div className={styles.weekdays}>
+                    {WEEKDAYS.map((day) => (
+                      <span key={day}>{day}</span>
+                    ))}
+                  </div>
+
+                  <div className={styles.grid}>
+                    {visibleDays.map((day) => {
+                      const dateKey = day.format("YYYY-MM-DD");
+                      const dayBookings = sortBookingsByStart(bookingsByDate[dateKey] ?? []);
+                      const visibleEvents = dayBookings.slice(0, 4);
+                      const hiddenEventCount = dayBookings.length - visibleEvents.length;
+                      const isSelected = dateKey === selectedDate;
+                      const isOutsideMonth = !day.isSame(selectedDay, "month");
+                      const isToday = day.isSame(dayjs(), "day");
+
+                      return (
+                        <button
+                          key={dateKey}
+                          type="button"
+                          className={[
+                            styles.dayCell,
+                            isSelected ? styles.daySelected : "",
+                            dayBookings.length ? styles.dayHasBooking : "",
+                            isOutsideMonth ? styles.dayMuted : "",
+                          ].join(" ")}
+                          onClick={() => selectDay(day)}
+                        >
+                          <span className={`${styles.dayNumber} ${isToday ? styles.todayNumber : ""}`}>
+                            {day.date()}
+                          </span>
+                          <span className={styles.monthEventList}>
+                            {visibleEvents.map((booking) => (
+                              <span key={booking.id} className={styles.monthEvent}>
+                                <span className={styles.monthEventTime}>{formatSlotTime(booking.slot_start)}</span>
+                                <span className={styles.monthEventTitle}>
+                                  {booking.event_type_label}
+                                  {booking.name ? ` · ${booking.name}` : ""}
+                                </span>
+                              </span>
+                            ))}
+                            {hiddenEventCount > 0 ? (
+                              <span className={styles.moreEvents}>+{hiddenEventCount} more</span>
+                            ) : null}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                renderDayColumns()
+              )}
+            </Card>
+
+            <aside className={styles.detailPanel}>
+              <Card className={styles.detailCard} title={`Mark booking · ${dayjs(selectedDate).format("MMM D")}`}>
+                <Form<BookingFormValues>
+                  form={bookingForm}
+                  layout="vertical"
+                  className={styles.bookingForm}
+                  initialValues={{
+                    start_time: "10:00",
+                    end_time: "14:00",
+                    guest_count: 200,
+                    event_type: "wedding",
+                  }}
+                  onValuesChange={(_, values) => {
+                    if (values.start_time && values.end_time) {
+                      setDraftSelection({
+                        date: selectedDate,
+                        start: values.start_time,
+                        end: values.end_time,
+                      });
+                    }
+                  }}
+                  onFinish={createBooking}
+                >
+                  <p className={styles.formHint}>
+                    Day view дээр эхлэх цагаас дуусах цаг хүртэл чирж сонгоод захиалга бүртгэнэ.
+                  </p>
+                  <div className={styles.timeFormGrid}>
+                    <Form.Item name="start_time" label="Start" rules={[{ required: true }]}>
+                      <input type="time" min="09:00" max="23:00" className={styles.timeInput} />
+                    </Form.Item>
+                    <Form.Item name="end_time" label="End" rules={[{ required: true }]}>
+                      <input type="time" min="09:00" max="23:00" className={styles.timeInput} />
+                    </Form.Item>
+                  </div>
+
+                  <Form.Item name="name" label="Customer name" rules={[{ required: true }]}>
+                    <Input placeholder="Customer name" />
+                  </Form.Item>
+                  <Form.Item name="phone" label="Phone" rules={[{ required: true }]}>
+                    <Input placeholder="99xxxxxx" />
+                  </Form.Item>
+
+                  <div className={styles.timeFormGrid}>
+                    <Form.Item name="guest_count" label="Guests" rules={[{ required: true }]}>
+                      <InputNumber min={1} max={2000} style={{ width: "100%" }} />
+                    </Form.Item>
+                    <Form.Item name="event_type" label="Event type">
+                      <Select options={[...ballroomBookingEventTypes]} />
+                    </Form.Item>
+                  </div>
+
+                  <Form.Item name="email" label="Email">
+                    <Input placeholder="name@example.com" />
+                  </Form.Item>
+                  <Form.Item name="message" label="Notes">
+                    <Input.TextArea rows={3} placeholder="Setup, catering, special requests..." />
+                  </Form.Item>
+
+                  <Button type="primary" htmlType="submit" loading={creating} className={styles.createButton}>
+                    Mark booking
+                  </Button>
+                </Form>
+              </Card>
+
+              <Card className={styles.detailCard} title="Contact & Reservation requests">
+                {selectedBookings.length ? (
+                  <div className={styles.bookingList}>
+                    {selectedBookings.map((booking) => {
+                      const status = BOOKING_STATUS_META[booking.status];
+                      return (
+                        <article key={booking.id} className={styles.bookingCard}>
+                          <div className={styles.bookingHead}>
+                            <strong>{booking.event_type_label}</strong>
+                            <Tag color={status.color}>{status.label}</Tag>
+                          </div>
+                          <div className={styles.bookingLine}>
+                            <UserOutlined />
+                            <span>{booking.name}</span>
+                          </div>
+                          <div className={styles.bookingLine}>
+                            <PhoneOutlined />
+                            <span>{booking.phone}</span>
+                          </div>
+                          <div className={styles.bookingMeta}>
+                            <span>{formatTimeRange(booking.slot_start, booking.slot_end)}</span>
+                            <span>{booking.guest_count.toLocaleString()} guests</span>
+                          </div>
+                          {booking.message ? <p>{booking.message}</p> : null}
+                        </article>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <Empty
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                    description="No reservation requests for this day"
+                  />
+                )}
+              </Card>
+            </aside>
+          </div>
+        </Spin>
+      )}
+    </section>
+  );
+}

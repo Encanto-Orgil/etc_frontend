@@ -8,6 +8,15 @@ export type AuthUser = {
   last_name: string;
   is_staff: boolean;
   is_superuser: boolean;
+  role: "staff" | "tenant" | "user";
+  tenant?: {
+    id: number;
+    name: string;
+    company: string;
+    phone: string;
+    email: string;
+    portal_enabled: boolean;
+  };
 };
 
 export type DashboardStats = {
@@ -18,6 +27,7 @@ export type DashboardStats = {
     tower_count: number;
     total_inquiries: number;
     total_bookings: number;
+    open_support_tickets: number;
   };
   recent_inquiries: Array<{
     id: number;
@@ -37,6 +47,16 @@ export type DashboardStats = {
     slot__date: string;
     slot__start_time: string;
     slot__end_time: string;
+  }>;
+  recent_support_tickets: Array<{
+    id: number;
+    subject: string;
+    category: string;
+    status: string;
+    priority: string;
+    created_at: string;
+    tenant__name: string;
+    tenant__company: string;
   }>;
   stacking: Record<
     string,
@@ -92,7 +112,7 @@ export async function authFetch(path: string, init: RequestInit = {}) {
     if (csrf) headers.set("X-CSRFToken", csrf);
   }
 
-  if (!headers.has("Content-Type") && init.body) {
+  if (!headers.has("Content-Type") && init.body && !(init.body instanceof FormData)) {
     headers.set("Content-Type", "application/json");
   }
 
@@ -109,7 +129,10 @@ export async function ensureCsrf() {
   await authFetch("/auth/csrf/");
 }
 
-export async function login(username: string, password: string): Promise<AuthUser> {
+export async function login(
+  username: string,
+  password: string,
+): Promise<AuthUser> {
   await ensureCsrf();
   const res = await authFetch("/auth/login/", {
     method: "POST",
@@ -125,6 +148,12 @@ export async function login(username: string, password: string): Promise<AuthUse
 
   const data = await res.json();
   return data.user as AuthUser;
+}
+
+export function getLoginRedirect(user: AuthUser) {
+  if (user.is_staff) return "/dashboard";
+  if (user.role === "tenant") return "/portal";
+  return "/dashboard/login";
 }
 
 export async function logout() {

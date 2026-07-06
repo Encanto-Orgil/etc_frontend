@@ -1,0 +1,109 @@
+.shell {
+  min-height: calc(100vh - 150px);
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.eyebrow {
+  margin: 0 0 5px;
+  color: #666666;
+  font-size: 13px;
+  font-weight: 550;
+}
+
+.header h2 {
+  margin: 0;
+  color: #111111;
+  font-size: 20px;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.primaryButton {
+  border-color: #000000 !important;
+  border-radius: 8px !important;
+  background: #000000 !important;
+  box-shadow: none !important;
+  color: #ffffff !important;
+}
+
+.moduleBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.moduleIcon {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  color: #333333;
+}
+
+.moduleBar strong,
+.moduleBar span {
+  display: block;
+}
+
+.moduleBar strong {
+  color: #111111;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.moduleBar span {
+  margin-top: 3px;
+  color: #666666;
+  font-size: 13px;
+}
+
+.tableCard {
+  padding: 0 20px 20px;
+}
+
+.tableCard table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tableCard th,
+.tableCard td {
+  height: 42px;
+  border-bottom: 1px solid #f1f1f1;
+  color: #333333;
+  text-align: left;
+}
+
+.tableCard th {
+  color: #666666;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #666666;
+}
+
+.status :global(.anticon) {
+  color: #00a36c;
+}
