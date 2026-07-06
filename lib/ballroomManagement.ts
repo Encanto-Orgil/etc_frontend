@@ -4,6 +4,7 @@ import type { BallroomCustomBookingPayload } from "./ballroomAvailability";
 export type BallroomBookingStatus = "pending" | "confirmed" | "declined" | "cancelled";
 export type BallroomEventType = "wedding" | "corporate" | "gala" | "conference" | "other";
 export type BallroomInvoiceStatus = "draft" | "sent" | "paid" | "cancelled";
+export type BallroomQuoteStatus = "draft" | "sent" | "accepted" | "declined" | "cancelled";
 
 export type DashboardBallroomBooking = {
   id: number;
@@ -81,6 +82,43 @@ export type DashboardBallroomInvoice = {
   updated_at: string;
 };
 
+export type BallroomQuoteLine = {
+  id: number;
+  description: string;
+  quantity: string | number;
+  unit_price: string | number;
+  amount: string | number;
+  order: number;
+};
+
+export type DashboardBallroomQuote = {
+  id: number;
+  customer_name: string;
+  customer_phone: string;
+  customer_email: string;
+  event_type: BallroomEventType | "";
+  event_type_label: string;
+  event_date: string | null;
+  guest_count: number | null;
+  quote_number: string;
+  issue_date: string;
+  valid_until: string;
+  lines: BallroomQuoteLine[];
+  subtotal: string | number;
+  discount_amount: string | number;
+  vat_mode: BallroomVatMode;
+  vat_mode_label: string;
+  net_amount: string | number;
+  vat_amount: string | number;
+  total_amount: string | number;
+  status: BallroomQuoteStatus;
+  status_label: string;
+  notes: string;
+  billing_profile: BallroomBillingProfile;
+  created_at: string;
+  updated_at: string;
+};
+
 export type BallroomSummary = {
   summary: {
     total_bookings: number;
@@ -91,9 +129,13 @@ export type BallroomSummary = {
     draft_invoices: number;
     paid_invoices: number;
     outstanding_amount: string | number;
+    total_quotes: number;
+    draft_quotes: number;
+    sent_quotes: number;
   };
   recent_bookings: DashboardBallroomBooking[];
   recent_invoices: DashboardBallroomInvoice[];
+  recent_quotes: DashboardBallroomQuote[];
   status_breakdown: Array<{ status: BallroomBookingStatus; count: number }>;
 };
 
@@ -302,5 +344,94 @@ export function updateBallroomBillingProfile(payload: Partial<Omit<BallroomBilli
     "/dashboard/ballroom/billing-profile/",
     { method: "PATCH", body: JSON.stringify(payload) },
     "Failed to update billing profile.",
+  );
+}
+
+export function fetchDashboardBallroomQuotes(query?: Query) {
+  return fetchList<DashboardBallroomQuote>("/dashboard/ballroom/quotes/", query);
+}
+
+export function fetchDashboardBallroomQuote(id: number) {
+  return fetchOne<DashboardBallroomQuote>(
+    `/dashboard/ballroom/quotes/${id}/`,
+    undefined,
+    "Failed to load quote.",
+  );
+}
+
+export function createDashboardBallroomQuote(payload: {
+  customer_name: string;
+  customer_phone?: string;
+  customer_email?: string;
+  event_type?: BallroomEventType | "";
+  event_date?: string | null;
+  guest_count?: number | null;
+  issue_date: string;
+  valid_until: string;
+  lines: Array<{ description: string; quantity: number; unit_price: number; order?: number }>;
+  discount_amount?: number;
+  vat_mode?: BallroomVatMode;
+  status?: BallroomQuoteStatus;
+  notes?: string;
+}) {
+  return send<DashboardBallroomQuote>(
+    "/dashboard/ballroom/quotes/",
+    "POST",
+    payload,
+    "Failed to create quote.",
+  );
+}
+
+export function updateDashboardBallroomQuote(
+  id: number,
+  payload: Partial<{
+    customer_name: string;
+    customer_phone: string;
+    customer_email: string;
+    event_type: BallroomEventType | "";
+    event_date: string | null;
+    guest_count: number | null;
+    issue_date: string;
+    valid_until: string;
+    lines: Array<{ description: string; quantity: number; unit_price: number; order?: number }>;
+    discount_amount: number;
+    vat_mode: BallroomVatMode;
+    status: BallroomQuoteStatus;
+    notes: string;
+  }>,
+) {
+  return send<DashboardBallroomQuote>(
+    `/dashboard/ballroom/quotes/${id}/`,
+    "PATCH",
+    payload,
+    "Failed to update quote.",
+  );
+}
+
+export function deleteDashboardBallroomQuote(id: number) {
+  return remove(`/dashboard/ballroom/quotes/${id}/`, "Failed to delete quote.");
+}
+
+export function markBallroomQuoteSent(id: number) {
+  return fetchOne<DashboardBallroomQuote>(
+    `/dashboard/ballroom/quotes/${id}/mark-sent/`,
+    { method: "POST" },
+    "Failed to mark quote as sent.",
+  );
+}
+
+export function markBallroomQuoteAccepted(id: number) {
+  return fetchOne<DashboardBallroomQuote>(
+    `/dashboard/ballroom/quotes/${id}/mark-accepted/`,
+    { method: "POST" },
+    "Failed to mark quote as accepted.",
+  );
+}
+
+export function markBallroomQuoteDeclined(id: number) {
+  return fetchOne<DashboardBallroomQuote>(
+    `/dashboard/ballroom/quotes/${id}/mark-declined/`,
+    { method: "POST" },
+    "Failed to mark quote as declined.",
   );
 }

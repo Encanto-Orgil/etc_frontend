@@ -97,14 +97,14 @@ export const towers: Tower[] = [
     slug: "mall",
     name: "Mall",
     nameMn: "Mall",
-    tagline: "Дэлхийн брэндүүдийн уулзвар",
+    tagline: "Where global brands meet",
     floors: "6 floors",
     heroImage: "/images/renders/render-40.jpg",
     accent: "#B98E4C",
     summary:
-      "6 давхар, олон улсын luxury брэндүүд, гастрономи, зугаа цэнгэлийг нэгтгэсэн худалдаа үйлчилгээний төв.",
+      "Six floors uniting international luxury brands, gastronomy, and entertainment in one premium retail destination.",
     description:
-      "Central Mall нь өргөн уужим атриум, байгалийн гэрэлтэй passage, premium заслын материалаар чимэглэгдсэн 6 давхар худалдааны орчин юм. Олон улсын тансаг брэндүүдээс эхлээд гэр бүлээрээ цэнгэх орон зай хүртэл бүгдийг нэг дор цогцлоосон.",
+      "Central Mall is a six-floor retail environment with a wide atrium, naturally lit passages, and premium finishes. From international luxury brands to family-friendly spaces, everything is brought together in one cohesive experience.",
     stats: [
       { label: "Давхар", value: "6" },
       { label: "Дэлгүүр", value: "200+" },
@@ -145,14 +145,14 @@ export const towers: Tower[] = [
     slug: "ballroom",
     name: "Ballroom",
     nameMn: "Ballroom",
-    tagline: "Дурсамжийн тансаг орчин",
+    tagline: "A luxurious setting for unforgettable moments",
     floors: "7–8 floors",
     heroImage: "/images/ballroom/ballroom-1.jpg",
     accent: "#A87E3E",
     summary:
-      "7, 8 давхарт байрлах 1600 м² Encanto Grand Ballroom — хурим, гала, корпорацийн арга хэмжээнд зориулсан премиум ёслолын танхим.",
+      "Encanto Grand Ballroom on floors 7–8 — 1,600 m² of premium event space for weddings, galas, and corporate celebrations.",
     description:
-      "Худалдаа, үйлчилгээний төвийн 7, 8 давхарт байрлах 1600 м² талбай бүхий Encanto Grand Ballroom нь 7.6 м таазны өндөр, Skyfold автомат тусгаарлах системтэй. Хурим найр, хүндэтгэлийн зоог, байгууллагын арга хэмжээ, хурал семинар, үзэсгэлэн зэрэг олон төрлийн ёслолыг нэг дор зохион байгуулах боломжтой.",
+      "Located on floors 7 and 8 of the retail podium, Encanto Grand Ballroom spans 1,600 m² with 7.6 m ceiling height and Skyfold automated partition walls. Weddings, banquets, corporate events, conferences, and exhibitions can all be hosted under one roof.",
     stats: [
       { label: "Талбай", value: "1,600 м²" },
       { label: "Давхар", value: "7–8" },
@@ -193,14 +193,14 @@ export const towers: Tower[] = [
     slug: "apartment",
     name: "Apartment",
     nameMn: "Apartment",
-    tagline: "Тэнгэрийн өндөрт амьдрах урлаг",
+    tagline: "The art of living above the skyline",
     floors: "34 floors",
     heroImage: "/images/renders/render-20.jpg",
     accent: "#C8A45C",
     summary:
-      "34 давхар, хотын панорам үзэмжтэй, premium заслал бүхий орон сууцны тансаг цамхаг.",
+      "A 34-floor residential tower with panoramic city views and premium finishes throughout.",
     description:
-      "Sky Residence нь 34 давхар өндөрт байрлах, хотын гайхамшигт панорам үзэмжийг өрөө бүрээс мэдрүүлэх тансаг орон сууцны цамхаг юм. Premium заслал, ухаалаг гэр, төвлөрсөн үйлчилгээ, аюулгүй байдал зэрэг орчин үеийн амьдралын бүх шаардлагыг хангасан.",
+      "Sky Residence rises 34 floors above the city, offering panoramic views from every home. Premium finishes, smart-home features, concierge service, and security meet the full expectations of contemporary luxury living.",
     stats: [
       { label: "Давхар", value: "34" },
       { label: "Үзэмж", value: "Панорам" },

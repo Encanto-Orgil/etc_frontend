@@ -55,6 +55,7 @@ export const DASHBOARD_MANAGEMENT_GROUPS: DashboardMenuGroup[] = [
       { key: "/dashboard/ballroom/events", label: "Events", path: "/dashboard/ballroom/events" },
       { key: "/dashboard/ballroom/customers", label: "Customers", path: "/dashboard/ballroom/customers" },
       { key: "/dashboard/ballroom/invoices", label: "Invoices", path: "/dashboard/ballroom/invoices" },
+      { key: "/dashboard/ballroom/quotes", label: "Quotes", path: "/dashboard/ballroom/quotes" },
       { key: "/dashboard/ballroom/settings", label: "Settings", path: "/dashboard/ballroom/settings" },
     ],
   },
@@ -88,6 +89,8 @@ const KIND_PATH = /^\/dashboard\/stacking\/(office|mall|apartment)$/;
 const PROPERTY_TENANT_DETAIL_PATH = /^\/dashboard\/property\/tenants\/\d+$/;
 const PROPERTY_CONTRACT_DETAIL_PATH = /^\/dashboard\/property\/contracts\/\d+$/;
 const PROPERTY_RENT_SCHEDULE_DETAIL_PATH = /^\/dashboard\/property\/rent-schedule\/\d+$/;
+const BALLROOM_INVOICE_DETAIL_PATH = /^\/dashboard\/ballroom\/invoices\/\d+$/;
+const BALLROOM_QUOTE_DETAIL_PATH = /^\/dashboard\/ballroom\/quotes\/\d+$/;
 
 export function getDashboardPageMeta(pathname: string) {
   const kindMatch = pathname.match(KIND_PATH);
@@ -111,6 +114,14 @@ export function getDashboardPageMeta(pathname: string) {
     return { eyebrow: "Property Management / Rent Schedule", title: "Invoice Detail" };
   }
 
+  if (BALLROOM_INVOICE_DETAIL_PATH.test(pathname)) {
+    return { eyebrow: "Ballroom Management / Invoices", title: "Invoice Detail" };
+  }
+
+  if (BALLROOM_QUOTE_DETAIL_PATH.test(pathname)) {
+    return { eyebrow: "Ballroom Management / Quotes", title: "Quote Detail" };
+  }
+
   return (
     DASHBOARD_MANAGEMENT_PAGES[pathname] ??
     DASHBOARD_PAGES[pathname] ?? { eyebrow: "Удирдлага", title: "Хяналтын самбар" }
@@ -128,6 +139,8 @@ export function getDashboardSelectedKey(pathname: string) {
   if (PROPERTY_TENANT_DETAIL_PATH.test(pathname)) return "/dashboard/property/tenants";
   if (PROPERTY_CONTRACT_DETAIL_PATH.test(pathname)) return "/dashboard/property/contracts";
   if (PROPERTY_RENT_SCHEDULE_DETAIL_PATH.test(pathname)) return "/dashboard/property/rent-schedule";
+  if (BALLROOM_INVOICE_DETAIL_PATH.test(pathname)) return "/dashboard/ballroom/invoices";
+  if (BALLROOM_QUOTE_DETAIL_PATH.test(pathname)) return "/dashboard/ballroom/quotes";
 
   const exactGroupItem = DASHBOARD_MANAGEMENT_GROUPS.flatMap((group) => group.items).find(
     (item) => item.path === pathname,

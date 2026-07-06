@@ -42,23 +42,29 @@ import {
   confirmDashboardBallroomBooking,
   createDashboardBallroomBooking,
   createDashboardBallroomInvoice,
+  createDashboardBallroomQuote,
   declineDashboardBallroomBooking,
   deleteDashboardBallroomBooking,
   deleteDashboardBallroomInvoice,
+  deleteDashboardBallroomQuote,
   fetchBallroomBillingProfile,
   fetchBallroomSummary,
   fetchDashboardBallroomBookings,
   fetchDashboardBallroomInvoices,
+  fetchDashboardBallroomQuotes,
   updateBallroomBillingProfile,
   updateDashboardBallroomBooking,
   updateDashboardBallroomInvoice,
+  updateDashboardBallroomQuote,
   type BallroomBillingProfile,
   type BallroomBookingStatus,
   type BallroomEventType,
   type BallroomInvoiceStatus,
+  type BallroomQuoteStatus,
   type BallroomSummary,
   type DashboardBallroomBooking,
   type DashboardBallroomInvoice,
+  type DashboardBallroomQuote,
 } from "@/lib/ballroomManagement";
 import { ballroomBookingEventTypes, formatSlotTime } from "@/lib/ballroomAvailability";
 import BallroomInvoiceFormFields, {
@@ -67,7 +73,7 @@ import BallroomInvoiceFormFields, {
 } from "@/components/dashboard/BallroomInvoiceFormFields";
 import styles from "./PropertyManagement.module.css";
 
-export type BallroomManagementView = "dashboard" | "bookings" | "invoices" | "settings";
+export type BallroomManagementView = "dashboard" | "bookings" | "invoices" | "quotes" | "settings";
 
 const BOOKING_STATUS_LABELS: Record<BallroomBookingStatus, string> = {
   pending: "Pending",
@@ -97,10 +103,27 @@ const INVOICE_STATUS_COLORS: Record<BallroomInvoiceStatus, string> = {
   cancelled: "red",
 };
 
+const QUOTE_STATUS_LABELS: Record<BallroomQuoteStatus, string> = {
+  draft: "Draft",
+  sent: "Sent",
+  accepted: "Accepted",
+  declined: "Declined",
+  cancelled: "Cancelled",
+};
+
+const QUOTE_STATUS_COLORS: Record<BallroomQuoteStatus, string> = {
+  draft: "default",
+  sent: "blue",
+  accepted: "green",
+  declined: "red",
+  cancelled: "default",
+};
+
 const VIEW_TITLES: Record<BallroomManagementView, string> = {
   dashboard: "Ballroom Dashboard",
   bookings: "Bookings",
   invoices: "Invoices",
+  quotes: "Quotes",
   settings: "Invoice settings",
 };
 
@@ -136,6 +159,18 @@ type InvoiceModalValues = InvoiceFormValues & {
   status: BallroomInvoiceStatus;
 };
 
+type QuoteModalValues = InvoiceFormValues & {
+  customer_name: string;
+  customer_phone?: string;
+  customer_email?: string;
+  event_type?: BallroomEventType;
+  event_date?: dayjs.Dayjs | null;
+  guest_count?: number;
+  issue_date: dayjs.Dayjs;
+  valid_until: dayjs.Dayjs;
+  status: BallroomQuoteStatus;
+};
+
 type BillingProfileFormValues = Omit<BallroomBillingProfile, "id" | "slug" | "updated_at">;
 
 export default function BallroomManagement({ view }: { view: BallroomManagementView }) {
@@ -144,14 +179,18 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
   const [summary, setSummary] = useState<BallroomSummary | null>(null);
   const [bookings, setBookings] = useState<DashboardBallroomBooking[]>([]);
   const [invoices, setInvoices] = useState<DashboardBallroomInvoice[]>([]);
+  const [quotes, setQuotes] = useState<DashboardBallroomQuote[]>([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [invoiceModalOpen, setInvoiceModalOpen] = useState(false);
+  const [quoteModalOpen, setQuoteModalOpen] = useState(false);
   const [editingBooking, setEditingBooking] = useState<DashboardBallroomBooking | null>(null);
   const [editingInvoice, setEditingInvoice] = useState<DashboardBallroomInvoice | null>(null);
+  const [editingQuote, setEditingQuote] = useState<DashboardBallroomQuote | null>(null);
   const [bookingForm] = Form.useForm<BookingFormValues>();
   const [invoiceForm] = Form.useForm<InvoiceModalValues>();
+  const [quoteForm] = Form.useForm<QuoteModalValues>();
   const [billingForm] = Form.useForm<BillingProfileFormValues>();
   const [billingProfile, setBillingProfile] = useState<BallroomBillingProfile | null>(null);
   const [saving, setSaving] = useState(false);
@@ -178,6 +217,13 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
         ]);
         setInvoices(invoiceList);
         setBookings(bookingList);
+      } else if (view === "quotes") {
+        setQuotes(
+          await fetchDashboardBallroomQuotes({
+            search: search || undefined,
+            status: statusFilter === "all" ? undefined : statusFilter,
+          }),
+        );
       } else if (view === "settings") {
         const profile = await fetchBallroomBillingProfile();
         setBillingProfile(profile);
@@ -354,6 +400,80 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
     }
   };
 
+  const openCreateQuote = () => {
+    setEditingQuote(null);
+    quoteForm.setFieldsValue({
+      issue_date: dayjs(),
+      valid_until: dayjs().add(14, "day"),
+      lines: [{ description: "", quantity: 1, unit_price: 0 }],
+      discount_amount: 0,
+      vat_mode: "included",
+      status: "draft",
+      guest_count: 100,
+      event_type: "corporate",
+    });
+    setQuoteModalOpen(true);
+  };
+
+  const openEditQuote = (record: DashboardBallroomQuote) => {
+    setEditingQuote(record);
+    quoteForm.setFieldsValue({
+      customer_name: record.customer_name,
+      customer_phone: record.customer_phone,
+      customer_email: record.customer_email,
+      event_type: record.event_type || undefined,
+      event_date: record.event_date ? dayjs(record.event_date) : null,
+      guest_count: record.guest_count ?? undefined,
+      issue_date: dayjs(record.issue_date),
+      valid_until: dayjs(record.valid_until),
+      lines: record.lines.map((line) => ({
+        description: line.description,
+        quantity: Number(line.quantity),
+        unit_price: Number(line.unit_price),
+      })),
+      discount_amount: Number(record.discount_amount),
+      vat_mode: record.vat_mode,
+      status: record.status,
+      notes: record.notes,
+    });
+    setQuoteModalOpen(true);
+  };
+
+  const saveQuote = async () => {
+    const values = await quoteForm.validateFields();
+    setSaving(true);
+    try {
+      const payload = {
+        customer_name: values.customer_name,
+        customer_phone: values.customer_phone || "",
+        customer_email: values.customer_email || "",
+        event_type: (values.event_type || "") as BallroomEventType | "",
+        event_date: values.event_date ? values.event_date.format("YYYY-MM-DD") : null,
+        guest_count: values.guest_count ?? null,
+        ...buildInvoicePayload(values),
+        issue_date: values.issue_date.format("YYYY-MM-DD"),
+        valid_until: values.valid_until.format("YYYY-MM-DD"),
+        status: values.status,
+      };
+      if (editingQuote) {
+        await updateDashboardBallroomQuote(editingQuote.id, payload);
+        message.success("Quote updated.");
+      } else {
+        const created = await createDashboardBallroomQuote(payload);
+        message.success("Quote created.");
+        setQuoteModalOpen(false);
+        router.push(`/dashboard/ballroom/quotes/${created.id}`);
+        return;
+      }
+      setQuoteModalOpen(false);
+      load();
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Failed to save quote.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const bookingOptions = useMemo(
     () =>
       bookings
@@ -503,6 +623,77 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
     },
   ];
 
+  const quoteColumns: ColumnsType<DashboardBallroomQuote> = [
+    {
+      title: "Quote",
+      dataIndex: "quote_number",
+      render: (value, record) => (
+        <div>
+          <strong>{value || `Draft #${record.id}`}</strong>
+          <div className={styles.muted}>{record.customer_name}</div>
+        </div>
+      ),
+    },
+    {
+      title: "Event",
+      key: "event",
+      render: (_, record) => (
+        <div>
+          <div>{record.event_type_label || "-"}</div>
+          <div className={styles.muted}>{formatDate(record.event_date)}</div>
+        </div>
+      ),
+    },
+    {
+      title: "Issue / Valid",
+      key: "dates",
+      render: (_, record) => `${formatDate(record.issue_date)} → ${formatDate(record.valid_until)}`,
+    },
+    {
+      title: "Total",
+      dataIndex: "total_amount",
+      width: 120,
+      render: (value) => formatMoney(value),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      width: 100,
+      render: (status: BallroomQuoteStatus) => (
+        <Tag color={QUOTE_STATUS_COLORS[status]}>{QUOTE_STATUS_LABELS[status]}</Tag>
+      ),
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      width: 160,
+      render: (_, record) => (
+        <Space size={4}>
+          <Button
+            size="small"
+            icon={<EyeOutlined />}
+            onClick={() => router.push(`/dashboard/ballroom/quotes/${record.id}`)}
+          />
+          <Button size="small" icon={<EditOutlined />} onClick={() => openEditQuote(record)} />
+          <Popconfirm
+            title="Delete this quote?"
+            onConfirm={async () => {
+              try {
+                await deleteDashboardBallroomQuote(record.id);
+                message.success("Quote deleted.");
+                load();
+              } catch (error) {
+                message.error(error instanceof Error ? error.message : "Delete failed.");
+              }
+            }}
+          >
+            <Button size="small" danger icon={<DeleteOutlined />} />
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   return (
     <div className={styles.shell}>
       <div className={styles.workspace}>
@@ -522,6 +713,11 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
                 New invoice
               </Button>
             )}
+            {view === "quotes" && (
+              <Button type="primary" icon={<PlusOutlined />} onClick={openCreateQuote}>
+                New quote
+              </Button>
+            )}
             {view === "settings" && (
               <Button type="primary" loading={saving} onClick={saveBillingProfile}>
                 Save settings
@@ -538,7 +734,7 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
           </Space>
         </div>
 
-        {(view === "bookings" || view === "invoices") && (
+        {(view === "bookings" || view === "invoices" || view === "quotes") && (
           <div className={styles.searchArea}>
             <Input
               allowClear
@@ -560,10 +756,15 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
                       value: s,
                       label: BOOKING_STATUS_LABELS[s],
                     }))
-                  : (Object.keys(INVOICE_STATUS_LABELS) as BallroomInvoiceStatus[]).map((s) => ({
-                      value: s,
-                      label: INVOICE_STATUS_LABELS[s],
-                    }))),
+                  : view === "invoices"
+                    ? (Object.keys(INVOICE_STATUS_LABELS) as BallroomInvoiceStatus[]).map((s) => ({
+                        value: s,
+                        label: INVOICE_STATUS_LABELS[s],
+                      }))
+                    : (Object.keys(QUOTE_STATUS_LABELS) as BallroomQuoteStatus[]).map((s) => ({
+                        value: s,
+                        label: QUOTE_STATUS_LABELS[s],
+                      }))),
               ]}
             />
             <Button icon={<FilterOutlined />} onClick={load}>
@@ -603,7 +804,7 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
               </Row>
 
               <Row gutter={[12, 12]} style={{ marginTop: 12 }}>
-                <Col xs={24} lg={12}>
+                <Col xs={24} lg={8}>
                   <Card title="Recent bookings" className={styles.statCard}>
                     <Table
                       size="small"
@@ -614,7 +815,7 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
                     />
                   </Card>
                 </Col>
-                <Col xs={24} lg={12}>
+                <Col xs={24} lg={8}>
                   <Card title="Recent invoices" className={styles.statCard}>
                     <Table
                       size="small"
@@ -622,6 +823,17 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
                       pagination={false}
                       dataSource={summary.recent_invoices}
                       columns={invoiceColumns.filter((c) => c.key !== "actions")}
+                    />
+                  </Card>
+                </Col>
+                <Col xs={24} lg={8}>
+                  <Card title="Recent quotes" className={styles.statCard}>
+                    <Table
+                      size="small"
+                      rowKey="id"
+                      pagination={false}
+                      dataSource={summary.recent_quotes}
+                      columns={quoteColumns.filter((c) => c.key !== "actions")}
                     />
                   </Card>
                 </Col>
@@ -635,6 +847,10 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
 
           {view === "invoices" && (
             <Table rowKey="id" columns={invoiceColumns} dataSource={invoices} pagination={{ pageSize: 20 }} />
+          )}
+
+          {view === "quotes" && (
+            <Table rowKey="id" columns={quoteColumns} dataSource={quotes} pagination={{ pageSize: 20 }} />
           )}
 
           {view === "settings" && billingProfile && (
@@ -812,6 +1028,79 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
               options={(Object.keys(INVOICE_STATUS_LABELS) as BallroomInvoiceStatus[]).map((s) => ({
                 value: s,
                 label: INVOICE_STATUS_LABELS[s],
+              }))}
+            />
+          </Form.Item>
+          <Form.Item name="notes" label="Notes">
+            <Input.TextArea rows={3} />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title={editingQuote ? "Edit quote" : "New quote"}
+        open={quoteModalOpen}
+        onCancel={() => setQuoteModalOpen(false)}
+        onOk={saveQuote}
+        confirmLoading={saving}
+        width={920}
+        destroyOnClose
+      >
+        <Form form={quoteForm} layout="vertical">
+          <Row gutter={12}>
+            <Col span={12}>
+              <Form.Item name="customer_name" label="Customer name" rules={[{ required: true }]}>
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="customer_phone" label="Phone">
+                <Input />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={12}>
+            <Col span={12}>
+              <Form.Item name="customer_email" label="Email">
+                <Input />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="event_type" label="Event type">
+                <Select allowClear options={[...ballroomBookingEventTypes]} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={12}>
+            <Col span={8}>
+              <Form.Item name="event_date" label="Event date">
+                <DatePicker style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item name="guest_count" label="Guests">
+                <InputNumber min={1} max={2000} style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={12}>
+            <Col span={12}>
+              <Form.Item name="issue_date" label="Issue date" rules={[{ required: true }]}>
+                <DatePicker style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="valid_until" label="Valid until" rules={[{ required: true }]}>
+                <DatePicker style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+          </Row>
+          <BallroomInvoiceFormFields form={quoteForm} />
+          <Form.Item name="status" label="Status">
+            <Select
+              options={(Object.keys(QUOTE_STATUS_LABELS) as BallroomQuoteStatus[]).map((s) => ({
+                value: s,
+                label: QUOTE_STATUS_LABELS[s],
               }))}
             />
           </Form.Item>

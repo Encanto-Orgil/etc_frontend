@@ -7,7 +7,7 @@ import BallroomManagement, { type BallroomManagementView } from "@/components/da
 import ManagementPlaceholder from "@/components/dashboard/ManagementPlaceholder";
 import { getDashboardManagementRoute } from "@/lib/dashboardNav";
 
-const MANAGEMENT_VIEWS = new Set<BallroomManagementView>(["dashboard", "bookings", "invoices", "settings"]);
+const MANAGEMENT_VIEWS = new Set<BallroomManagementView>(["dashboard", "bookings", "invoices", "quotes", "settings"]);
 
 export default function DashboardBallroomViewPage({
   params,
