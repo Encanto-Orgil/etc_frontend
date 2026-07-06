@@ -200,7 +200,7 @@ export const towers: Tower[] = [
     summary:
       "A 34-floor residential tower with panoramic city views and premium finishes throughout.",
     description:
-      "Sky Residence rises 34 floors above the city, offering panoramic views from every home. Premium finishes, smart-home features, concierge service, and security meet the full expectations of contemporary luxury living.",
+      "Encanto Trade Center - Residence rises 34 floors above the city, offering panoramic views from every home. Premium finishes, smart-home features, concierge service, and security meet the full expectations of contemporary luxury living.",
     stats: [
       { label: "Давхар", value: "34" },
       { label: "Үзэмж", value: "Панорам" },

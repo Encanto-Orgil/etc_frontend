@@ -31,7 +31,7 @@ export function ApartmentConceptSection() {
   return (
     <section className={styles.sectionMinimal} id="concept">
       <div className={styles.inner} data-apartment-reveal>
-        <p className={styles.eyebrow}>Sky Residence</p>
+        <p className={styles.eyebrow}>Encanto Trade Center - Residence</p>
         <h2 className={styles.title}>{apartmentConcept.title}</h2>
         <p className={styles.lead}>{apartmentConcept.body}</p>
       </div>
@@ -173,7 +173,7 @@ export function ApartmentLocationSection() {
         </div>
         <div className={styles.mapWrap} data-apartment-reveal>
           <iframe
-            title="Sky Residence location"
+            title="Encanto Trade Center - Residence location"
             loading="lazy"
             src="https://www.google.com/maps?q=Encanto+Town+Ulaanbaatar&output=embed"
           />
@@ -229,7 +229,7 @@ export function ApartmentWhySection() {
   return (
     <section className={styles.sectionMinimal} id="why">
       <div className={styles.inner} data-apartment-reveal>
-        <p className={styles.eyebrow}>Why Sky Residence</p>
+        <p className={styles.eyebrow}>Why Encanto Trade Center - Residence</p>
         <h2 className={styles.title}>The Definitive Address</h2>
         <ul className={styles.whyList}>
           {apartmentWhy.map((item) => (
@@ -389,7 +389,7 @@ export function ApartmentPageFooter() {
     <footer className={styles.pageFooter}>
       <div className={styles.inner}>
         <p>{apartmentContact.footer}</p>
-        <nav aria-label="Sky Residence footer">
+        <nav aria-label="Encanto Trade Center - Residence footer">
           <Link href="#contact">Contact</Link>
           <Link href="#location">Location</Link>
           <Link href="#contact">Leasing</Link>

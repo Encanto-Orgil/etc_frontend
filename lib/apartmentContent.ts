@@ -1,9 +1,9 @@
 export const apartmentHero = {
   eyebrow: "Encanto Trade Center",
   headline: "LIVE ABOVE THE CITY",
-  title: "Sky Residence",
+  title: "Encanto Trade Center - Residence",
   description:
-    "Sky Residence is a 34-story luxury residential tower offering breathtaking panoramic views of the city from every unit. Designed for modern urban living, it combines premium interiors, smart home systems, centralized services, and world-class security into one elevated lifestyle.",
+    "Encanto Trade Center - Residence is a 34-story luxury residential tower offering breathtaking panoramic views of the city from every unit. Designed for modern urban living, it combines premium interiors, smart home systems, centralized services, and world-class security into one elevated lifestyle.",
   imageDay: "/images/renders/render-20.jpg",
   imageSunset: "/images/renders/render-35.jpg",
   imageNight: "/images/renders/render-25.jpg",
@@ -14,7 +14,7 @@ export const apartmentHero = {
 
 export const apartmentConcept = {
   title: "A New Standard of Vertical Living",
-  body: "Sky Residence redefines urban apartment living by merging architecture, comfort, and technology into a seamless residential experience above the city skyline.",
+  body: "Encanto Trade Center - Residence redefines urban apartment living by merging architecture, comfort, and technology into a seamless residential experience above the city skyline.",
 };
 
 export const apartmentHighlights = [
@@ -36,7 +36,7 @@ export const apartmentTypes = [
 
 export const apartmentStackingIntro = {
   eyebrow: "Interactive Stacking Plan",
-  title: "Explore Sky Residence Floors",
+  title: "Explore Encanto Trade Center - Residence Floors",
   subtitle:
     "Navigate floors 5–34 to discover residence availability, unit sizes, and premium views.",
 };
@@ -78,7 +78,7 @@ export const apartmentTravel = [
 
 export const apartmentInvestment = {
   title: "A Smart Residential Investment",
-  body: "Sky Residence is not only a home — it is a high-value real estate asset in one of the city's most iconic developments.",
+  body: "Encanto Trade Center - Residence is not only a home — it is a high-value real estate asset in one of the city's most iconic developments.",
   points: ["High rental demand", "Central integrated ecosystem", "Premium resale value", "Limited unit supply"],
 };
 
@@ -110,7 +110,7 @@ export const apartmentWhy = [
 
 export const apartmentCta = {
   title: "Your Life Above the Skyline Awaits",
-  body: "Schedule a private viewing and experience Sky Residence in person.",
+  body: "Schedule a private viewing and experience Encanto Trade Center - Residence in person.",
   primary: { label: "Book a Tour", href: "#contact" },
   secondary: { label: "Contact Sales", href: "#contact" },
   tertiary: { label: "Download Brochure", href: "#contact" },
@@ -119,7 +119,7 @@ export const apartmentCta = {
 export const apartmentContact = {
   title: "Private Viewing Request",
   body: "Connect with our residence specialists for availability, pricing, and private tours.",
-  footer: "Encanto Trade Center · Sky Residence",
+  footer: "Encanto Trade Center - Residence",
 };
 
 export const apartmentEcosystem = [

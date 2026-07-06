@@ -15,14 +15,14 @@ const INTEREST_OPTIONS: Record<
     { value: "office", label: "Office Tower" },
     { value: "mall", label: "Central Mall" },
     { value: "ballroom", label: "Grand Ballroom" },
-    { value: "apartment", label: "Sky Residence" },
+    { value: "apartment", label: "Encanto Trade Center - Residence" },
     { value: "general", label: "Ерөнхий мэдээлэл" },
   ],
   en: [
     { value: "office", label: "Office Tower" },
     { value: "mall", label: "Central Mall" },
     { value: "ballroom", label: "Grand Ballroom" },
-    { value: "apartment", label: "Sky Residence" },
+    { value: "apartment", label: "Encanto Trade Center - Residence" },
     { value: "general", label: "General inquiry" },
   ],
 };

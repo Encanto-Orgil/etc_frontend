@@ -20,7 +20,7 @@ const items = [
     key: "3",
     label: "Ямар хэсгүүдтэй вэ?",
     children:
-      "Office Tower, Central Mall, Grand Ballroom, Sky Residence — ажил, худалдаа, ёслол, амьдралын бүх хэрэгцээг нэг дор шийднэ.",
+      "Office Tower, Central Mall, Grand Ballroom, Encanto Trade Center - Residence — ажил, худалдаа, ёслол, амьдралын бүх хэрэгцээг нэг дор шийднэ.",
   },
   {
     key: "4",

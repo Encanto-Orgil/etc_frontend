@@ -157,7 +157,7 @@ export function homeMetadata(): Metadata {
       "35 давхар",
       "135 метр",
       "Central Mall",
-      "Sky Residence",
+      "Encanto Trade Center - Residence",
     ],
   });
 }

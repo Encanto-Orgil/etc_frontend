@@ -28,7 +28,7 @@ export const STACKING_TOWER_META: Record<TowerKind, StackingTowerMeta> = {
   },
   apartment: {
     kind: "apartment",
-    title: "Sky Residence",
+    title: "Encanto Trade Center - Residence",
     subtitle: "Premium орон сууцны цамхаг",
     floorsLabel: "34 давхар",
     image: "/images/renders/render-20.jpg",

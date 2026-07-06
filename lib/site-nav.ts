@@ -31,7 +31,7 @@ export const SITE_SECTION_NAV: SiteSectionNav[] = [
     label: "Encanto Grand Ballroom",
     navLabel: "Ballroom",
   },
-  { slug: "apartment", href: "/apartment", label: "Sky Residence", navLabel: "Residences" },
+  { slug: "apartment", href: "/apartment", label: "Encanto Trade Center - Residence", navLabel: "Residences" },
 ];
 
 /**
