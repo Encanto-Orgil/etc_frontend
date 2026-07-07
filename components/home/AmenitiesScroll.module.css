@@ -1,93 +1,167 @@
-.header {
-  margin-bottom: clamp(28px, 4vw, 40px);
-}
-
 .section {
+  position: relative;
   overflow: hidden;
 }
 
-.marquee {
-  overflow: hidden;
-  padding: 8px 0 12px;
-  mask-image: linear-gradient(
-    90deg,
-    transparent,
-    #000 6%,
-    #000 94%,
-    transparent
-  );
+.glow {
+  position: absolute;
+  top: -10%;
+  left: -8%;
+  width: min(42vw, 520px);
+  height: min(42vw, 520px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(200, 164, 92, 0.12) 0%, transparent 68%);
+  pointer-events: none;
 }
 
-.marqueeTrack {
-  display: flex;
-  gap: 18px;
-  width: max-content;
-  animation: amenitiesMarquee 48s linear infinite;
-  will-change: transform;
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: end;
+  margin-bottom: clamp(40px, 5vw, 64px);
 }
 
-.marquee:hover .marqueeTrack {
-  animation-play-state: paused;
+.headerCopy {
+  max-width: clamp(280px, 34vw, 520px);
+}
+
+.title {
+  text-wrap: balance;
+}
+
+.lead {
+  margin: 0;
+  max-width: 48ch;
+  justify-self: end;
+  font-size: clamp(0.98rem, 1.35vw, 1.08rem);
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(4, minmax(180px, 220px));
+  gap: clamp(12px, 1.6vw, 16px);
 }
 
 .card {
   position: relative;
-  flex: 0 0 clamp(240px, 28vw, 320px);
-  aspect-ratio: 3 / 4;
-  border-radius: 20px;
+  min-height: 180px;
+  border-radius: 22px;
   overflow: hidden;
-  background: var(--bg-soft);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition:
+    transform 0.35s var(--ease),
+    border-color 0.35s var(--ease),
+    box-shadow 0.35s var(--ease);
 }
 
-.card img {
+.card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(200, 164, 92, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 24px 48px rgba(0, 0, 0, 0.28);
+}
+
+.image {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.6s var(--ease);
 }
 
-.card:hover img {
+.card:hover .image {
   transform: scale(1.05);
 }
 
-.cardOverlay {
+.overlay {
   position: absolute;
-  inset: auto 0 0;
-  padding: 20px;
-  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.72));
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.18) 42%, rgba(0, 0, 0, 0.78) 100%);
 }
 
-.cardOverlay h3 {
+.cardBody {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+  height: 100%;
+  padding: clamp(18px, 2.2vw, 24px);
+}
+
+.index {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--luxury-gold);
+}
+
+.cardBody h3 {
   margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
   color: #fff;
-  font-size: 1rem;
-  font-weight: 600;
 }
 
-@keyframes amenitiesMarquee {
-  from {
-    transform: translateX(0);
+.cardFeatured .cardBody h3 {
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+}
+
+@media (max-width: 960px) {
+  .header {
+    grid-template-columns: 1fr;
+    gap: 18px;
   }
 
-  to {
-    transform: translateX(-50%);
+  .lead {
+    justify-self: start;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+    grid-auto-rows: minmax(200px, 240px);
+  }
+
+  .card,
+  .cardFeatured {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+
+  .cardFeatured {
+    grid-column: 1 / -1 !important;
+    grid-row: span 1 !important;
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: minmax(220px, auto);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee {
-    overflow-x: auto;
-    mask-image: none;
-    padding: 0 clamp(20px, 4vw, 40px) 8px;
-    scrollbar-width: none;
+  .card:hover {
+    transform: none;
   }
 
-  .marquee::-webkit-scrollbar {
-    display: none;
-  }
-
-  .marqueeTrack {
-    animation: none;
-    padding-right: clamp(20px, 4vw, 40px);
+  .card:hover .image {
+    transform: none;
   }
 }

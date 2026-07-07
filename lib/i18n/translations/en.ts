@@ -214,18 +214,19 @@ export const en: Translations = {
     amenities: {
       eyebrow: "Amenities",
       title: "Curated lifestyle experiences.",
+      lead: "From arrival to everyday living, every detail is designed to feel effortless, secure, and distinctly premium. Office, retail, residence, and lifestyle destinations are all linked via connected bridges — move through the development without stepping outside.",
       ariaLabel: "Amenities gallery",
       items: [
         { title: "Luxury Lobby" },
-        { title: "Sky Garden" },
-        { title: "Fitness" },
+        { title: "Terrace" },
+        { title: "Sport Complex" },
         { title: "Conference" },
         { title: "Restaurant" },
         { title: "Coffee" },
         { title: "Retail" },
         { title: "Parking" },
         { title: "24/7 Security" },
-        { title: "Smart Access" },
+        { title: "Connected Bridge" },
       ],
     },
     gallery: {

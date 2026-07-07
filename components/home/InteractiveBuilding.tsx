@@ -26,7 +26,9 @@ const DESTINATIONS_WITH_DESCRIPTION = new Set([
 export default function InteractiveBuilding() {
   const copy = useTranslations().home.interactiveBuilding;
   const searchParams = useSearchParams();
-  const startCalibrating = searchParams.get("building-calibrate") === "1";
+  const settingsMode = searchParams.get("settings") === "True";
+  const startCalibrating =
+    settingsMode && searchParams.get("building-calibrate") === "1";
   const {
     calibration,
     ready,
@@ -85,15 +87,17 @@ export default function InteractiveBuilding() {
 
         <div className={styles.stage} data-home-reveal>
           <div className={styles.facade}>
-            <div className={styles.facadeTopBar}>
-              <button
-                type="button"
-                className={styles.calibrateBtn}
-                onClick={() => setCalibrateMode(true)}
-              >
-                {copy.calibrateZones}
-              </button>
-            </div>
+            {settingsMode ? (
+              <div className={styles.facadeTopBar}>
+                <button
+                  type="button"
+                  className={styles.calibrateBtn}
+                  onClick={() => setCalibrateMode(true)}
+                >
+                  {copy.calibrateZones}
+                </button>
+              </div>
+            ) : null}
 
             <img
               src={interactiveBuilding.image}

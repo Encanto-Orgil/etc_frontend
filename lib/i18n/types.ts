@@ -129,6 +129,7 @@ export type Translations = {
     amenities: {
       eyebrow: string;
       title: string;
+      lead: string;
       ariaLabel: string;
       items: { title: string }[];
     };
