@@ -1,55 +1,23 @@
-import { newsItems } from "@/lib/homeContent";
-import shared from "./home.shared.module.css";
-import styles from "./NewsSection.module.css";
+import { fetchSiteNews } from "@/lib/api";
+import { newsItems as fallbackNews } from "@/lib/homeContent";
+import NewsSectionView from "./NewsSectionView";
 
-export default function NewsSection() {
-  const [featured, ...rest] = newsItems;
+export default async function NewsSection() {
+  const apiNews = await fetchSiteNews();
+  const items =
+    apiNews && apiNews.length
+      ? apiNews.map((item) => ({
+          category: item.category,
+          title: item.title,
+          date: item.date,
+          image: item.image,
+          excerpt: item.excerpt || undefined,
+        }))
+      : fallbackNews;
 
-  return (
-    <section className={shared.section} id="news">
-      <div className={shared.container}>
-        <div className={styles.header} data-home-reveal>
-          <div>
-            <p className={shared.eyebrow}>Latest News</p>
-            <h2 className={shared.title}>Updates from Encanto.</h2>
-          </div>
-          <p className={styles.headerNote}>Featured story and recent announcements from the project.</p>
-        </div>
+  if (!items.length) {
+    return null;
+  }
 
-        <div className={styles.layout}>
-          <article className={styles.featured} data-home-reveal>
-            <div className={styles.featuredMedia}>
-              <img src={featured.image} alt={featured.title} loading="eager" />
-              <div className={styles.featuredOverlay} />
-              <div className={styles.featuredContent}>
-                <div className={styles.featuredMeta}>
-                  <span className={styles.category}>{featured.category}</span>
-                  <time>{featured.date}</time>
-                </div>
-                <h3>{featured.title}</h3>
-                {featured.excerpt ? <p className={styles.excerpt}>{featured.excerpt}</p> : null}
-              </div>
-            </div>
-          </article>
-
-          <div className={styles.secondaryList}>
-            {rest.map((item) => (
-              <article key={item.title} className={styles.compact} data-home-reveal>
-                <div className={styles.compactMedia}>
-                  <img src={item.image} alt={item.title} loading="lazy" />
-                </div>
-                <div className={styles.compactBody}>
-                  <div className={styles.compactMeta}>
-                    <span className={styles.category}>{item.category}</span>
-                    <time>{item.date}</time>
-                  </div>
-                  <h3>{item.title}</h3>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+  return <NewsSectionView items={items} />;
 }

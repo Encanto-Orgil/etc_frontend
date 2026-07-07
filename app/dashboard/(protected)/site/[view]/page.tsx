@@ -3,21 +3,22 @@
 import { notFound } from "next/navigation";
 import { use } from "react";
 import ManagementPlaceholder from "@/components/dashboard/ManagementPlaceholder";
+import SiteNewsManagement from "@/components/dashboard/SiteNewsManagement";
 import { getDashboardManagementRoute } from "@/lib/dashboardNav";
 
-export default function DashboardModuleViewPage({
+export default function DashboardSiteViewPage({
   params,
 }: {
-  params: Promise<{ module: string; view: string }>;
+  params: Promise<{ view: string }>;
 }) {
-  const { module, view } = use(params);
-  const route = getDashboardManagementRoute(`/dashboard/${module}/${view}`);
+  const { view } = use(params);
 
-  if (!route) {
-    notFound();
+  if (view === "news") {
+    return <SiteNewsManagement />;
   }
 
-  if (module === "ballroom" || module === "site") {
+  const route = getDashboardManagementRoute(`/dashboard/site/${view}`);
+  if (!route) {
     notFound();
   }
 

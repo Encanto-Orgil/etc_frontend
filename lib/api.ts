@@ -21,6 +21,17 @@ export async function submitInquiry(payload: InquiryPayload): Promise<void> {
 }
 
 export type { OfficeStackingPlan } from "./officeStacking";
+export type { PublicSiteNewsItem } from "./siteNewsManagement";
+
+export async function fetchSiteNews(): Promise<import("./siteNewsManagement").PublicSiteNewsItem[] | null> {
+  try {
+    const res = await fetch(`${API_BASE}/news/`, { next: { revalidate: 60 } });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
 
 export async function fetchOfficeStackingPlan(): Promise<import("./officeStacking").OfficeStackingPlan | null> {
   try {
