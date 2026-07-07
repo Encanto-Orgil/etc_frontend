@@ -1,6 +1,7 @@
 "use client";
 
 import AlertsCard from "@/components/dashboard/AlertsCard";
+import InquiriesCard from "@/components/dashboard/InquiriesCard";
 import ProjectsGrid from "@/components/dashboard/ProjectsGrid";
 import RecentPreviewsCard from "@/components/dashboard/RecentPreviewsCard";
 import SupportTicketsCard from "@/components/dashboard/SupportTicketsCard";
@@ -15,6 +16,7 @@ export default function DashboardPage() {
         <aside className={styles.sideColumn}>
           <UsageCard metrics={usageMetrics} />
           <SupportTicketsCard />
+          <InquiriesCard />
           <AlertsCard />
           <RecentPreviewsCard preview={recentPreview} />
         </aside>

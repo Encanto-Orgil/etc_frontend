@@ -8,23 +8,20 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
-import { brandStatement } from "@/lib/homeContent";
+import { useTranslations } from "@/lib/i18n";
 import styles from "./BrandStatement.module.css";
-
-const STATS = brandStatement.stats;
-const LAST_INDEX = STATS.length - 1;
 
 /** Scroll distance per stat word (vh). */
 const STEP_VH = 72;
 
-function wordOpacity(index: number, progress: number) {
-  const exactIndex = progress * LAST_INDEX;
+function wordOpacity(index: number, progress: number, lastIndex: number) {
+  const exactIndex = progress * lastIndex;
   const distance = Math.abs(index - exactIndex);
   return Math.max(0.06, 1 - distance * 0.78);
 }
 
-function wordScale(index: number, progress: number) {
-  const exactIndex = progress * LAST_INDEX;
+function wordScale(index: number, progress: number, lastIndex: number) {
+  const exactIndex = progress * lastIndex;
   const distance = Math.abs(index - exactIndex);
   return 0.9 + Math.max(0, 1 - distance * 1.35) * 0.1;
 }
@@ -32,24 +29,26 @@ function wordScale(index: number, progress: number) {
 function StatWord({
   stat,
   index,
+  lastIndex,
   scrollProgress,
   measureRef,
 }: {
-  stat: (typeof STATS)[number];
+  stat: { value: string; label: string };
   index: number;
+  lastIndex: number;
   scrollProgress: MotionValue<number>;
   measureRef?: RefObject<HTMLLIElement | null>;
 }) {
   const opacity = useTransform(scrollProgress, (progress) =>
-    wordOpacity(index, progress),
+    wordOpacity(index, progress, lastIndex),
   );
   const scale = useTransform(scrollProgress, (progress) =>
-    wordScale(index, progress),
+    wordScale(index, progress, lastIndex),
   );
   const [active, setActive] = useState(index === 0);
 
   useMotionValueEvent(scrollProgress, "change", (progress) => {
-    const exactIndex = progress * LAST_INDEX;
+    const exactIndex = progress * lastIndex;
     setActive(Math.abs(index - exactIndex) < 0.45);
   });
 
@@ -68,6 +67,10 @@ function StatWord({
 }
 
 export default function BrandStatement() {
+  const brandStatement = useTranslations().home.brandStatement;
+  const stats = brandStatement.stats;
+  const lastIndex = stats.length - 1;
+
   const containerRef = useRef<HTMLElement>(null);
   const itemRef = useRef<HTMLLIElement>(null);
   const scrollProgress = useMotionValue(0);
@@ -75,12 +78,12 @@ export default function BrandStatement() {
   const [activeDot, setActiveDot] = useState(0);
 
   const trackY = useTransform(scrollProgress, (progress) => {
-    const exactIndex = progress * LAST_INDEX;
+    const exactIndex = progress * lastIndex;
     return (1 - exactIndex) * itemHeight;
   });
 
   useMotionValueEvent(scrollProgress, "change", (progress) => {
-    setActiveDot(Math.round(progress * LAST_INDEX));
+    setActiveDot(Math.round(progress * lastIndex));
   });
 
   useEffect(() => {
@@ -135,7 +138,7 @@ export default function BrandStatement() {
     <section
       ref={containerRef}
       className={styles.section}
-      style={{ height: `${STATS.length * STEP_VH}vh` }}
+      style={{ height: `${stats.length * STEP_VH}vh` }}
       id="brand"
       aria-label={brandStatement.headline}
     >
@@ -158,11 +161,12 @@ export default function BrandStatement() {
             <div className={styles.scrollCol}>
               <div className={styles.wordWindow}>
                 <motion.ul className={styles.wordTrack} style={{ y: trackY }}>
-                  {STATS.map((stat, index) => (
+                  {stats.map((stat, index) => (
                     <StatWord
                       key={stat.label}
                       stat={stat}
                       index={index}
+                      lastIndex={lastIndex}
                       scrollProgress={scrollProgress}
                       measureRef={index === 0 ? itemRef : undefined}
                     />
@@ -171,7 +175,7 @@ export default function BrandStatement() {
               </div>
 
               <div className={styles.dots} aria-hidden>
-                {STATS.map((stat, index) => (
+                {stats.map((stat, index) => (
                   <span
                     key={stat.label}
                     className={styles.dot}

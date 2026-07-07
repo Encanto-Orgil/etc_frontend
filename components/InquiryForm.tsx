@@ -71,7 +71,8 @@ export default function InquiryForm({
   defaultMessage = "",
   hideInterest = false,
   interestOptions,
-  locale = "mn",
+  locale = "en",
+  theme = "light",
   onSuccess,
 }: {
   defaultInterest?: InquiryPayload["interest"];
@@ -79,6 +80,7 @@ export default function InquiryForm({
   hideInterest?: boolean;
   interestOptions?: { value: InquiryPayload["interest"]; label: string }[];
   locale?: "mn" | "en";
+  theme?: "light" | "dark";
   onSuccess?: () => void;
 }) {
   const copy = COPY[locale];
@@ -104,7 +106,7 @@ export default function InquiryForm({
 
   if (done) {
     return (
-      <div className={styles.done}>
+      <div className={`${styles.done} ${theme === "dark" ? styles.doneDark : ""}`}>
         <h3 className="display">{copy.doneTitle}</h3>
         <p>{copy.doneBody}</p>
         <Button type="default" onClick={() => setDone(false)}>
@@ -118,7 +120,7 @@ export default function InquiryForm({
     <Form
       form={form}
       layout="vertical"
-      className={styles.form}
+      className={`${styles.form} ${theme === "dark" ? styles.formDark : ""}`}
       initialValues={{ interest: defaultInterest, message: defaultMessage }}
       onFinish={onFinish}
       requiredMark={false}
@@ -154,7 +156,11 @@ export default function InquiryForm({
           </Form.Item>
         ) : (
           <Form.Item name="interest" label={copy.interestLabel}>
-            <Select size="large" options={options} />
+            <Select
+              size="large"
+              options={options}
+              popupClassName={theme === "dark" ? styles.selectDropdownDark : undefined}
+            />
           </Form.Item>
         )}
       </div>

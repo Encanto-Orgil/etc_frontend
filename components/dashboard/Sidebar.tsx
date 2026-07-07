@@ -6,6 +6,7 @@ import {
   BellOutlined,
   CalendarOutlined,
   DownOutlined,
+  FormOutlined,
   GithubOutlined,
   GlobalOutlined,
   LogoutOutlined,
@@ -60,6 +61,7 @@ export default function Sidebar({ user }: { user: AuthUser }) {
   const managementItems = useMemo<MenuItem[]>(
     () => [
       { key: "/dashboard", icon: <AppstoreOutlined />, label: "Projects" },
+      { key: "/dashboard/inquiries", icon: <FormOutlined />, label: "Inquiries" },
       { key: "/dashboard/support", icon: <MessageOutlined />, label: "Support Tickets" },
       ...DASHBOARD_MANAGEMENT_GROUPS.map((group) => ({
         key: group.key,

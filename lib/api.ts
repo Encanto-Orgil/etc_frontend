@@ -33,6 +33,14 @@ export async function fetchSiteNews(): Promise<import("./siteNewsManagement").Pu
   }
 }
 
+export async function fetchSiteNewsClient(): Promise<import("./siteNewsManagement").PublicSiteNewsItem[]> {
+  const res = await fetch(`${API_BASE}/news/`, { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error(`Failed to load news: ${res.status}`);
+  }
+  return res.json();
+}
+
 export async function fetchOfficeStackingPlan(): Promise<import("./officeStacking").OfficeStackingPlan | null> {
   try {
     const res = await fetch(`${API_BASE}/office/stacking-plan/`, {

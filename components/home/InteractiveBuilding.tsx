@@ -11,11 +11,20 @@ import {
   mergeDestinationsWithCalibration,
   polygonToPoints,
 } from "@/lib/interactiveBuildingZones";
+import { useTranslations } from "@/lib/i18n";
 import shared from "./home.shared.module.css";
 import InteractiveBuildingZoneCalibrator from "./InteractiveBuildingZoneCalibrator";
 import styles from "./InteractiveBuilding.module.css";
 
+const DESTINATIONS_WITH_DESCRIPTION = new Set([
+  "office",
+  "mall",
+  "ballroom",
+  "residence",
+]);
+
 export default function InteractiveBuilding() {
+  const copy = useTranslations().home.interactiveBuilding;
   const searchParams = useSearchParams();
   const startCalibrating = searchParams.get("building-calibrate") === "1";
   const {
@@ -69,12 +78,9 @@ export default function InteractiveBuilding() {
     <section className={shared.section} id="building">
       <div className={shared.container}>
         <div className={styles.header} data-home-reveal>
-          <p className={shared.eyebrow}>Interactive Building</p>
-          <h2 className={shared.title}>Explore the full development.</h2>
-          <p className={shared.lead}>
-            Hover the exterior render to discover office, retail, ballroom, Encanto Tower,
-            residence, and connected destinations.
-          </p>
+          <p className={shared.eyebrow}>{copy.eyebrow}</p>
+          <h2 className={shared.title}>{copy.title}</h2>
+          <p className={shared.lead}>{copy.lead}</p>
         </div>
 
         <div className={styles.stage} data-home-reveal>
@@ -85,7 +91,7 @@ export default function InteractiveBuilding() {
                 className={styles.calibrateBtn}
                 onClick={() => setCalibrateMode(true)}
               >
-                Calibrate zones
+                {copy.calibrateZones}
               </button>
             </div>
 
@@ -101,7 +107,7 @@ export default function InteractiveBuilding() {
               className={styles.zoneOverlay}
               viewBox={`0 0 ${INTERACTIVE_BUILDING_VIEWBOX.width} ${INTERACTIVE_BUILDING_VIEWBOX.height}`}
               preserveAspectRatio="xMidYMid meet"
-              aria-label="Interactive building map"
+              aria-label={copy.ariaLabel}
             >
               {destinations.map((destination) => {
                 const isActive = activeId === destination.id;
@@ -146,12 +152,13 @@ export default function InteractiveBuilding() {
                     style={{ background: active.color }}
                     aria-hidden
                   />
-                  <span className={styles.panelFloors}>{active.floors}</span>
                   <h3>{active.detail.title}</h3>
-                  <p>{active.detail.description}</p>
+                  {DESTINATIONS_WITH_DESCRIPTION.has(active.id) ? (
+                    <p>{active.detail.description}</p>
+                  ) : null}
                   {active.href ? (
                     <Link href={active.href} className={shared.btnDark}>
-                      View {active.label}
+                      {copy.viewLabel} {active.label}
                     </Link>
                   ) : null}
                 </motion.div>
@@ -164,11 +171,8 @@ export default function InteractiveBuilding() {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.25 }}
                 >
-                  <span className={styles.panelHint}>Hover a destination</span>
-                  <p>
-                    Select Office, Mall, Ballroom, Encanto Tower, Residence, or Orgil Supermarket
-                    on the render to view details.
-                  </p>
+                  <span className={styles.panelHint}>{copy.hoverHint}</span>
+                  <p>{copy.hoverLead}</p>
                   <ul className={styles.panelList}>
                     {destinations.map((destination) => (
                       <li key={destination.id}>

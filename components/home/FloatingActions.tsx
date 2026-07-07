@@ -5,6 +5,7 @@ import type { IconType } from "react-icons";
 import { FaCalendarCheck, FaFacebookMessenger } from "react-icons/fa6";
 import { LuPhone } from "react-icons/lu";
 import { project } from "@/lib/data";
+import { useTranslations } from "@/lib/i18n";
 import styles from "./FloatingActions.module.css";
 
 type Action = {
@@ -14,28 +15,30 @@ type Action = {
   external?: boolean;
 };
 
-const actions: Action[] = [
-  {
-    href: "https://m.me/",
-    label: "Messenger",
-    icon: FaFacebookMessenger,
-    external: true,
-  },
-  {
-    href: `tel:${project.contactPhone.replace(/\s/g, "")}`,
-    label: "Phone",
-    icon: LuPhone,
-  },
-  {
-    href: "/#contact",
-    label: "Book Visit",
-    icon: FaCalendarCheck,
-  },
-];
-
 export default function FloatingActions() {
+  const copy = useTranslations().home.floatingActions;
+
+  const actions: Action[] = [
+    {
+      href: "https://m.me/",
+      label: copy.messenger,
+      icon: FaFacebookMessenger,
+      external: true,
+    },
+    {
+      href: `tel:${project.contactPhone.replace(/\s/g, "")}`,
+      label: copy.phone,
+      icon: LuPhone,
+    },
+    {
+      href: "/#contact",
+      label: copy.bookVisit,
+      icon: FaCalendarCheck,
+    },
+  ];
+
   return (
-    <div className={styles.wrap} aria-label="Quick contact">
+    <div className={styles.wrap} aria-label={copy.ariaLabel}>
       {actions.map((action) => {
         const Icon = action.icon;
         const className = styles.btn;

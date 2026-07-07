@@ -2,19 +2,23 @@
 
 import InquiryForm from "@/components/InquiryForm";
 import type { InquiryPayload } from "@/lib/api";
-
-const HOME_INTEREST_OPTIONS: { value: InquiryPayload["interest"]; label: string }[] = [
-  { value: "office", label: "Office" },
-  { value: "apartment", label: "Residence" },
-  { value: "mall", label: "Retail" },
-  { value: "general", label: "Investment" },
-];
+import { useLocale } from "@/lib/i18n";
 
 export default function HomeInquiryForm() {
+  const { locale, t } = useLocale();
+
+  const interestOptions: { value: InquiryPayload["interest"]; label: string }[] =
+    t.home.contact.interestOptions.map((option) => ({
+      value: option.value as InquiryPayload["interest"],
+      label: option.label,
+    }));
+
   return (
     <InquiryForm
-      defaultInterest="general"
-      interestOptions={HOME_INTEREST_OPTIONS}
+      defaultInterest="office"
+      interestOptions={interestOptions}
+      locale={locale}
+      theme="light"
     />
   );
 }

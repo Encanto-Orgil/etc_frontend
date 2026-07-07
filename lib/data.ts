@@ -25,6 +25,8 @@ export const project = {
   location: "26th Khoroo, Bayanzurkh District, Ulaanbaatar",
   mapUrl:
     "https://www.google.com/maps/search/?api=1&query=Encanto+Trade+Center+26th+khoroo+Bayanzurkh+Ulaanbaatar",
+  mapDirectionsUrl:
+    "https://www.google.com/maps/dir/?api=1&destination=Encanto+Trade+Center+26th+khoroo+Bayanzurkh+Ulaanbaatar",
   heroImage: "/images/renders/render-8.jpg",
   duskImage: "/images/renders/render-35.jpg",
   droneImage: "/images/drone/drone-3.jpg",
@@ -38,9 +40,10 @@ export const project = {
     { label: "Цамхаг", value: "2" },
     { label: "Суурь давхар", value: "8" },
   ] as Stat[],
-  contactPhone: "+976 7700 0000",
+  contactPhone: "+976 9919-1522",
   contactEmail: "info@encanto.mn",
-  contactAddress: "Баянзүрх дүүрэг, Улаанбаатар, Монгол улс",
+  contactAddress:
+    "Улаанбаатар хот, Баянзүрх дүүрэг, 26-р хороо, Их Монгол Улсын гудамж, Энканто оффис 4 давхар",
 };
 
 export const towers: Tower[] = [
@@ -51,7 +54,7 @@ export const towers: Tower[] = [
     nameMn: "Office",
     tagline: "Define your business value",
     floors: "24 floors",
-    heroImage: "/images/renders/render-8.jpg",
+    heroImage: "/images/renders/render-34.jpg",
     accent: "#C8A45C",
     summary:
       "Mongolia's tallest building — Grade-A office with 4.5 m ceilings, YUANDA glass facade, FUJITEC smart elevators, and 1,500 parking spaces.",
@@ -147,7 +150,7 @@ export const towers: Tower[] = [
     nameMn: "Ballroom",
     tagline: "A luxurious setting for unforgettable moments",
     floors: "7–8 floors",
-    heroImage: "/images/ballroom/ballroom-1.jpg",
+    heroImage: "/images/ballroom/ballroom-4.jpg",
     accent: "#A87E3E",
     summary:
       "Encanto Grand Ballroom on floors 7–8 — 1,600 m² of premium event space for weddings, galas, and corporate celebrations.",
@@ -195,7 +198,7 @@ export const towers: Tower[] = [
     nameMn: "Apartment",
     tagline: "The art of living above the skyline",
     floors: "34 floors",
-    heroImage: "/images/renders/render-20.jpg",
+    heroImage: "/images/renders/render-1.jpg",
     accent: "#C8A45C",
     summary:
       "A 34-floor residential tower with panoramic city views and premium finishes throughout.",

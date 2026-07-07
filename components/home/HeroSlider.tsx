@@ -3,18 +3,14 @@
 import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "@/lib/i18n";
 import styles from "./HeroSlider.module.css";
 
-const slide = {
-  image: "/images/renders/render-34.jpg",
-  tag: "Premium Offices • Luxury Residences • Retail & Lifestyle",
-  title: "Encanto",
-  titleLine2: "Trade Center",
-  subtitle:
-    "A new-generation integrated business destination where commerce, lifestyle, and investment converge in one iconic development.",
-};
+const slideImage = "/images/renders/render-34.jpg";
 
 export default function HeroSlider() {
+  const t = useTranslations();
+  const hero = t.home.hero;
   const [light, setLight] = useState({ x: 50, y: 40 });
 
   return (
@@ -37,13 +33,13 @@ export default function HeroSlider() {
       />
       <AnimatePresence mode="sync">
         <motion.div
-          key={slide.image}
+          key={slideImage}
           className={styles.slide}
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-          style={{ backgroundImage: `url(${slide.image})` }}
+          style={{ backgroundImage: `url(${slideImage})` }}
         />
       </AnimatePresence>
 
@@ -56,19 +52,19 @@ export default function HeroSlider() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className={styles.tag}>{slide.tag}</span>
+          <span className={styles.tag}>{hero.tag}</span>
           <h1 className={styles.title}>
-            {slide.title}
+            {hero.title}
             <br />
-            {slide.titleLine2}
+            {hero.titleLine2}
           </h1>
-          <p className={styles.sub}>{slide.subtitle}</p>
+          <p className={styles.sub}>{hero.subtitle}</p>
           <div className={styles.actions}>
             <Link href="/#contact" className={styles.ctaPrimary}>
-              Schedule Private Presentation
+              {hero.ctaPrimary}
             </Link>
             <Link href="/#why-encanto" className={styles.ctaSecondary}>
-              Explore the Project
+              {hero.ctaSecondary}
             </Link>
           </div>
         </motion.div>
@@ -80,14 +76,14 @@ export default function HeroSlider() {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        aria-label="Scroll down to explore"
+        aria-label={hero.scrollAria}
       >
         <motion.span
           className={styles.scrollDownText}
           animate={{ y: [0, 5, 0], opacity: [0.5, 1, 0.5] }}
           transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
         >
-          Scroll Down
+          {hero.scrollDown}
         </motion.span>
         <span className={styles.scrollDownTrack} aria-hidden>
           <span className={styles.scrollDownMarker} />

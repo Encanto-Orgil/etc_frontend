@@ -1,32 +1,37 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LuArrowUpRight } from "react-icons/lu";
-import { nearbyPlaces, type NearbyPlace } from "@/lib/homeContent";
+import { getNearbyPlaces, useLocale, useTranslations } from "@/lib/i18n";
+import type { NearbyPlace } from "@/lib/i18n/types";
 import { project } from "@/lib/data";
 import shared from "./home.shared.module.css";
 import styles from "./LocationSection.module.css";
 
-const defaultPreview = {
-  image: "/images/drone/drone-1.jpg",
-  imageAlt: "Aerial view of Encanto Trade Center and the surrounding Bayanzurkh district",
-  name: "Encanto Trade Center",
-  distance: null as string | null,
-};
-
 export default function LocationSection() {
+  const { locale } = useLocale();
+  const t = useTranslations();
+  const location = t.home.location;
+  const nearbyPlaces = getNearbyPlaces(locale);
   const [activePlace, setActivePlace] = useState<NearbyPlace | null>(null);
+
+  const defaultPreview = {
+    image: "/images/drone/drone-1.jpg",
+    imageAlt: location.defaultPreviewAlt,
+    name: "Encanto Trade Center",
+    distance: null as string | null,
+  };
+
   const preview = activePlace ?? defaultPreview;
 
   return (
     <section className={`${shared.section} ${styles.section}`} id="location">
       <div className={shared.container}>
         <div className={styles.header} data-home-reveal>
-          <p className={shared.eyebrow}>Location</p>
-          <h2 className={shared.title}>Connected to the city.</h2>
+          <p className={shared.eyebrow}>{location.eyebrow}</p>
+          <h2 className={shared.title}>{location.title}</h2>
           <p className={shared.lead}>
             <a
               href={project.mapUrl}
@@ -34,7 +39,7 @@ export default function LocationSection() {
               rel="noreferrer"
               className={styles.locationLink}
             >
-              {project.location}
+              {t.project.location}
               <LuArrowUpRight className={styles.locationLinkIcon} aria-hidden />
             </a>
           </p>
@@ -70,8 +75,8 @@ export default function LocationSection() {
           </div>
 
           <div className={styles.nearby}>
-            <h3>Nearby</h3>
-            <p className={styles.nearbyLabel}>Walking distance</p>
+            <h3>{location.nearby}</h3>
+            <p className={styles.nearbyLabel}>{location.nearbyLabel}</p>
             <ul
               className={styles.nearbyList}
               onMouseLeave={() => setActivePlace(null)}
@@ -87,7 +92,11 @@ export default function LocationSection() {
                       onMouseEnter={() => setActivePlace(place)}
                       onFocus={() => setActivePlace(place)}
                       onBlur={() => setActivePlace(null)}
-                      onClick={() => setActivePlace((current) => (current?.name === place.name ? null : place))}
+                      onClick={() =>
+                        setActivePlace((current) =>
+                          current?.name === place.name ? null : place,
+                        )
+                      }
                     >
                       <span className={styles.nearbyName}>{place.name}</span>
                       <strong>{place.distance}</strong>
@@ -96,9 +105,14 @@ export default function LocationSection() {
                 );
               })}
             </ul>
-            <Link href="/#contact" className={shared.btnDark}>
-              Request Location Brief
-            </Link>
+            <a
+              href={project.mapDirectionsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className={shared.btnDark}
+            >
+              {location.requestBrief}
+            </a>
           </div>
         </div>
       </div>

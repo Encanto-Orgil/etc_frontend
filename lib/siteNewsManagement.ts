@@ -10,6 +10,7 @@ export type SiteNewsArticle = {
   date_label: string;
   is_published: boolean;
   is_featured: boolean;
+  external_url?: string;
   created_at: string;
   updated_at: string;
 };
@@ -22,6 +23,7 @@ export type PublicSiteNewsItem = {
   image: string;
   date: string;
   is_featured: boolean;
+  external_url?: string;
 };
 
 type ListEnvelope<T> = T[] | { results: T[] };

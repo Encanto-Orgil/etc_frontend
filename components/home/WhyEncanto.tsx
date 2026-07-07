@@ -1,6 +1,8 @@
+"use client";
+
 import type { IconType } from "react-icons";
 import { LuBriefcase, LuBuilding2, LuHouse, LuTrendingUp } from "react-icons/lu";
-import { whyEncanto, whyEncantoSection, type WhyEncantoIcon } from "@/lib/homeContent";
+import { useTranslations, type WhyEncantoIcon } from "@/lib/i18n";
 import shared from "./home.shared.module.css";
 import styles from "./WhyEncanto.module.css";
 
@@ -12,6 +14,8 @@ const iconMap: Record<WhyEncantoIcon, IconType> = {
 };
 
 export default function WhyEncanto() {
+  const whyEncantoSection = useTranslations().home.whyEncanto;
+
   return (
     <section className={`${shared.section} ${shared.darkSection} ${styles.section}`} id="why-encanto">
       <div className={shared.container}>
@@ -28,7 +32,7 @@ export default function WhyEncanto() {
         </div>
 
         <div className={styles.grid}>
-          {whyEncanto.map((item, index) => {
+          {whyEncantoSection.items.map((item, index) => {
             const Icon = iconMap[item.icon];
 
             return (

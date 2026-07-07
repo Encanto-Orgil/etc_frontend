@@ -8,6 +8,56 @@
   gap: 16px;
 }
 
+.formDark :global(.ant-form-item-label > label) {
+  color: rgba(255, 255, 255, 0.72) !important;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.formDark :global(.ant-input),
+.formDark :global(.ant-input-affix-wrapper),
+.formDark :global(.ant-select-selector),
+.formDark :global(.ant-input-textarea textarea) {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+.formDark :global(.ant-input::placeholder),
+.formDark :global(.ant-input-affix-wrapper input::placeholder),
+.formDark :global(.ant-input-textarea textarea::placeholder) {
+  color: rgba(255, 255, 255, 0.58) !important;
+  opacity: 1 !important;
+}
+
+.formDark :global(.ant-select-selection-item),
+.formDark :global(.ant-select-selection-placeholder) {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.formDark :global(.ant-select-arrow) {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.formDark :global(.ant-select-open .ant-select-selector) {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.formDark :global(.ant-input:hover),
+.formDark :global(.ant-input-affix-wrapper:hover),
+.formDark :global(.ant-select-selector:hover),
+.formDark :global(.ant-input-textarea textarea:hover) {
+  border-color: rgba(255, 255, 255, 0.24) !important;
+}
+
+.formDark :global(.ant-input:focus),
+.formDark :global(.ant-input-affix-wrapper-focused),
+.formDark :global(.ant-select-focused .ant-select-selector),
+.formDark :global(.ant-input-textarea textarea:focus) {
+  border-color: rgba(200, 164, 92, 0.65) !important;
+  box-shadow: 0 0 0 2px rgba(200, 164, 92, 0.14) !important;
+}
+
 .submit {
   width: 100%;
   margin-top: 8px;
@@ -17,6 +67,38 @@
   background: var(--blue) !important;
   border: none !important;
   border-radius: var(--radius-sm) !important;
+}
+
+.formDark .submit {
+  background: var(--luxury-gold) !important;
+  color: #0a0a0a !important;
+}
+
+.formDark .submit:hover {
+  background: #e0c068 !important;
+  color: #0a0a0a !important;
+}
+
+.selectDropdownDark:global(.ant-select-dropdown) {
+  background: #161618 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45) !important;
+  padding: 6px !important;
+}
+
+.selectDropdownDark :global(.ant-select-item) {
+  color: rgba(255, 255, 255, 0.82) !important;
+  border-radius: 8px !important;
+}
+
+.selectDropdownDark :global(.ant-select-item-option-active),
+.selectDropdownDark :global(.ant-select-item-option-selected) {
+  background: rgba(200, 164, 92, 0.16) !important;
+  color: #fff !important;
+}
+
+.selectDropdownDark :global(.ant-select-item-option-selected .ant-select-item-option-state) {
+  color: var(--luxury-gold) !important;
 }
 
 .done {
@@ -34,6 +116,14 @@
 .done p {
   color: var(--text-dim);
   margin-bottom: 20px;
+}
+
+.doneDark h3 {
+  color: var(--luxury-gold);
+}
+
+.doneDark p {
+  color: rgba(255, 255, 255, 0.68);
 }
 
 @media (max-width: 620px) {

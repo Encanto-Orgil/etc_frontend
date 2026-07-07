@@ -15,6 +15,7 @@ export type DashboardMenuGroup = {
 
 export const DASHBOARD_PAGES: Record<string, { eyebrow: string; title: string }> = {
   "/dashboard": { eyebrow: "All Projects", title: "Overview" },
+  "/dashboard/inquiries": { eyebrow: "Operations", title: "Inquiries" },
   "/dashboard/support": { eyebrow: "Operations", title: "Support Tickets" },
   "/dashboard/property": { eyebrow: "Property Management", title: "Dashboard" },
   "/dashboard/stacking": { eyebrow: "", title: "Түрээсийн төлөвлөлтийн тойм" },
@@ -134,6 +135,9 @@ export function isStackingSection(pathname: string) {
 
 export function getDashboardSelectedKey(pathname: string) {
   if (pathname === "/dashboard") return "/dashboard";
+  if (pathname === "/dashboard/inquiries" || pathname.startsWith("/dashboard/inquiries/")) {
+    return "/dashboard/inquiries";
+  }
   if (pathname === "/dashboard/support" || pathname.startsWith("/dashboard/support/")) return "/dashboard/support";
   if (pathname === "/dashboard/property/dashboard") return "/dashboard/property";
   if (PROPERTY_TENANT_DETAIL_PATH.test(pathname)) return "/dashboard/property/tenants";

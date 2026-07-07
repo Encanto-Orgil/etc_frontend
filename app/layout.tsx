@@ -14,7 +14,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="mn" className={fontDisplay.variable}>
+    <html lang="en" className={fontDisplay.variable}>
       <body>
         <SiteSchema />
         <AntdRegistry>

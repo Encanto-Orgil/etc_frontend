@@ -5,7 +5,9 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Drawer } from "antd";
 import { CalendarOutlined, MenuOutlined } from "@ant-design/icons";
+import LocaleSwitcher from "@/components/LocaleSwitcher";
 import Logo from "@/components/Logo";
+import { useTranslations } from "@/lib/i18n";
 import {
   GLOBAL_HEADER_NAV,
   getContactHref,
@@ -13,6 +15,16 @@ import {
   resolveNavHref,
 } from "@/lib/site-nav";
 import styles from "./Navbar.module.css";
+
+const NAV_LABEL_KEYS: Record<string, keyof ReturnType<typeof useTranslations>["nav"]> = {
+  project: "project",
+  office: "office",
+  mall: "mall",
+  ballroom: "ballroom",
+  apartment: "residences",
+  location: "location",
+  contact: "contact",
+};
 
 const SCROLL_THRESHOLD = 48;
 
@@ -42,6 +54,7 @@ function isLinkActive(
 }
 
 export default function Navbar() {
+  const t = useTranslations();
   const pathname = usePathname();
   const isLanding = isLandingPath(pathname);
   const isScrollAwayHeader = pathname === "/ballroom";
@@ -53,18 +66,20 @@ export default function Navbar() {
     () =>
       GLOBAL_HEADER_NAV.map((item) => {
         const href = resolveNavHref(item, pathname);
+        const key = NAV_LABEL_KEYS[item.slug];
+        const label = key ? t.nav[key] : item.navLabel ?? item.label;
         return {
           href,
-          label: item.navLabel ?? item.label,
-          title: item.label,
+          label,
+          title: label,
           sectionId: item.sectionId,
         };
       }),
-    [pathname],
+    [pathname, t],
   );
 
   const contactHref = getContactHref(pathname);
-  const ctaLabel = "Book Tour";
+  const ctaLabel = t.nav.bookTour;
   const CtaIcon = CalendarOutlined;
 
   const updateScroll = useCallback(() => {
@@ -165,6 +180,7 @@ export default function Navbar() {
             </nav>
 
             <div className={styles.actions}>
+              <LocaleSwitcher />
               <Link href={contactHref} className={styles.cta} aria-label={ctaLabel}>
                 <CtaIcon className={styles.ctaIcon} aria-hidden />
                 <span>{ctaLabel}</span>
@@ -174,7 +190,7 @@ export default function Navbar() {
             <button
               type="button"
               className={styles.burger}
-              aria-label="Open menu"
+              aria-label={t.nav.openMenu}
               onClick={() => setOpen(true)}
             >
               <MenuOutlined />
@@ -212,6 +228,7 @@ export default function Navbar() {
               </Link>
             ))}
           </nav>
+          <LocaleSwitcher className={styles.drawerLang} />
           <Link
             href={contactHref}
             onClick={() => setOpen(false)}
