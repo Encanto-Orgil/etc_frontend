@@ -1,6 +1,5 @@
-import fs from "fs";
-import path from "path";
 import type { Locale } from "@/lib/i18n/types";
+import galleryManifest from "./homeGallery.manifest.json";
 
 export const GALLERY_FOLDERS = ["renders", "drone", "mall", "ballroom"] as const;
 
@@ -19,50 +18,35 @@ const CATEGORY_LABELS: Record<HomeGalleryCategory, Record<Locale, string>> = {
   ballroom: { en: "Ballroom", mn: "Ballroom" },
 };
 
-const IMAGE_RE = /\.(jpe?g|png|webp|gif)$/i;
-const EXT_PREFERENCE = [".jpg", ".jpeg", ".webp", ".png", ".gif"];
+type GalleryManifest = Record<HomeGalleryCategory, string[]>;
 
-function naturalSort(a: string, b: string) {
-  return a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
+function withCdnBase(src: string) {
+  const base = process.env.NEXT_PUBLIC_GALLERY_CDN_BASE?.replace(/\/$/, "");
+  if (!base) return src;
+  if (/^https?:\/\//i.test(src)) return src;
+  return `${base}${src.startsWith("/") ? src : `/${src}`}`;
 }
 
-function dedupeByStem(files: string[]) {
-  const byStem = new Map<string, string>();
-
-  for (const file of files.sort(naturalSort)) {
-    const stem = file.replace(/\.[^.]+$/, "").toLowerCase();
-    const ext = file.slice(file.lastIndexOf(".")).toLowerCase();
-    const existing = byStem.get(stem);
-
-    if (!existing) {
-      byStem.set(stem, file);
-      continue;
-    }
-
-    const existingExt = existing.slice(existing.lastIndexOf(".")).toLowerCase();
-    if (EXT_PREFERENCE.indexOf(ext) < EXT_PREFERENCE.indexOf(existingExt)) {
-      byStem.set(stem, file);
-    }
-  }
-
-  return [...byStem.values()].sort(naturalSort);
-}
-
+/**
+ * Gallery paths come from a static JSON manifest (not fs.readdir).
+ * Reading public/images at runtime makes Vercel bundle ~500MB into the
+ * serverless function and exceeds the 250MB limit.
+ *
+ * Optional: set NEXT_PUBLIC_GALLERY_CDN_BASE to an R2 public URL so images
+ * are served from CDN instead of the Next.js public folder.
+ */
 export function getHomeGalleryGroups(locale: Locale = "en"): HomeGalleryGroup[] {
-  const root = path.join(process.cwd(), "public", "images");
+  const manifest = galleryManifest as GalleryManifest;
   const groups: HomeGalleryGroup[] = [];
 
   for (const folder of GALLERY_FOLDERS) {
-    const dir = path.join(root, folder);
-    if (!fs.existsSync(dir)) continue;
-
-    const files = dedupeByStem(fs.readdirSync(dir).filter((name) => IMAGE_RE.test(name)));
-    if (!files.length) continue;
+    const images = (manifest[folder] ?? []).map(withCdnBase);
+    if (!images.length) continue;
 
     groups.push({
       id: folder,
       title: CATEGORY_LABELS[folder][locale],
-      images: files.map((file) => `/images/${folder}/${file}`),
+      images,
     });
   }
 
