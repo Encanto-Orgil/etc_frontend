@@ -58,6 +58,18 @@ export const DASHBOARD_MANAGEMENT_GROUPS: DashboardMenuGroup[] = [
       { key: "/dashboard/ballroom/invoices", label: "Invoices", path: "/dashboard/ballroom/invoices" },
       { key: "/dashboard/ballroom/quotes", label: "Quotes", path: "/dashboard/ballroom/quotes" },
       { key: "/dashboard/ballroom/settings", label: "Settings", path: "/dashboard/ballroom/settings" },
+      { key: "/dashboard/ballroom/bms", label: "BMS", path: "/dashboard/ballroom/bms" },
+      { key: "/dashboard/ballroom/bms/cameras", label: "Cameras", path: "/dashboard/ballroom/bms/cameras" },
+      {
+        key: "/dashboard/ballroom/bms/fire-alarms",
+        label: "Fire Alarms",
+        path: "/dashboard/ballroom/bms/fire-alarms",
+      },
+      {
+        key: "/dashboard/ballroom/bms/elevator-access",
+        label: "Elevator NFC",
+        path: "/dashboard/ballroom/bms/elevator-access",
+      },
     ],
   },
   {
@@ -147,6 +159,13 @@ export function getDashboardSelectedKey(pathname: string) {
   if (PROPERTY_RENT_SCHEDULE_DETAIL_PATH.test(pathname)) return "/dashboard/property/rent-schedule";
   if (BALLROOM_INVOICE_DETAIL_PATH.test(pathname)) return "/dashboard/ballroom/invoices";
   if (BALLROOM_QUOTE_DETAIL_PATH.test(pathname)) return "/dashboard/ballroom/quotes";
+  if (pathname === "/dashboard/ballroom/bms" || pathname.startsWith("/dashboard/ballroom/bms/")) {
+    const exact = DASHBOARD_MANAGEMENT_GROUPS.flatMap((group) => group.items).find(
+      (item) => item.path === pathname,
+    );
+    if (exact) return exact.key;
+    return "/dashboard/ballroom/bms";
+  }
 
   const exactGroupItem = DASHBOARD_MANAGEMENT_GROUPS.flatMap((group) => group.items).find(
     (item) => item.path === pathname,
