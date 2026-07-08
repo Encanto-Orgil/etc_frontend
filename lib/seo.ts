@@ -39,9 +39,13 @@ const TOWER_PAGE_TITLES: Partial<Record<string, string>> = {
   ballroom: "Encanto Grand Ballroom",
 };
 
-function absoluteUrl(path: string) {
+export function canonicalUrl(path: string) {
   const normalized = path.startsWith("/") ? path : `/${path}`;
   return `${SITE_URL}${normalized}`;
+}
+
+function absoluteUrl(path: string) {
+  return canonicalUrl(path);
 }
 
 function buildOpenGraph({
@@ -96,7 +100,7 @@ export function buildPageMetadata(input: PageMetaInput): Metadata {
     description,
     keywords: keywords ?? [...DEFAULT_KEYWORDS],
     alternates: {
-      canonical: path,
+      canonical: canonicalUrl(path),
     },
     openGraph: buildOpenGraph(input),
     twitter: buildTwitter(input),
@@ -143,6 +147,9 @@ export const rootMetadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  alternates: {
+    canonical: canonicalUrl("/"),
+  },
 };
 
 export function homeMetadata(): Metadata {
@@ -185,19 +192,48 @@ export function towerMetadata(tower: Tower): Metadata {
   });
 }
 
-export const dashboardMetadata: Metadata = buildPageMetadata({
-  title: "Удирдлага",
-  description: "Encanto Trade Center түрээсийн удирдлагын систем.",
-  path: "/dashboard",
-  noIndex: true,
-});
+function privatePageMetadata(
+  path: string,
+  title: string,
+  description: string,
+): Metadata {
+  return buildPageMetadata({
+    title,
+    description,
+    path,
+    noIndex: true,
+  });
+}
 
-export const dashboardLoginMetadata: Metadata = buildPageMetadata({
-  title: "Нэвтрэх",
-  description: "Encanto Trade Center удирдлагын системд нэвтрэх.",
-  path: "/dashboard/login",
-  noIndex: true,
-});
+export function dashboardPageMetadata(path: string): Metadata {
+  return privatePageMetadata(
+    path,
+    "Удирдлага",
+    "Encanto Trade Center түрээсийн удирдлагын систем.",
+  );
+}
+
+export const dashboardMetadata: Metadata = dashboardPageMetadata("/dashboard");
+
+export const dashboardLoginMetadata: Metadata = privatePageMetadata(
+  "/dashboard/login",
+  "Нэвтрэх",
+  "Encanto Trade Center удирдлагын системд нэвтрэх.",
+);
+
+export function portalPageMetadata(path: string): Metadata {
+  return privatePageMetadata(
+    path,
+    "Tenant Portal",
+    "Encanto Trade Center түрээслэгчийн портал.",
+  );
+}
+
+export const portalLoginMetadata: Metadata = privatePageMetadata(
+  "/portal/login",
+  "Нэвтрэх",
+  "Encanto Trade Center түрээслэгчийн порталд нэвтрэх.",
+);
 
 export function organizationJsonLd() {
   return {

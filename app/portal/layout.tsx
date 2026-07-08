@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import "@fontsource-variable/inter";
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function DashboardLayout({
+export default function PortalLayout({
   children,
 }: {
   children: React.ReactNode;

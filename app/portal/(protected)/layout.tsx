@@ -1,44 +1,17 @@
-"use client";
+import type { Metadata } from "next";
+import { headers } from "next/headers";
+import PortalAuthGate from "@/components/portal/PortalAuthGate";
+import { portalPageMetadata } from "@/lib/seo";
 
-import { Spin } from "antd";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import PortalShell from "@/components/portal/PortalShell";
-import { getMe, type AuthUser } from "@/lib/auth";
+export async function generateMetadata(): Promise<Metadata> {
+  const pathname = (await headers()).get("x-pathname") ?? "/portal";
+  return portalPageMetadata(pathname);
+}
 
 export default function ProtectedPortalLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
-  const [user, setUser] = useState<AuthUser | null>(null);
-
-  useEffect(() => {
-    getMe().then((nextUser) => {
-      if (!nextUser) {
-        router.replace("/portal/login");
-        return;
-      }
-      if (nextUser.is_staff) {
-        router.replace("/dashboard");
-        return;
-      }
-      if (nextUser.role !== "tenant") {
-        router.replace("/portal/login");
-        return;
-      }
-      setUser(nextUser);
-    });
-  }, [router]);
-
-  if (!user) {
-    return (
-      <div style={{ minHeight: "100vh", display: "grid", placeItems: "center" }}>
-        <Spin size="large" />
-      </div>
-    );
-  }
-
-  return <PortalShell user={user}>{children}</PortalShell>;
+  return <PortalAuthGate>{children}</PortalAuthGate>;
 }
