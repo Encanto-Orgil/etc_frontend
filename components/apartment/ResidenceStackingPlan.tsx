@@ -5,7 +5,6 @@ import Link from "next/link";
 import { fetchApartmentStackingPlan } from "@/lib/api";
 import { apartmentStackingIntro } from "@/lib/apartmentContent";
 import { STATUS_META } from "@/lib/officeStacking";
-import type { OfficeZone } from "@/lib/officeZones";
 import {
   RESIDENCE_FLOOR_MAX,
   RESIDENCE_FLOOR_MIN,
@@ -129,7 +128,6 @@ export default function ResidenceStackingPlan() {
               <BuildingStackDiagram
                 floors={visibleFloors.length ? visibleFloors : floors}
                 selectedFloor={selectedFloor}
-                selectedZone={selectedZone as unknown as OfficeZone}
                 availableOnly={availableOnly}
                 onSelectFloor={selectFloor}
                 onHoverFloor={setHoverFloor}
