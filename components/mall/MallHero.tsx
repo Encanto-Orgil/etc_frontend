@@ -2,19 +2,24 @@
 
 import Link from "next/link";
 import { mallHero } from "@/lib/mallContent";
+import HeroBackgroundImage from "@/components/HeroBackgroundImage";
 import styles from "./MallHero.module.css";
 
 export default function MallHero() {
   return (
     <section className={styles.hero} id="hero">
-      <div
-        className={styles.bgDay}
-        style={{ backgroundImage: `url(${mallHero.image})` }}
+      <HeroBackgroundImage
+        src={mallHero.image}
+        wrapperClassName={styles.bgDay}
+        imageClassName={styles.bgImage}
+        priority
         data-mall-parallax
       />
-      <div
-        className={styles.bgNight}
-        style={{ backgroundImage: `url(${mallHero.imageNight})` }}
+      <HeroBackgroundImage
+        src={mallHero.imageNight}
+        wrapperClassName={styles.bgNight}
+        imageClassName={styles.bgImage}
+        loading="lazy"
         aria-hidden
       />
       <div className={styles.dayNightCycle} aria-hidden />

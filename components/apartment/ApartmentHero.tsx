@@ -2,24 +2,31 @@
 
 import Link from "next/link";
 import { apartmentHero } from "@/lib/apartmentContent";
+import HeroBackgroundImage from "@/components/HeroBackgroundImage";
 import styles from "./ApartmentHero.module.css";
 
 export default function ApartmentHero() {
   return (
     <section className={styles.hero} id="hero">
-      <div
-        className={styles.bgMorning}
-        style={{ backgroundImage: `url(${apartmentHero.imageDay})` }}
+      <HeroBackgroundImage
+        src={apartmentHero.imageDay}
+        wrapperClassName={styles.bgMorning}
+        imageClassName={styles.bgImage}
+        priority
         data-apartment-parallax
       />
-      <div
-        className={styles.bgSunset}
-        style={{ backgroundImage: `url(${apartmentHero.imageSunset})` }}
+      <HeroBackgroundImage
+        src={apartmentHero.imageSunset}
+        wrapperClassName={styles.bgSunset}
+        imageClassName={styles.bgImage}
+        loading="lazy"
         aria-hidden
       />
-      <div
-        className={styles.bgNight}
-        style={{ backgroundImage: `url(${apartmentHero.imageNight})` }}
+      <HeroBackgroundImage
+        src={apartmentHero.imageNight}
+        wrapperClassName={styles.bgNight}
+        imageClassName={styles.bgImage}
+        loading="lazy"
         aria-hidden
       />
       <div className={styles.skyTint} aria-hidden />

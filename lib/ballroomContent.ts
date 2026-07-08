@@ -6,7 +6,7 @@ export const ballroomHero = {
   title: "Encanto Grande Ballroom",
   description:
     "A world-class venue crafted for weddings, galas, conferences, and extraordinary celebrations.",
-  image: "/images/ballroom/ballroom-5.jpg",
+  image: "/images/hero/ballroom.webp",
   primaryCta: { label: "Explore Venue", href: "#experience" },
   secondaryCta: { label: "Book a Tour", href: "#contact" },
 };
