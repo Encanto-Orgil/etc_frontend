@@ -10,6 +10,7 @@ import {
   LogoutOutlined,
   MessageOutlined,
   MoreOutlined,
+  SafetyCertificateOutlined,
   SearchOutlined,
   ShopOutlined,
 } from "@ant-design/icons";
@@ -37,6 +38,7 @@ const managementIcons: Record<string, ReactNode> = {
   "ballroom-management": <CalendarOutlined />,
   "bms-management": <ClusterOutlined />,
   "site-management": <GlobalOutlined />,
+  "admin-management": <SafetyCertificateOutlined />,
 };
 
 export default function Sidebar({ user }: { user: AuthUser }) {
@@ -49,7 +51,9 @@ export default function Sidebar({ user }: { user: AuthUser }) {
       { key: "/dashboard", icon: <AppstoreOutlined />, label: "Dashboard" },
       { key: "/dashboard/inquiries", icon: <FormOutlined />, label: "Inquiries" },
       { key: "/dashboard/support", icon: <MessageOutlined />, label: "Support Tickets" },
-      ...DASHBOARD_MANAGEMENT_GROUPS.map((group) => ({
+      ...DASHBOARD_MANAGEMENT_GROUPS.filter(
+        (group) => group.key !== "admin-management" || user.is_superuser,
+      ).map((group) => ({
         key: group.key,
         icon: managementIcons[group.key],
         label: group.label,
@@ -59,7 +63,7 @@ export default function Sidebar({ user }: { user: AuthUser }) {
         })),
       })),
     ],
-    [],
+    [user.is_superuser],
   );
 
   useEffect(() => {

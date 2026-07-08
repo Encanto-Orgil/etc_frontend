@@ -17,7 +17,7 @@ export default function DashboardModuleViewPage({
     notFound();
   }
 
-  if (module === "ballroom" || module === "site" || module === "bms") {
+  if (module === "ballroom" || module === "site" || module === "bms" || module === "admin") {
     notFound();
   }
 

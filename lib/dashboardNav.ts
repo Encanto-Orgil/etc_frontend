@@ -85,6 +85,14 @@ export const DASHBOARD_MANAGEMENT_GROUPS: DashboardMenuGroup[] = [
       { key: "/dashboard/site/settings", label: "Settings", path: "/dashboard/site/settings" },
     ],
   },
+  {
+    key: "admin-management",
+    label: "Admin Management",
+    path: "/dashboard/admin",
+    items: [
+      { key: "/dashboard/admin", label: "Dashboard Users", path: "/dashboard/admin" },
+    ],
+  },
 ];
 
 export const DASHBOARD_MANAGEMENT_PAGES = DASHBOARD_MANAGEMENT_GROUPS.reduce<
@@ -150,6 +158,9 @@ export function getDashboardSelectedKey(pathname: string) {
     return "/dashboard/inquiries";
   }
   if (pathname === "/dashboard/support" || pathname.startsWith("/dashboard/support/")) return "/dashboard/support";
+  if (pathname === "/dashboard/admin" || pathname.startsWith("/dashboard/admin/")) {
+    return "/dashboard/admin";
+  }
   if (pathname === "/dashboard/property" || pathname === "/dashboard/property/stacking") {
     return "/dashboard/property";
   }

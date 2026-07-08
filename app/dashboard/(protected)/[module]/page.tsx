@@ -12,7 +12,7 @@ export default function DashboardModulePage({
 }) {
   const { module } = use(params);
 
-  if (module === "ballroom" || module === "bms") {
+  if (module === "ballroom" || module === "bms" || module === "admin") {
     notFound();
   }
 
