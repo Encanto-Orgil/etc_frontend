@@ -1,7 +1,7 @@
 "use client";
 
-import { BellOutlined, DownOutlined, MessageOutlined } from "@ant-design/icons";
-import { Avatar, Badge, Dropdown, Layout } from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import { Avatar, Dropdown, Layout } from "antd";
 import type { AuthUser } from "@/lib/auth";
 import styles from "./DashboardShell.module.css";
 
@@ -16,7 +16,7 @@ export default function TopBar({
   title: string;
   user: AuthUser;
 }) {
-  const breadcrumb = eyebrow ? `${eyebrow} / ${title}` : title || "All Projects";
+  const breadcrumb = eyebrow ? `${eyebrow} / ${title}` : title || "Dashboard";
   const displayName = [user.first_name, user.last_name].filter(Boolean).join(" ") || user.username;
 
   return (
@@ -25,7 +25,7 @@ export default function TopBar({
         menu={{
           items: [
             { key: "current", label: breadcrumb },
-            { key: "all", label: "All Projects" },
+            { key: "dashboard", label: "Dashboard" },
             { key: "property", label: "Property Management" },
           ],
         }}
@@ -38,16 +38,6 @@ export default function TopBar({
       </Dropdown>
 
       <div className={styles.topBarActions}>
-        <button type="button" className={styles.topIconButton} aria-label="Messages">
-          <Badge dot color="#0070f3" offset={[-1, 2]}>
-            <MessageOutlined />
-          </Badge>
-        </button>
-        <button type="button" className={styles.topIconButton} aria-label="Notifications">
-          <Badge count={3} size="small" offset={[-2, 2]}>
-            <BellOutlined />
-          </Badge>
-        </button>
         <Avatar className={styles.topAvatar}>
           {(displayName || "U").slice(0, 1).toUpperCase()}
         </Avatar>

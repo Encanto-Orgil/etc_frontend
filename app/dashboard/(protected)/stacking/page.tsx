@@ -1,7 +1,5 @@
-"use client";
-
-import StackingOverview from "@/components/dashboard/StackingOverview";
+import { redirect } from "next/navigation";
 
 export default function DashboardStackingPage() {
-  return <StackingOverview />;
+  redirect("/dashboard/property");
 }

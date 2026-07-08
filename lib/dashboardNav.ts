@@ -14,10 +14,10 @@ export type DashboardMenuGroup = {
 };
 
 export const DASHBOARD_PAGES: Record<string, { eyebrow: string; title: string }> = {
-  "/dashboard": { eyebrow: "All Projects", title: "Overview" },
+  "/dashboard": { eyebrow: "Encanto Trade Center", title: "Dashboard" },
   "/dashboard/inquiries": { eyebrow: "Operations", title: "Inquiries" },
   "/dashboard/support": { eyebrow: "Operations", title: "Support Tickets" },
-  "/dashboard/property": { eyebrow: "Property Management", title: "Dashboard" },
+  "/dashboard/property": { eyebrow: "Property Management", title: "Stacking Plan" },
   "/dashboard/stacking": { eyebrow: "", title: "Түрээсийн төлөвлөлтийн тойм" },
 };
 
@@ -27,7 +27,7 @@ export const DASHBOARD_MANAGEMENT_GROUPS: DashboardMenuGroup[] = [
     label: "Property Management",
     path: "/dashboard/property",
     items: [
-      { key: "/dashboard/property", label: "Dashboard", path: "/dashboard/property" },
+      { key: "/dashboard/property", label: "Stacking Plan", path: "/dashboard/property" },
       { key: "/dashboard/property/buildings", label: "Buildings", path: "/dashboard/property/buildings" },
       { key: "/dashboard/property/floors", label: "Floors", path: "/dashboard/property/floors" },
       { key: "/dashboard/property/units", label: "Units", path: "/dashboard/property/units" },
@@ -139,7 +139,9 @@ export function getDashboardSelectedKey(pathname: string) {
     return "/dashboard/inquiries";
   }
   if (pathname === "/dashboard/support" || pathname.startsWith("/dashboard/support/")) return "/dashboard/support";
-  if (pathname === "/dashboard/property/dashboard") return "/dashboard/property";
+  if (pathname === "/dashboard/property" || pathname === "/dashboard/property/stacking") {
+    return "/dashboard/property";
+  }
   if (PROPERTY_TENANT_DETAIL_PATH.test(pathname)) return "/dashboard/property/tenants";
   if (PROPERTY_CONTRACT_DETAIL_PATH.test(pathname)) return "/dashboard/property/contracts";
   if (PROPERTY_RENT_SCHEDULE_DETAIL_PATH.test(pathname)) return "/dashboard/property/rent-schedule";
@@ -151,7 +153,7 @@ export function getDashboardSelectedKey(pathname: string) {
   );
 
   if (exactGroupItem) return exactGroupItem.key;
-  if (isStackingSection(pathname)) return "/dashboard/property/units";
+  if (isStackingSection(pathname)) return "/dashboard/property";
 
   return "/dashboard";
 }

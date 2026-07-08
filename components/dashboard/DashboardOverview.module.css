@@ -15,6 +15,160 @@
   gap: 18px;
 }
 
+.mainColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+.loadingWrap {
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  min-height: 320px;
+}
+
+.kpiRow {
+  margin-bottom: 0 !important;
+}
+
+.kpiCard,
+.sectionCard {
+  overflow: hidden;
+  border: 1px solid #eaeaea !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.kpiCard :global(.ant-statistic-title),
+.sectionCard :global(.ant-card-head-title) {
+  color: #666;
+  font-size: 13px;
+}
+
+.kpiCard :global(.ant-statistic-content-value) {
+  color: #111;
+  font-size: 28px;
+  font-weight: 650;
+}
+
+.stackingGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.stackingCard {
+  padding: 14px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.stackingHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.stackingHead strong {
+  display: block;
+  color: #111;
+  font-size: 14px;
+}
+
+.stackingHead p {
+  margin: 2px 0 0;
+  color: #666;
+  font-size: 12px;
+}
+
+.stackingIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #111;
+  color: #fff;
+  font-size: 15px;
+}
+
+.stackingStats {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 8px;
+  color: #666;
+  font-size: 12px;
+}
+
+.financeStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.financeStats div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.financeStats span {
+  color: #666;
+  font-size: 11px;
+}
+
+.financeStats strong {
+  color: #111;
+  font-size: 15px;
+}
+
+.quickLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.quickLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid #eaeaea;
+  border-radius: 8px;
+  background: #fff;
+  color: #111;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.quickLink:hover {
+  border-color: #111;
+  background: #fafafa;
+  color: #111;
+}
+
+@media (max-width: 960px) {
+  .stackingGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .mutedText {
   color: #888;
   font-size: 13px;

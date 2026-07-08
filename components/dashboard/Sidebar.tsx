@@ -2,25 +2,22 @@
 
 import {
   AppstoreOutlined,
-  BarChartOutlined,
-  BellOutlined,
   CalendarOutlined,
   DownOutlined,
   FormOutlined,
-  GithubOutlined,
   GlobalOutlined,
   LogoutOutlined,
   MessageOutlined,
   MoreOutlined,
   SearchOutlined,
-  SettingOutlined,
   ShopOutlined,
 } from "@ant-design/icons";
-import { Avatar, Dropdown, Layout, Menu, Tag } from "antd";
+import { Avatar, Dropdown, Layout, Menu } from "antd";
 import type { MenuProps } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
+import { API_BASE } from "@/lib/api";
 import type { AuthUser } from "@/lib/auth";
 import { logout } from "@/lib/auth";
 import {
@@ -33,19 +30,6 @@ import styles from "./DashboardShell.module.css";
 const { Sider } = Layout;
 
 type MenuItem = Required<MenuProps>["items"][number];
-
-const accountItems: MenuItem[] = [
-  { key: "usage", icon: <BarChartOutlined />, label: "Usage" },
-  {
-    key: "settings",
-    icon: <SettingOutlined />,
-    label: "Settings",
-    children: [
-      { key: "settings-general", label: "General" },
-      { key: "settings-billing", label: "Billing" },
-    ],
-  },
-];
 
 const managementIcons: Record<string, ReactNode> = {
   "property-management": <ShopOutlined />,
@@ -60,7 +44,7 @@ export default function Sidebar({ user }: { user: AuthUser }) {
   const [openKeys, setOpenKeys] = useState<string[]>(getDashboardOpenKeys(pathname));
   const managementItems = useMemo<MenuItem[]>(
     () => [
-      { key: "/dashboard", icon: <AppstoreOutlined />, label: "Projects" },
+      { key: "/dashboard", icon: <AppstoreOutlined />, label: "Dashboard" },
       { key: "/dashboard/inquiries", icon: <FormOutlined />, label: "Inquiries" },
       { key: "/dashboard/support", icon: <MessageOutlined />, label: "Support Tickets" },
       ...DASHBOARD_MANAGEMENT_GROUPS.map((group) => ({
@@ -81,13 +65,15 @@ export default function Sidebar({ user }: { user: AuthUser }) {
     setOpenKeys((current) => Array.from(new Set([...current, ...activeOpenKeys])));
   }, [pathname]);
 
+  const adminUrl = `${API_BASE.replace(/\/api\/?$/, "")}/admin/`;
+  const displayName = [user.first_name, user.last_name].filter(Boolean).join(" ") || user.username;
+
   const userMenu: MenuProps = {
     items: [
       {
         key: "admin",
-        icon: <GithubOutlined />,
         label: (
-          <a href="http://localhost:8000/admin/" target="_blank" rel="noreferrer">
+          <a href={adminUrl} target="_blank" rel="noreferrer">
             Django admin
           </a>
         ),
@@ -127,7 +113,6 @@ export default function Sidebar({ user }: { user: AuthUser }) {
             <span className={styles.teamAvatar}>E</span>
             <span className={styles.teamCopy}>
               <strong>Encanto Trade Center</strong>
-              <Tag className={styles.planTag}>Hobby</Tag>
             </span>
             <DownOutlined className={styles.teamChevron} />
           </button>
@@ -149,24 +134,18 @@ export default function Sidebar({ user }: { user: AuthUser }) {
             onOpenChange={setOpenKeys}
             onClick={onMenuClick}
           />
-          <div className={styles.menuDivider} />
-          <Menu className={styles.menu} mode="inline" items={accountItems} selectedKeys={selectedKeys} />
         </nav>
 
         <div className={styles.userRow}>
           <Avatar className={styles.userAvatar}>
-            {(user.username || "sukhochird").slice(0, 1).toUpperCase()}
+            {displayName.slice(0, 1).toUpperCase()}
           </Avatar>
-          <span className={styles.userName}>sukhochird</span>
+          <span className={styles.userName}>{displayName}</span>
           <Dropdown menu={userMenu} placement="topRight" trigger={["click"]}>
             <button type="button" className={styles.footerIcon} aria-label="Open user menu">
               <MoreOutlined />
             </button>
           </Dropdown>
-          <button type="button" className={styles.footerIcon} aria-label="Notifications">
-            <BellOutlined />
-            <span className={styles.notificationDot} />
-          </button>
         </div>
       </div>
     </Sider>

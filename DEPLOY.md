@@ -56,15 +56,9 @@ git pull origin main
 
 ```bash
 cp .env.production.example .env.local
-nano .env.local
 ```
 
-Production:
-
-```env
-NEXT_PUBLIC_SITE_URL=https://encantotrade.mn
-NEXT_PUBLIC_API_BASE=https://api.encantotrade.mn/api
-```
+Бэлэн production утгууд орсон — засварлах шаардлагагүй (CDN URL өөрчлөгдвөл л засна).
 
 ---
 

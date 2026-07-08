@@ -13,6 +13,7 @@ const PROPERTY_VIEWS = new Set<PropertyManagementView>([
   "contracts",
   "rent-schedule",
   "rental-invoices",
+  "stacking",
 ]);
 
 export default function DashboardPropertyViewPage({

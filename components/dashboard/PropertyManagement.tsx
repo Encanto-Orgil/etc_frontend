@@ -81,6 +81,7 @@ import type {
   PropertyUnitStatus,
 } from "@/lib/propertyManagement";
 import MoneyInput from "@/components/dashboard/MoneyInput";
+import PropertyStackingDashboard from "@/components/dashboard/PropertyStackingDashboard";
 import styles from "./PropertyManagement.module.css";
 
 export type PropertyManagementView =
@@ -91,7 +92,8 @@ export type PropertyManagementView =
   | "tenants"
   | "contracts"
   | "rent-schedule"
-  | "rental-invoices";
+  | "rental-invoices"
+  | "stacking";
 
 type FloorFormValues = {
   building: number;
@@ -862,114 +864,27 @@ export default function PropertyManagement({ view }: { view: PropertyManagementV
 
   const renderDashboard = () => (
     <>
-      {renderBuildings()}
-
       <Row gutter={[12, 12]} className={styles.metrics}>
         <Col xs={12} lg={6}>
           {metricCard("Buildings", totals?.building_count ?? 0, <BankOutlined />)}
         </Col>
         <Col xs={12} lg={6}>
-          {metricCard("Floors", totals?.floor_count ?? 0, <ApartmentOutlined />)}
+          {metricCard("Available Units", totals?.available_count ?? 0, <HomeOutlined />)}
         </Col>
         <Col xs={12} lg={6}>
-          {metricCard("Units", totals?.unit_count ?? 0, <HomeOutlined />)}
+          {metricCard("Rented Units", totals?.rented_count ?? 0, <ApartmentOutlined />)}
         </Col>
         <Col xs={12} lg={6}>
           {metricCard("Active Contracts", totals?.active_contract_count ?? 0, <FileProtectOutlined />)}
         </Col>
       </Row>
 
-      <Row gutter={[12, 12]} className={styles.metrics}>
-        <Col xs={12} lg={6}>
-          {metricCard("This Month Due", formatMoney(reports?.current_month_receivables.total_due ?? 0), <DollarOutlined />)}
-        </Col>
-        <Col xs={12} lg={6}>
-          {metricCard("Paid This Month", formatMoney(reports?.current_month_receivables.paid_amount ?? 0), <CheckCircleOutlined />)}
-        </Col>
-        <Col xs={12} lg={6}>
-          {metricCard("Unpaid This Month", formatMoney(reports?.current_month_receivables.unpaid_amount ?? 0), <ExclamationCircleOutlined />)}
-        </Col>
-        <Col xs={12} lg={6}>
-          {metricCard("Overdue Amount", formatMoney(reports?.overdue_receivables.amount ?? 0), <ExclamationCircleOutlined />)}
-        </Col>
-      </Row>
-
-      <div className={styles.reportGrid}>
-        <Card className={styles.reportCard} title="Current Month Receivables">
-          <div className={styles.collectionSummary}>
-            <div>
-              <strong>{reports?.current_month_receivables.collection_rate ?? 0}%</strong>
-              <span>Collection Rate</span>
-            </div>
-            <Progress percent={reports?.current_month_receivables.collection_rate ?? 0} showInfo={false} />
-            <div className={styles.reportMeta}>
-              <span>Paid lines: {reports?.current_month_receivables.paid_count ?? 0}</span>
-              <span>Unpaid lines: {reports?.current_month_receivables.unpaid_count ?? 0}</span>
-            </div>
-          </div>
-        </Card>
-
-        <Card className={styles.reportCard} title="Overdue Receivables">
-          <div className={styles.collectionSummary}>
-            <div>
-              <strong>{reports?.overdue_receivables.contract_count ?? 0}</strong>
-              <span>Contracts with unpaid rent</span>
-            </div>
-            <div className={styles.reportMeta}>
-              <span>Overdue lines: {reports?.overdue_receivables.line_count ?? 0}</span>
-              <span>As of: {formatDate(reports?.overdue_receivables.as_of ?? null)}</span>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <div className={styles.reportGridWide}>
-        <Card className={styles.reportCard} title="Recently Signed Contracts">
-          <Table
-            rowKey="id"
-            columns={recentContractColumns}
-            dataSource={reports?.recent_contracts ?? []}
-            pagination={false}
-            onRow={(contract) => ({
-              onClick: () => router.push(`/dashboard/property/contracts/${contract.id}`),
-            })}
-          />
-        </Card>
-
-        <Card className={styles.reportCard} title="Multiple Months Unpaid">
-          <Table
-            rowKey="contract_id"
-            columns={overdueAccountColumns}
-            dataSource={reports?.overdue_receivables.accounts ?? []}
-            pagination={false}
-            onRow={(account) => ({
-              onClick: () => router.push(`/dashboard/property/contracts/${account.contract_id}`),
-            })}
-          />
-        </Card>
-
-        <Card className={styles.reportCard} title="Contracts Expiring in 90 Days">
-          <Table
-            rowKey="id"
-            columns={expiringContractColumns}
-            dataSource={reports?.expiring_contracts ?? []}
-            pagination={false}
-            onRow={(contract) => ({
-              onClick: () => router.push(`/dashboard/property/contracts/${contract.id}`),
-            })}
-          />
-        </Card>
-
-        <Card className={styles.reportCard} title="Rent Schedule Status Breakdown">
-          <Table
-            rowKey="status"
-            columns={rentStatusColumns}
-            dataSource={reports?.rent_status_breakdown ?? []}
-            pagination={false}
-          />
-        </Card>
-      </div>
-
+      <PropertyStackingDashboard
+        buildings={buildings}
+        floors={floors}
+        units={units}
+        onRefresh={load}
+      />
     </>
   );
 
@@ -1181,7 +1096,11 @@ export default function PropertyManagement({ view }: { view: PropertyManagementV
         <div className={styles.pageHead}>
           <div>
             <span className={styles.eyebrow}>Property Management</span>
-            <h1>{activeView === "dashboard" ? "Overview" : activeView.replace("-", " ")}</h1>
+            <h1>
+              {activeView === "dashboard" || activeView === "stacking"
+                ? "Stacking Plan"
+                : activeView.replace("-", " ")}
+            </h1>
             <p>Manage buildings, floors, units, tenants, and lease contracts from the normalized database.</p>
           </div>
           <div className={styles.pager}>
@@ -1193,7 +1112,11 @@ export default function PropertyManagement({ view }: { view: PropertyManagementV
           </div>
         </div>
 
-        <div className={styles.viewWrap}>{activeView === "dashboard" ? renderDashboard() : renderTable()}</div>
+        <div className={styles.viewWrap}>
+          {activeView === "dashboard" || activeView === "stacking"
+            ? renderDashboard()
+            : renderTable()}
+        </div>
 
         <Modal
           title={editingFloor ? "Edit Floor" : "New Floor"}
