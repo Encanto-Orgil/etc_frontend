@@ -1,6 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { Swiper as SwiperType } from "swiper";
+import { Keyboard, Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 import { useTranslations } from "@/lib/i18n";
 import type { HomeGalleryCategory, HomeGalleryGroup } from "@/lib/homeGallery";
@@ -8,19 +11,20 @@ import GalleryFullscreenSlider from "./GalleryFullscreenSlider";
 import shared from "./home.shared.module.css";
 import styles from "./GalleryCategorySlider.module.css";
 
+import "swiper/css";
+import "swiper/css/pagination";
+
 type Props = {
   groups: HomeGalleryGroup[];
 };
 
-function preloadImage(src: string) {
-  if (typeof window === "undefined" || !src) return;
-  const img = new window.Image();
-  img.decoding = "async";
-  img.src = src;
-}
-
 export default function GalleryCategorySlider({ groups }: Props) {
   const copy = useTranslations().home.gallery;
+  const swiperRef = useRef<SwiperType | null>(null);
+  const prevRef = useRef<HTMLButtonElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
+  const paginationRef = useRef<HTMLDivElement>(null);
+  const [navReady, setNavReady] = useState(false);
   const [categoryId, setCategoryId] = useState<HomeGalleryCategory>(
     groups[0]?.id ?? "renders",
   );
@@ -34,48 +38,25 @@ export default function GalleryCategorySlider({ groups }: Props) {
 
   const images = activeGroup?.images ?? [];
   const total = images.length;
-  const current = images[index] ?? "";
-  const prevSrc = total ? images[(index - 1 + total) % total] : "";
-  const nextSrc = total ? images[(index + 1) % total] : "";
 
   useEffect(() => {
-    setIndex(0);
-  }, [categoryId]);
+    setNavReady(true);
+  }, []);
 
   useEffect(() => {
-    if (nextSrc && nextSrc !== current) preloadImage(nextSrc);
-    if (prevSrc && prevSrc !== current) preloadImage(prevSrc);
-  }, [current, nextSrc, prevSrc]);
+    const swiper = swiperRef.current;
+    if (!swiper) return;
+    swiper.keyboard.enabled = !lightboxOpen;
+  }, [lightboxOpen]);
 
   const selectCategory = (id: HomeGalleryCategory) => {
     if (id === categoryId) return;
     setCategoryId(id);
+    setIndex(0);
     setLightboxOpen(false);
   };
 
-  const goPrev = useCallback(() => {
-    if (!total) return;
-    setIndex((currentIndex) => (currentIndex - 1 + total) % total);
-  }, [total]);
-
-  const goNext = useCallback(() => {
-    if (!total) return;
-    setIndex((currentIndex) => (currentIndex + 1) % total);
-  }, [total]);
-
-  useEffect(() => {
-    if (lightboxOpen || !total) return;
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowLeft") goPrev();
-      if (event.key === "ArrowRight") goNext();
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [goPrev, goNext, lightboxOpen, total]);
-
-  if (!groups.length || !activeGroup || !current) {
+  if (!groups.length || !activeGroup || !total) {
     return null;
   }
 
@@ -120,55 +101,88 @@ export default function GalleryCategorySlider({ groups }: Props) {
 
           <div className={styles.slider} data-home-reveal>
             <button
+              ref={prevRef}
               type="button"
               className={`${styles.nav} ${styles.navPrev}`}
-              onClick={goPrev}
               aria-label={copy.lightbox.prev}
             >
               <LuChevronLeft aria-hidden />
             </button>
 
-            <button
-              type="button"
-              className={styles.stage}
-              onClick={() => setLightboxOpen(true)}
-              aria-label={`${copy.lightbox.viewImage}: ${activeGroup.title}`}
-            >
-              <img
-                key={current}
-                src={current}
-                alt={activeGroup.title}
-                className={styles.image}
-                loading="eager"
-                decoding="async"
-                fetchPriority="low"
-              />
-            </button>
+            <div className={styles.stage}>
+              {navReady ? (
+                <Swiper
+                  key={categoryId}
+                  modules={[Navigation, Pagination, Keyboard]}
+                  className={styles.swiper}
+                  slidesPerView={1}
+                  spaceBetween={0}
+                  loop={total > 1}
+                  speed={450}
+                  grabCursor
+                  keyboard={{ enabled: true }}
+                  lazyPreloadPrevNext={1}
+                  navigation={{
+                    prevEl: prevRef.current,
+                    nextEl: nextRef.current,
+                  }}
+                  pagination={{
+                    el: paginationRef.current,
+                    clickable: true,
+                    dynamicBullets: total > 12,
+                    dynamicMainBullets: 5,
+                  }}
+                  onSwiper={(swiper) => {
+                    swiperRef.current = swiper;
+                  }}
+                  onSlideChange={(swiper) => {
+                    setIndex(swiper.realIndex);
+                  }}
+                >
+                  {images.map((image, imageIndex) => (
+                    <SwiperSlide key={image} className={styles.slide}>
+                      <button
+                        type="button"
+                        className={styles.slideButton}
+                        onClick={() => setLightboxOpen(true)}
+                        aria-label={`${copy.lightbox.viewImage}: ${activeGroup.title}`}
+                      >
+                        <img
+                          src={image}
+                          alt={`${activeGroup.title} ${imageIndex + 1}`}
+                          className={styles.image}
+                          loading={imageIndex === 0 ? "eager" : "lazy"}
+                          decoding="async"
+                          fetchPriority={imageIndex === 0 ? "low" : "auto"}
+                        />
+                      </button>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              ) : (
+                <div className={styles.slideButton}>
+                  <img
+                    src={images[0]}
+                    alt={activeGroup.title}
+                    className={styles.image}
+                    loading="eager"
+                    decoding="async"
+                  />
+                </div>
+              )}
+            </div>
 
             <button
+              ref={nextRef}
               type="button"
               className={`${styles.nav} ${styles.navNext}`}
-              onClick={goNext}
               aria-label={copy.lightbox.next}
             >
               <LuChevronRight aria-hidden />
             </button>
           </div>
 
-          <div className={styles.dots} aria-hidden>
-            {Array.from({ length: Math.min(total, 12) }, (_, dotIndex) => {
-              const active =
-                total <= 12
-                  ? dotIndex === index
-                  : Math.floor((index / Math.max(total - 1, 1)) * 11) === dotIndex;
-              return (
-                <span
-                  key={`${categoryId}-dot-${dotIndex}`}
-                  className={`${styles.dot} ${active ? styles.dotActive : ""}`}
-                />
-              );
-            })}
-          </div>
+          <div ref={paginationRef} className={styles.pagination} />
         </div>
       </section>
 

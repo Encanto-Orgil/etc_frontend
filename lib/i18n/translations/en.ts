@@ -134,28 +134,28 @@ export const en: Translations = {
     },
     construction: {
       eyebrow: "Construction Progress",
-      title: "Operational from autumn 2026.",
-      lead: "Office, mall, ballroom, and apartment collections are on track to open from fall 2026.",
+      title: "Phased opening through 2026–2027.",
+      lead: "Office and Ballroom open in Q4 2026. Residence and Mall follow in Q4 2027.",
       timeline: [
         {
-          period: "Fall 2026",
+          period: "Q4 2026",
           tower: "Office",
-          detail: "Premium office floors ready for occupancy from autumn 2026.",
+          detail: "Premium office floors ready for occupancy in Q4 2026.",
         },
         {
-          period: "Fall 2026",
-          tower: "Mall",
-          detail: "Retail and dining destinations opening from autumn 2026.",
-        },
-        {
-          period: "Fall 2026",
+          period: "Q4 2026",
           tower: "Ballroom",
-          detail: "Grand ballroom and event spaces available from autumn 2026.",
+          detail: "Grand ballroom and event spaces available in Q4 2026.",
         },
         {
-          period: "Fall 2026",
-          tower: "Apartment",
-          detail: "Residences ready for move-in from autumn 2026.",
+          period: "Q4 2027",
+          tower: "Residence",
+          detail: "Residences ready for move-in in Q4 2027.",
+        },
+        {
+          period: "Q4 2027",
+          tower: "Mall",
+          detail: "Retail and dining destinations opening in Q4 2027.",
         },
       ],
     },

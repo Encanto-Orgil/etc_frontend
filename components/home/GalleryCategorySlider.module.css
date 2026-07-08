@@ -78,15 +78,29 @@
 
 .stage {
   position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--bg-soft);
+}
+
+.swiper {
+  width: 100%;
+}
+
+.slide {
+  height: auto;
+}
+
+.slideButton {
   display: block;
   width: 100%;
   margin: 0;
   padding: 0;
   aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  background: var(--bg-soft);
+  border: none;
+  background: transparent;
   cursor: zoom-in;
 }
 
@@ -125,24 +139,24 @@
   height: 22px;
 }
 
-.dots {
+.pagination {
   display: flex;
   justify-content: center;
-  gap: 6px;
   margin-top: 16px;
 }
 
-.dot {
+.pagination :global(.swiper-pagination-bullet) {
   width: 6px;
   height: 6px;
-  border-radius: 999px;
+  margin: 0 3px !important;
   background: var(--line-strong);
   opacity: 0.35;
 }
 
-.dotActive {
-  opacity: 1;
+.pagination :global(.swiper-pagination-bullet-active) {
   width: 18px;
+  border-radius: 999px;
+  opacity: 1;
   background: var(--text);
 }
 
@@ -180,7 +194,10 @@
   }
 
   .stage {
-    aspect-ratio: 4 / 3;
     border-radius: 18px;
+  }
+
+  .slideButton {
+    aspect-ratio: 4 / 3;
   }
 }
