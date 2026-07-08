@@ -7,7 +7,7 @@ export const apartmentHero = {
   imageDay: "/images/renders/render-20.jpg",
   imageSunset: "/images/renders/render-35.jpg",
   imageNight: "/images/renders/render-25.jpg",
-  primaryCta: { label: "Explore Residences", href: "#stacking-plan" },
+  primaryCta: { label: "Explore Residences", href: "#types" },
   secondaryCta: { label: "View Floor Plans", href: "#floor-plans" },
   tertiaryCta: { label: "Book a Private Tour", href: "#contact" },
 };
@@ -17,21 +17,104 @@ export const apartmentConcept = {
   body: "Encanto Trade Center - Residence redefines urban apartment living by merging architecture, comfort, and technology into a seamless residential experience above the city skyline.",
 };
 
-export const apartmentHighlights = [
-  { icon: "🌆", title: "Panoramic Views", description: "Every apartment faces the city skyline." },
-  { icon: "🏡", title: "Premium Interiors", description: "High-end materials and modern design." },
-  { icon: "🏠", title: "Smart Home System", description: "Full automation and intelligent control." },
-  { icon: "🔒", title: "24/7 Security", description: "Advanced access control and monitoring." },
-  { icon: "🛎", title: "Hotel-Grade Services", description: "Concierge, cleaning, maintenance." },
-  { icon: "🚗", title: "Private Parking", description: "Dedicated resident parking zones." },
+export type ApartmentHighlightIcon =
+  | "views"
+  | "interiors"
+  | "smart"
+  | "security"
+  | "services"
+  | "parking";
+
+export const apartmentHighlights: {
+  icon: ApartmentHighlightIcon;
+  title: string;
+  description: string;
+}[] = [
+  { icon: "views", title: "Panoramic Views", description: "Every apartment faces the city skyline." },
+  { icon: "interiors", title: "Premium Interiors", description: "High-end materials and modern design." },
+  { icon: "smart", title: "Smart Home System", description: "Full automation and intelligent control." },
+  { icon: "security", title: "24/7 Security", description: "Advanced access control and monitoring." },
+  { icon: "services", title: "Hotel-Grade Services", description: "Concierge, cleaning, maintenance." },
+  { icon: "parking", title: "Private Parking", description: "Dedicated resident parking zones." },
 ];
 
-export const apartmentTypes = [
-  { title: "Studio Residence", size: "40–60 sqm", note: "Perfect for professionals & investors" },
-  { title: "1 Bedroom", size: "60–90 sqm", note: "Ideal urban living space" },
-  { title: "2 Bedroom", size: "90–140 sqm", note: "Comfort for families" },
-  { title: "3 Bedroom Premium", size: "140–220 sqm", note: "Luxury panoramic units" },
-  { title: "Penthouse Collection", size: "Custom layouts", note: "Ultra-luxury top-floor residences" },
+export const apartmentTypesSection = {
+  eyebrow: "Орон сууц",
+  title: "10–30 давхар",
+  note: "Давхартаа 2 айлтай",
+};
+
+export const apartmentLayoutTypes = [
+  {
+    title: "A загварын айл",
+    orientations: ["Урагшаа", "Хойшоо", "Зүүн харууцтай"],
+  },
+  {
+    title: "B загварын айл",
+    orientations: ["Урагшаа", "Хойшоо харууцтай"],
+  },
+];
+
+/** @deprecated Use apartmentLayoutTypes */
+export const apartmentTypes = apartmentLayoutTypes.map((type) => ({
+  title: type.title,
+  size: type.orientations.join(" · "),
+  note: "",
+}));
+
+export const apartmentSpecificationsSection = {
+  eyebrow: "Барилгын онцлог",
+  title: "Premium стандарт",
+  lead: "Дэлхийн тэргүүлэгч брэнд, инженерийн шийдэл, luxury дотоод засал — бүх нь нэг орон сууцны стандарт.",
+};
+
+export const apartmentSpecifications: {
+  label: string;
+  value: string;
+  featured?: boolean;
+}[] = [
+  { label: "Давхрын өндөр", value: "3.75 м" },
+  { label: "Хаалганы өндөр", value: "2.7 м" },
+  {
+    label: "Барилгын хийц",
+    value:
+      "БНХАУ-ын №1 Hangxiao брендийн метал төмөр 345 маркын ган карказ. Дотоодын тэргүүлэх үйлдвэрлэгч Премиум Конкрит ХХК-ийн M400–M450 маркын өндөр бат бэх бетоноор барилгын багана дотор хүчитгэлттэй.",
+    featured: true,
+  },
+  {
+    label: "Шилэн фасад",
+    value:
+      "Дэлхийн №1 Yuanda брэндийн шалнаас тааз хүртэлх өндөртэй Unitized фасадын систем — 3 давхар ганжуулсан шил, 4 давхар Low-E түрхлэг болон аргон хийн дулаан тусгаарлалттай. Халуун, хүйтэн, хэт ягаан туяа болон дуу чимээг өндөр түвшинд тусгаарлах чадвартай premium шилэн фасадын шийдэл.",
+    featured: true,
+  },
+  {
+    label: "Дотоод дизайн",
+    value: "Luxury зэрэглэлийн дотор засалтай.",
+  },
+  { label: "Давхарын төлөвлөлт", value: "Давхартаа 2 айлтай" },
+  {
+    label: "Агаар цэвэршүүлэх систем",
+    value:
+      "Дотор орчинд буй таагүй үнэр, бохир агаарыг гадагшлуулж, аль ч улиралд цонхоо онгойлгох шаардлагагүйгээр тоос шороо, утаа, бохирдлыг бүрэн цэвэршүүлсэн цэвэр агаарыг нэвтрүүлэх агааржуулалтын систем.",
+    featured: true,
+  },
+  { label: "Орцондоо", value: "Kone брендийн өндөр хурдны 2 лифттэй." },
+  {
+    label: "Ундны ус",
+    value: "SEOWON (KOREA) брендийн усны чанарт үл нөлөөлөх SUS-304 стандартын зэвэрдэггүй никель хоолойгоор хийсэн.",
+  },
+  { label: "Халаалтын систем", value: "GENERAL FITTINGS (ITALY) брендийн шалны халаалтын системтэй." },
+  { label: "Шал", value: "CLASSEN (GERMANY) брендийн паркетан шал." },
+  {
+    label: "Гадна хаалга",
+    value:
+      "ILJINGATE (KOREA) брендийн галын аюулаас хамгаалах, дуу чимээ бүрэн тусгаарлах ган хаалга, ASSA ABLOY брендийн ухаалаг цоожноос бүрдэнэ.",
+  },
+  { label: "Домофон систем", value: "Хяналтын системийн тэргүүлэгч HIKVISION бренд." },
+  { label: "Air condition", value: "Дэд бүтэц бэлдсэн." },
+  { label: "Гал тогоо", value: "Иж бүрэн тавилга, цахилгаан хэрэгслийн хамт бэлэглэнэ." },
+  { label: "Доороо", value: "8 давхар бүх төрлийн үйлчилгээг цогцлоосон үйлчилгээний төвтэй." },
+  { label: "Зогсоол", value: "Айл бүрт хүртээмжтэй авто зогсоолтой." },
 ];
 
 export const apartmentStackingIntro = {
@@ -49,12 +132,18 @@ export const apartmentInteriors = [
   { title: "Balcony", image: "/images/renders/render-35.jpg", note: "Skyline view" },
 ];
 
-export const apartmentSmartFeatures = [
-  { icon: "📱", title: "Smart Control System", description: "Lighting, curtains, temperature" },
-  { icon: "🌡", title: "Climate Optimization", description: "Energy-efficient comfort" },
-  { icon: "🔊", title: "Smart Audio Integration", description: "Multi-room sound system" },
-  { icon: "🪞", title: "Floor-to-Ceiling Windows", description: "Natural light optimization" },
-  { icon: "⚡", title: "Backup Power System", description: "Uninterrupted living" },
+export type ApartmentSmartIcon = "control" | "climate" | "audio" | "windows" | "power";
+
+export const apartmentSmartFeatures: {
+  icon: ApartmentSmartIcon;
+  title: string;
+  description: string;
+}[] = [
+  { icon: "control", title: "Smart Control System", description: "Lighting, curtains, temperature" },
+  { icon: "climate", title: "Climate Optimization", description: "Energy-efficient comfort" },
+  { icon: "audio", title: "Smart Audio Integration", description: "Multi-room sound system" },
+  { icon: "windows", title: "Floor-to-Ceiling Windows", description: "Natural light optimization" },
+  { icon: "power", title: "Backup Power System", description: "Uninterrupted living" },
 ];
 
 export const apartmentServices = {

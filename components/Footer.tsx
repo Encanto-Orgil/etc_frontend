@@ -8,7 +8,7 @@ import styles from "./Footer.module.css";
 const NAV_LINKS = [
   { href: "/", key: "home" as const },
   { href: "/#about", key: "about" as const },
-  { href: "/apartment", key: "towerResidence" as const },
+  { href: "/residence", key: "towerResidence" as const },
   { href: "/mall", key: "towerMall" as const },
   { href: "/#contact", key: "contact" as const },
 ];

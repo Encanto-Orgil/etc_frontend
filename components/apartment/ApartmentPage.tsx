@@ -15,11 +15,10 @@ import {
   ApartmentLocationSection,
   ApartmentPageFooter,
   ApartmentServicesSection,
-  ApartmentSmartSection,
+  ApartmentSpecificationsSection,
   ApartmentTypesSection,
   ApartmentWhySection,
 } from "./ApartmentLandingSections";
-import ResidenceStackingPlan from "./ResidenceStackingPlan";
 import styles from "./ApartmentPage.module.css";
 
 type Props = {
@@ -36,9 +35,8 @@ export default function ApartmentPage({ others }: Props) {
         <ApartmentConceptSection />
         <ApartmentHighlightsSection />
         <ApartmentTypesSection />
-        <ResidenceStackingPlan />
         <ApartmentInteriorSection />
-        <ApartmentSmartSection />
+        <ApartmentSpecificationsSection />
         <ApartmentServicesSection />
         <ApartmentLocationSection />
         <ApartmentInvestmentSection />

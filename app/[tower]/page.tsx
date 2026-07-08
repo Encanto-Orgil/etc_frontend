@@ -70,7 +70,7 @@ export default async function TowerPage({
     );
   }
 
-  if (data.slug === "apartment") {
+  if (data.slug === "residence") {
     return (
       <>
         {jsonLd}

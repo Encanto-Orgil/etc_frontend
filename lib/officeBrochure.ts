@@ -16,10 +16,10 @@ export const officeLocation = {
   ] satisfies OfficeLandmark[],
   schools: [
     { name: "Orchlon School", distance: "100 m" },
-    { name: "International School of Mongolia", distance: "300 m" },
+    { name: "International School of Ulaanbaatar", distance: "300 m" },
     { name: "School No. 130", distance: "300 m" },
     { name: "Hobby School", distance: "700 m" },
-    { name: "Olonlog School", distance: "700 m" },
+    { name: "Olonlog Academy School", distance: "700 m" },
     { name: "Global Innova", distance: "900 m" },
   ] satisfies OfficeLandmark[],
 };
@@ -75,7 +75,7 @@ export const officeHighlights = [
   { label: "Floor-to-ceiling height", value: "4.5", unit: "m" },
   { label: "Elevators", value: "7" },
   { label: "Parking spaces", value: "1500" },
-  { label: "Helipad", value: "Yes" },
+  { label: "Parking", value: "Helicopter" },
   { label: "Office floors", value: "24" },
   { label: "Handover", value: "2026", note: "Q4" },
 ];

@@ -11,7 +11,7 @@ export type SiteSectionNav = {
 };
 
 /** Pages with full-screen hero + transparent navbar at top. */
-export const LANDING_PATHS = ["/", "/office", "/mall", "/ballroom", "/apartment"] as const;
+export const LANDING_PATHS = ["/", "/office", "/mall", "/ballroom", "/residence"] as const;
 
 export type LandingPath = (typeof LANDING_PATHS)[number];
 
@@ -20,7 +20,7 @@ export function isLandingPath(pathname: string): pathname is LandingPath {
 }
 
 /** Tower destination pages (each has own landing + #contact). */
-export const TOWER_PATHS = ["/office", "/mall", "/ballroom", "/apartment"] as const;
+export const TOWER_PATHS = ["/office", "/mall", "/ballroom", "/residence"] as const;
 
 export const SITE_SECTION_NAV: SiteSectionNav[] = [
   { slug: "office", href: "/office", label: "Office" },
@@ -31,7 +31,7 @@ export const SITE_SECTION_NAV: SiteSectionNav[] = [
     label: "Encanto Grand Ballroom",
     navLabel: "Ballroom",
   },
-  { slug: "apartment", href: "/apartment", label: "Encanto Trade Center - Residence", navLabel: "Residences" },
+  { slug: "residence", href: "/residence", label: "Encanto Trade Center - Residence", navLabel: "Residences" },
 ];
 
 /**
@@ -43,7 +43,7 @@ export const GLOBAL_HEADER_NAV: SiteSectionNav[] = [
   { slug: "office", href: "/office", label: "Office" },
   { slug: "mall", href: "/mall", label: "Mall" },
   { slug: "ballroom", href: "/ballroom", label: "Ballroom" },
-  { slug: "apartment", href: "/apartment", label: "Residences", navLabel: "Residences" },
+  { slug: "residence", href: "/residence", label: "Residences", navLabel: "Residences" },
   { slug: "location", href: "/#location", label: "Location", sectionId: "location" },
   { slug: "contact", href: "/#contact", label: "Contact", sectionId: "contact" },
 ];

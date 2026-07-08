@@ -1,18 +1,55 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { OFFICE_VIDEO_SRC } from "@/lib/media";
 import { officeVideoSection } from "@/lib/officeContent";
 import styles from "./OfficePresentationVideo.module.css";
 
+/** Seconds into the reel used as the preview frame before play. */
+const THUMBNAIL_TIME = 2;
+
 export default function OfficePresentationVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
+  const [thumbReady, setThumbReady] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    let cancelled = false;
+
+    const seekToThumbnail = () => {
+      if (cancelled) return;
+      const target = Number.isFinite(video.duration)
+        ? Math.min(THUMBNAIL_TIME, Math.max(0, video.duration - 0.25))
+        : THUMBNAIL_TIME;
+      video.currentTime = target;
+    };
+
+    const onSeeked = () => {
+      if (!cancelled && video.paused) setThumbReady(true);
+    };
+
+    video.addEventListener("seeked", onSeeked);
+
+    if (video.readyState >= 1) {
+      seekToThumbnail();
+    } else {
+      video.addEventListener("loadedmetadata", seekToThumbnail, { once: true });
+    }
+
+    return () => {
+      cancelled = true;
+      video.removeEventListener("seeked", onSeeked);
+    };
+  }, []);
 
   const toggle = () => {
     const video = videoRef.current;
     if (!video) return;
     if (video.paused) {
+      video.currentTime = 0;
       void video.play();
       setPlaying(true);
     } else {
@@ -38,17 +75,28 @@ export default function OfficePresentationVideo() {
         <div className={styles.playerWrap} data-office-reveal>
           <video
             ref={videoRef}
-            className={styles.video}
+            className={`${styles.video} ${thumbReady || playing ? styles.videoReady : ""}`}
             src={OFFICE_VIDEO_SRC}
-            poster="/images/renders/render-8.jpg"
             playsInline
-            controls
-            preload="metadata"
+            controls={playing}
+            preload="auto"
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
+            onEnded={() => {
+              setPlaying(false);
+              const video = videoRef.current;
+              if (!video || !Number.isFinite(video.duration)) return;
+              video.currentTime = Math.min(THUMBNAIL_TIME, Math.max(0, video.duration - 0.25));
+            }}
           />
           {!playing ? (
-            <button type="button" className={styles.playOverlay} onClick={toggle} aria-label="Play video">
+            <button
+              type="button"
+              className={styles.playOverlay}
+              onClick={toggle}
+              aria-label="Play video"
+              disabled={!thumbReady}
+            >
               <span className={styles.playIcon} aria-hidden />
             </button>
           ) : null}

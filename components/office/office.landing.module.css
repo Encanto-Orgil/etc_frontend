@@ -94,6 +94,42 @@
   font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.typeLevel {
+  display: block;
+  margin-top: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.48);
+}
+
+.typeSizeLabel {
+  display: block;
+  margin-top: 14px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--luxury-gold);
+}
+
+.typeSizes {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+}
+
+.typeSizes li {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: rgba(0, 0, 0, 0.78);
 }
 
 .typeSize {
@@ -109,70 +145,6 @@
   margin: 12px 0 0;
   font-size: 0.95rem;
   color: rgba(0, 0, 0, 0.58);
-}
-
-.amenitiesTrack {
-  display: flex;
-  gap: 16px;
-  margin-top: 40px;
-  padding: 4px 0 16px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-}
-
-.amenitiesTrack::-webkit-scrollbar {
-  display: none;
-}
-
-.amenityCard {
-  flex: 0 0 min(280px, 78vw);
-  scroll-snap-align: start;
-  border-radius: 16px;
-  overflow: hidden;
-  background: #111;
-}
-
-.amenityCard img {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-}
-
-.amenityCard span {
-  display: block;
-  padding: 14px 16px;
-  font-family: var(--font-heading);
-  font-size: 1.1rem;
-  color: #fff;
-}
-
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-}
-
-.statItem {
-  padding: 20px 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.statValue {
-  display: block;
-  font-family: var(--font-heading);
-  font-size: clamp(2rem, 4vw, 2.75rem);
-  font-weight: 300;
-  line-height: 1;
-}
-
-.statLabel {
-  display: block;
-  margin-top: 8px;
-  font-size: 0.85rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(0, 0, 0, 0.5);
 }
 
 .featureGrid {
@@ -306,73 +278,10 @@
   color: rgba(0, 0, 0, 0.62);
 }
 
-.ctaSection {
-  position: relative;
-  overflow: hidden;
-  padding: clamp(88px, 12vw, 140px) 0;
-  background: var(--luxury-black);
-  color: #fff;
-}
-
-.ctaGlass {
-  position: absolute;
-  inset: 10% 15%;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  pointer-events: none;
-}
-
-.ctaInner {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-}
-
-.ctaActions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 28px;
-}
-
-.ctaPrimary,
-.ctaSecondary {
-  display: inline-flex;
-  padding: 14px 28px;
-  border-radius: 12px;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-
-.ctaPrimary {
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
-}
-
-.ctaSecondary {
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: #fff;
-}
-
-.investmentInner {
-  text-align: center;
-  max-width: 720px;
-  margin: 0 auto;
-}
-
 @media (min-width: 900px) {
   .split {
     grid-template-columns: 1.05fr 0.95fr;
     gap: 56px;
-  }
-
-  .statsGrid {
-    grid-template-columns: repeat(2, 1fr);
   }
 }
 

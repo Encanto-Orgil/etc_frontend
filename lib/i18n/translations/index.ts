@@ -13,12 +13,12 @@ export function getNearbyPlaces(locale: Locale): NearbyPlace[] {
     en: [
       { name: "Sukhbaatar Square", imageAlt: "Sukhbaatar Square in central Ulaanbaatar" },
       {
-        name: "National Culture and Recreation Center",
-        imageAlt: "Aerial view near the National Culture and Recreation Center",
+        name: "The National Amusement Park",
+        imageAlt: "The National Amusement Park, Ulaanbaatar",
       },
       {
         name: "National Stadium of Mongolia",
-        imageAlt: "National Sports Stadium, Ulaanbaatar",
+        imageAlt: "National Stadium of Mongolia, Ulaanbaatar",
       },
       {
         name: "National Garden Park",
@@ -27,49 +27,49 @@ export function getNearbyPlaces(locale: Locale): NearbyPlace[] {
       { name: "Orchlon School", imageAlt: "Aerial view near Orchlon School" },
       { name: "Hobby School", imageAlt: "Hobby School building, Ulaanbaatar" },
       {
-        name: "International School of Mongolia",
-        imageAlt: "Aerial view near International School of Mongolia",
+        name: "International School of Ulaanbaatar",
+        imageAlt: "Aerial view near International School of Ulaanbaatar",
       },
       { name: "Global Innova", imageAlt: "Aerial view near Global Innova" },
-      { name: "Olonlog School", imageAlt: "Aerial view near Olonlog School" },
+      { name: "Olonlog Academy School", imageAlt: "Aerial view near Olonlog Academy School" },
       { name: "School No. 130", imageAlt: "Aerial view near School No. 130" },
     ],
     mn: [
       { name: "Сүхбаатарын талбай", imageAlt: "Улаанбаатар хотын төвийн Сүхбаатарын талбай" },
       {
-        name: "Үндэсний соёл амралтын төв",
-        imageAlt: "Үндэсний соёл амралтын төвийн ойролцоох агаарын зураг",
+        name: "Үндэсний соёл амралтын хүрээлэн",
+        imageAlt: "Үндэсний соёл амралтын хүрээлэн",
       },
       {
-        name: "Үндэсний спортын цогцолбор",
-        imageAlt: "Үндэсний спортын цогцолбор, Улаанбаатар",
+        name: "Төв цэнгэлдэх хүрээлэн",
+        imageAlt: "Төв цэнгэлдэх хүрээлэн, Улаанбаатар",
       },
       {
         name: "Үндэсний цэцэрлэгт хүрээлэн",
         imageAlt: "Үндэсний цэцэрлэгт хүрээлэн, Улаанбаатар",
       },
       { name: "Орчлон сургууль", imageAlt: "Орчлон сургуулийн ойролцоох агаарын зураг" },
-      { name: "Хобби сургууль", imageAlt: "Хобби сургуулийн барилга, Улаанбаатар" },
+      { name: "Hobby сургууль", imageAlt: "Hobby сургуулийн барилга, Улаанбаатар" },
       {
-        name: "Монголын Олон Улсын Сургууль",
-        imageAlt: "Монголын Олон Улсын Сургуулийн ойролцоох агаарын зураг",
+        name: "International School of Ulaanbaatar",
+        imageAlt: "International School of Ulaanbaatar-ийн ойролцоох агаарын зураг",
       },
       { name: "Global Innova", imageAlt: "Global Innova-ийн ойролцоох агаарын зураг" },
-      { name: "Олонлог сургууль", imageAlt: "Олонлог сургуулийн ойролцоох агаарын зураг" },
-      { name: "130 дугаар сургууль", imageAlt: "130 дугаар сургуулийн ойролцоох агаарын зураг" },
+      { name: "Olonlog Academy School", imageAlt: "Olonlog Academy School-ийн ойролцоох агаарын зураг" },
+      { name: "130-р сургууль", imageAlt: "130-р сургуулийн ойролцоох агаарын зураг" },
     ],
   };
 
   const images = [
     "/images/nearby/sukhbaatar-square.jpg",
-    "/images/drone/drone-2.jpg",
+    "/images/nearby/national-amusement-park.jpg",
     "/images/nearby/national-stadium.jpg",
     "/images/nearby/national-garden-park.jpg",
-    "/images/drone/drone-5.jpg",
+    "/images/nearby/orchlon-school.jpg",
     "/images/nearby/hobby-school.jpg",
-    "/images/drone/drone-3.jpg",
+    "/images/nearby/international-school-of-ulaanbaatar.png",
     "/images/drone/drone-4.jpg",
-    "/images/drone/drone-6.jpg",
+    "/images/nearby/olonlog-academy-school.jpg",
     "/images/drone/drone-2.jpg",
   ];
 

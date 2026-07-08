@@ -2,23 +2,12 @@
   position: relative;
   overflow: hidden;
   padding: clamp(72px, 10vw, 120px) 0;
-  background: var(--luxury-black);
+  background: #000;
   color: #fff;
-}
-
-.section::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 10% 0%, rgba(200, 164, 92, 0.12), transparent 40%),
-    radial-gradient(circle at 92% 100%, rgba(255, 255, 255, 0.05), transparent 44%);
-  pointer-events: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .inner {
-  position: relative;
-  z-index: 1;
   width: 100%;
   max-width: var(--maxw);
   margin: 0 auto;
@@ -64,7 +53,7 @@
   font-family: var(--font-body);
   font-size: clamp(0.98rem, 1.35vw, 1.08rem);
   line-height: 1.75;
-  color: rgba(255, 255, 255, 0.68);
+  color: rgba(255, 255, 255, 0.64);
 }
 
 .metricsRail {
@@ -72,10 +61,10 @@
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 1px;
   margin-bottom: clamp(28px, 4vw, 40px);
-  border-radius: 18px;
+  border-radius: 16px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .metric {
@@ -83,7 +72,7 @@
   flex-direction: column;
   gap: 8px;
   padding: clamp(18px, 2.5vw, 24px) clamp(14px, 2vw, 20px);
-  background: rgba(255, 255, 255, 0.04);
+  background: #0a0a0a;
 }
 
 .metricValue {
@@ -114,8 +103,8 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--luxury-gold);
-  background: rgba(200, 164, 92, 0.14);
-  border: 1px solid rgba(200, 164, 92, 0.24);
+  background: rgba(200, 164, 92, 0.12);
+  border: 1px solid rgba(200, 164, 92, 0.22);
 }
 
 .metricLabel {
@@ -123,7 +112,7 @@
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.48);
+  color: rgba(255, 255, 255, 0.45);
   line-height: 1.35;
 }
 
@@ -139,47 +128,19 @@
   flex-direction: column;
   min-height: 220px;
   padding: clamp(22px, 2.5vw, 28px);
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.045);
+  border-radius: 18px;
+  background: #0a0a0a;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  overflow: hidden;
   transition:
-    transform 0.35s var(--ease),
-    border-color 0.35s var(--ease),
-    background 0.35s var(--ease),
-    box-shadow 0.35s var(--ease);
-}
-
-.card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 24px;
-  right: 24px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--luxury-gold), transparent);
-  opacity: 0;
-  transform: scaleX(0.6);
-  transition:
-    opacity 0.35s var(--ease),
-    transform 0.35s var(--ease);
+    transform 0.3s var(--ease),
+    border-color 0.3s var(--ease),
+    background 0.3s var(--ease);
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.18);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 20px 48px rgba(0, 0, 0, 0.28);
-}
-
-.card:hover::before {
-  opacity: 1;
-  transform: scaleX(1);
+  transform: translateY(-3px);
+  background: #111;
+  border-color: rgba(255, 255, 255, 0.16);
 }
 
 .index {
@@ -193,11 +154,11 @@
   letter-spacing: -0.04em;
   color: rgba(255, 255, 255, 0.08);
   pointer-events: none;
-  transition: color 0.35s var(--ease);
+  transition: color 0.3s var(--ease);
 }
 
 .card:hover .index {
-  color: rgba(200, 164, 92, 0.22);
+  color: rgba(255, 255, 255, 0.14);
 }
 
 .cardTop {
@@ -212,20 +173,18 @@
   height: 48px;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.92);
+  background: #111;
+  color: rgba(255, 255, 255, 0.9);
   transition:
-    background 0.35s var(--ease),
-    border-color 0.35s var(--ease),
-    color 0.35s var(--ease),
-    transform 0.35s var(--ease);
+    background 0.3s var(--ease),
+    border-color 0.3s var(--ease),
+    color 0.3s var(--ease);
 }
 
 .card:hover .iconWrap {
-  background: var(--luxury-gold-soft);
-  border-color: rgba(200, 164, 92, 0.35);
-  color: #f3e2bc;
-  transform: translateY(-1px);
+  background: #161616;
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #fff;
 }
 
 .icon {
@@ -249,7 +208,7 @@
 
 .cardBody p {
   margin: 0;
-  color: rgba(255, 255, 255, 0.64);
+  color: rgba(255, 255, 255, 0.58);
   line-height: 1.65;
   font-size: 0.94rem;
 }
@@ -280,7 +239,7 @@
 
   .metricsRail {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    border-radius: 16px;
+    border-radius: 14px;
   }
 }
 
@@ -295,5 +254,11 @@
 
   .metricsRail {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover {
+    transform: none;
   }
 }

@@ -5,17 +5,18 @@ import OfficeContactSection from "./OfficeContactSection";
 import OfficeHero from "./OfficeHero";
 import OfficePresentationVideo from "./OfficePresentationVideo";
 import OfficeHighlightsSection from "./OfficeHighlightsSection";
+import OfficeInvestmentSection from "./OfficeInvestmentSection";
+import OfficeCtaSection from "./OfficeCtaSection";
+import OfficePortalSection from "./OfficePortalSection";
+import OfficeWhySection from "./OfficeWhySection";
 import {
   OfficeAmenitiesSection,
   OfficeBusinessSection,
-  OfficeCtaSection,
   OfficeFaqSection,
   OfficeFeaturesSection,
   OfficeGallerySection,
-  OfficeInvestmentSection,
   OfficeLocationSection,
   OfficeTypesSection,
-  OfficeWhySection,
 } from "./OfficeLandingSections";
 import OfficeStackingPlan from "./OfficeStackingPlan";
 import OfficeStickySidebar from "./OfficeStickySidebar";
@@ -41,6 +42,7 @@ export default function OfficePage({ others }: Props) {
         <OfficeAmenitiesSection />
         <OfficeWhySection />
         <OfficeFeaturesSection />
+        <OfficePortalSection />
         <OfficeLocationSection />
         <OfficeInvestmentSection />
         <OfficeGallerySection />

@@ -2,6 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import type { IconType } from "react-icons";
+import {
+  LuBellRing,
+  LuCar,
+  LuHouse,
+  LuShieldCheck,
+  LuSparkles,
+  LuSunrise,
+} from "react-icons/lu";
 import { Button, Form, Input, Select, message } from "antd";
 import { useState } from "react";
 import SalesContacts from "@/components/SalesContacts";
@@ -16,16 +25,28 @@ import {
   apartmentInvestment,
   apartmentNearby,
   apartmentServices,
-  apartmentSmartFeatures,
+  apartmentSpecifications,
+  apartmentSpecificationsSection,
   apartmentTravel,
-  apartmentTypes,
+  apartmentLayoutTypes,
+  apartmentTypesSection,
   apartmentWhy,
   apartmentGallery,
+  type ApartmentHighlightIcon,
 } from "@/lib/apartmentContent";
 import styles from "./apartment.landing.module.css";
 import formStyles from "./ApartmentContactForm.module.css";
 
 const { TextArea } = Input;
+
+const highlightIconMap: Record<ApartmentHighlightIcon, IconType> = {
+  views: LuSunrise,
+  interiors: LuSparkles,
+  smart: LuHouse,
+  security: LuShieldCheck,
+  services: LuBellRing,
+  parking: LuCar,
+};
 
 export function ApartmentConceptSection() {
   return (
@@ -46,13 +67,19 @@ export function ApartmentHighlightsSection() {
         <p className={styles.eyebrow}>Key Highlights</p>
         <h2 className={styles.title}>Elevated Living</h2>
         <div className={styles.highlightGrid}>
-          {apartmentHighlights.map((card) => (
-            <article key={card.title} className={styles.highlightCard} data-apartment-reveal>
-              <span aria-hidden>{card.icon}</span>
-              <h3>{card.title}</h3>
-              <p>{card.description}</p>
-            </article>
-          ))}
+          {apartmentHighlights.map((card) => {
+            const Icon = highlightIconMap[card.icon];
+
+            return (
+              <article key={card.title} className={styles.highlightCard} data-apartment-reveal>
+                <span className={styles.iconWrap} aria-hidden>
+                  <Icon className={styles.icon} />
+                </span>
+                <h3>{card.title}</h3>
+                <p>{card.description}</p>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -63,14 +90,19 @@ export function ApartmentTypesSection() {
   return (
     <section className={styles.sectionCream} id="types">
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>Apartment Types</p>
-        <h2 className={styles.title}>Residences for Every Lifestyle</h2>
+        <p className={styles.eyebrow}>{apartmentTypesSection.eyebrow}</p>
+        <h2 className={styles.title}>{apartmentTypesSection.title}</h2>
+        <p className={styles.lead}>{apartmentTypesSection.note}</p>
         <div className={styles.typeGrid}>
-          {apartmentTypes.map((type) => (
+          {apartmentLayoutTypes.map((type) => (
             <article key={type.title} className={styles.typeCard} data-apartment-reveal>
               <h3>{type.title}</h3>
-              <span className={styles.typeSize}>{type.size}</span>
-              <p>{type.note}</p>
+              <span className={styles.typeSize}>Харууц</span>
+              <ul className={styles.orientationList}>
+                {type.orientations.map((orientation) => (
+                  <li key={orientation}>{orientation}</li>
+                ))}
+              </ul>
             </article>
           ))}
         </div>
@@ -101,18 +133,22 @@ export function ApartmentInteriorSection() {
   );
 }
 
-export function ApartmentSmartSection() {
+export function ApartmentSpecificationsSection() {
   return (
-    <section className={styles.sectionDark} id="smart-living">
+    <section className={styles.sectionDark} id="specifications">
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>Smart Living</p>
-        <h2 className={styles.title}>Technology Meets Comfort</h2>
-        <div className={styles.smartGrid}>
-          {apartmentSmartFeatures.map((item) => (
-            <article key={item.title} className={styles.smartCard} data-apartment-reveal>
-              <span aria-hidden>{item.icon}</span>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
+        <p className={styles.eyebrow}>{apartmentSpecificationsSection.eyebrow}</p>
+        <h2 className={styles.title}>{apartmentSpecificationsSection.title}</h2>
+        <p className={styles.lead}>{apartmentSpecificationsSection.lead}</p>
+        <div className={styles.specGrid}>
+          {apartmentSpecifications.map((item) => (
+            <article
+              key={item.label}
+              className={`${styles.specCard} ${item.featured ? styles.specFeatured : ""}`}
+              data-apartment-reveal
+            >
+              <h3>{item.label}</h3>
+              <p>{item.value}</p>
             </article>
           ))}
         </div>

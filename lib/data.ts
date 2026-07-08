@@ -193,7 +193,7 @@ export const towers: Tower[] = [
   },
   {
     kind: "apartment",
-    slug: "apartment",
+    slug: "residence",
     name: "Apartment",
     nameMn: "Apartment",
     tagline: "The art of living above the skyline",

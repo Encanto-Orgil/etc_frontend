@@ -110,16 +110,16 @@ export const nearbyPlaces: NearbyPlace[] = [
     imageAlt: "Sukhbaatar Square in central Ulaanbaatar",
   },
   {
-    name: "National Culture and Recreation Center",
+    name: "The National Amusement Park",
     distance: "500 m",
-    image: "/images/drone/drone-2.jpg",
-    imageAlt: "Aerial view near the National Culture and Recreation Center",
+    image: "/images/nearby/national-amusement-park.jpg",
+    imageAlt: "The National Amusement Park, Ulaanbaatar",
   },
   {
     name: "National Stadium of Mongolia",
     distance: "800 m",
     image: "/images/nearby/national-stadium.jpg",
-    imageAlt: "National Sports Stadium, Ulaanbaatar",
+    imageAlt: "National Stadium of Mongolia, Ulaanbaatar",
   },
   {
     name: "National Garden Park",
@@ -130,7 +130,7 @@ export const nearbyPlaces: NearbyPlace[] = [
   {
     name: "Orchlon School",
     distance: "100 m",
-    image: "/images/drone/drone-5.jpg",
+    image: "/images/nearby/orchlon-school.jpg",
     imageAlt: "Aerial view near Orchlon School",
   },
   {
@@ -140,10 +140,10 @@ export const nearbyPlaces: NearbyPlace[] = [
     imageAlt: "Hobby School building, Ulaanbaatar",
   },
   {
-    name: "International School of Mongolia",
+    name: "International School of Ulaanbaatar",
     distance: "300 m",
-    image: "/images/drone/drone-3.jpg",
-    imageAlt: "Aerial view near International School of Mongolia",
+    image: "/images/nearby/international-school-of-ulaanbaatar.png",
+    imageAlt: "Aerial view near International School of Ulaanbaatar",
   },
   {
     name: "Global Innova",
@@ -152,10 +152,10 @@ export const nearbyPlaces: NearbyPlace[] = [
     imageAlt: "Aerial view near Global Innova",
   },
   {
-    name: "Olonlog School",
+    name: "Olonlog Academy School",
     distance: "700 m",
-    image: "/images/drone/drone-6.jpg",
-    imageAlt: "Aerial view near Olonlog School",
+    image: "/images/nearby/olonlog-academy-school.jpg",
+    imageAlt: "Aerial view near Olonlog Academy School",
   },
   {
     name: "School No. 130",

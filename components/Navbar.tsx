@@ -21,7 +21,7 @@ const NAV_LABEL_KEYS: Record<string, keyof ReturnType<typeof useTranslations>["n
   office: "office",
   mall: "mall",
   ballroom: "ballroom",
-  apartment: "residences",
+  residence: "residences",
   location: "location",
   contact: "contact",
 };

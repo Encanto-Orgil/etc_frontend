@@ -103,7 +103,7 @@ export const buildingDestinations: BuildingDestination[] = [
     label: "Residence",
     floors: "34 floors",
     color: "#C8A45C",
-    href: "/apartment",
+    href: "/residence",
     zone: rectPercentToZone("8%", "52%", "17%", "52%"),
     detail: {
       title: "Residence",

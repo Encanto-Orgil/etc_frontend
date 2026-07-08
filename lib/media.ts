@@ -4,9 +4,10 @@ export const TRADE_VIDEO_SRC =
   process.env.NEXT_PUBLIC_TRADE_VIDEO_URL?.trim() ||
   "https://pub-6c7c4c348453498291848eaef41bf007.r2.dev/trade.mp4";
 
-/** Office page reel — defaults to trade.mp4 (materials/trade.mp4). */
+/** Office page project film. */
 export const OFFICE_VIDEO_SRC =
-  process.env.NEXT_PUBLIC_OFFICE_VIDEO_URL?.trim() || TRADE_VIDEO_SRC;
+  process.env.NEXT_PUBLIC_OFFICE_VIDEO_URL?.trim() ||
+  "https://pub-6c7c4c348453498291848eaef41bf007.r2.dev/video/ETC-W%201080HD%20copy.mp4";
 
 /** Ballroom hero reel — chandeliers, stage, banquet setups. Falls back to trade reel. */
 export const BALLROOM_VIDEO_SRC =

@@ -14,7 +14,7 @@ import styles from "./ScrollSyncedText.module.css";
 const ITEMS = [
   { word: "Office", href: "/office" },
   { word: "Mall", href: "/mall" },
-  { word: "Apartment", href: "/apartment" },
+  { word: "Residence", href: "/residence" },
   { word: "Ballroom", href: "/ballroom" },
 ] as const;
 
