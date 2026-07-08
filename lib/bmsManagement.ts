@@ -125,11 +125,11 @@ async function remove(path: string, fallback: string) {
 }
 
 export function fetchBmsSummary() {
-  return fetchOne<BmsSummary>("/dashboard/ballroom/bms/summary/");
+  return fetchOne<BmsSummary>("/dashboard/bms/summary/");
 }
 
 export function fetchBmsCameras(query?: Query) {
-  return fetchList<BmsCamera>("/dashboard/ballroom/bms/cameras/", query);
+  return fetchList<BmsCamera>("/dashboard/bms/cameras/", query);
 }
 
 export function createBmsCamera(payload: {
@@ -140,7 +140,7 @@ export function createBmsCamera(payload: {
   notes?: string;
   order?: number;
 }) {
-  return send<BmsCamera>("/dashboard/ballroom/bms/cameras/", "POST", payload, "Failed to create camera.");
+  return send<BmsCamera>("/dashboard/bms/cameras/", "POST", payload, "Failed to create camera.");
 }
 
 export function updateBmsCamera(
@@ -154,15 +154,15 @@ export function updateBmsCamera(
     order: number;
   }>,
 ) {
-  return send<BmsCamera>(`/dashboard/ballroom/bms/cameras/${id}/`, "PATCH", payload, "Failed to update camera.");
+  return send<BmsCamera>(`/dashboard/bms/cameras/${id}/`, "PATCH", payload, "Failed to update camera.");
 }
 
 export function deleteBmsCamera(id: number) {
-  return remove(`/dashboard/ballroom/bms/cameras/${id}/`, "Failed to delete camera.");
+  return remove(`/dashboard/bms/cameras/${id}/`, "Failed to delete camera.");
 }
 
 export function fetchBmsFireAlarms(query?: Query) {
-  return fetchList<BmsFireAlarmLog>("/dashboard/ballroom/bms/fire-alarms/", query);
+  return fetchList<BmsFireAlarmLog>("/dashboard/bms/fire-alarms/", query);
 }
 
 export function createBmsFireAlarm(payload: {
@@ -176,7 +176,7 @@ export function createBmsFireAlarm(payload: {
   notes?: string;
 }) {
   return send<BmsFireAlarmLog>(
-    "/dashboard/ballroom/bms/fire-alarms/",
+    "/dashboard/bms/fire-alarms/",
     "POST",
     payload,
     "Failed to create fire alarm log.",
@@ -185,14 +185,14 @@ export function createBmsFireAlarm(payload: {
 
 export function clearBmsFireAlarm(id: number) {
   return fetchOne<BmsFireAlarmLog>(
-    `/dashboard/ballroom/bms/fire-alarms/${id}/clear/`,
+    `/dashboard/bms/fire-alarms/${id}/clear/`,
     { method: "POST" },
     "Failed to clear alarm.",
   );
 }
 
 export function fetchBmsElevatorCards(query?: Query) {
-  return fetchList<BmsElevatorAccessCard>("/dashboard/ballroom/bms/elevator-cards/", query);
+  return fetchList<BmsElevatorAccessCard>("/dashboard/bms/elevator-cards/", query);
 }
 
 export function createBmsElevatorCard(payload: {
@@ -208,7 +208,7 @@ export function createBmsElevatorCard(payload: {
   notes?: string;
 }) {
   return send<BmsElevatorAccessCard>(
-    "/dashboard/ballroom/bms/elevator-cards/",
+    "/dashboard/bms/elevator-cards/",
     "POST",
     payload,
     "Failed to create elevator card.",
@@ -231,7 +231,7 @@ export function updateBmsElevatorCard(
   }>,
 ) {
   return send<BmsElevatorAccessCard>(
-    `/dashboard/ballroom/bms/elevator-cards/${id}/`,
+    `/dashboard/bms/elevator-cards/${id}/`,
     "PATCH",
     payload,
     "Failed to update elevator card.",
@@ -239,12 +239,12 @@ export function updateBmsElevatorCard(
 }
 
 export function deleteBmsElevatorCard(id: number) {
-  return remove(`/dashboard/ballroom/bms/elevator-cards/${id}/`, "Failed to delete elevator card.");
+  return remove(`/dashboard/bms/elevator-cards/${id}/`, "Failed to delete elevator card.");
 }
 
 export function revokeBmsElevatorCard(id: number) {
   return fetchOne<BmsElevatorAccessCard>(
-    `/dashboard/ballroom/bms/elevator-cards/${id}/revoke/`,
+    `/dashboard/bms/elevator-cards/${id}/revoke/`,
     { method: "POST" },
     "Failed to revoke card.",
   );
@@ -252,7 +252,7 @@ export function revokeBmsElevatorCard(id: number) {
 
 export function activateBmsElevatorCard(id: number) {
   return fetchOne<BmsElevatorAccessCard>(
-    `/dashboard/ballroom/bms/elevator-cards/${id}/activate/`,
+    `/dashboard/bms/elevator-cards/${id}/activate/`,
     { method: "POST" },
     "Failed to activate card.",
   );
@@ -263,12 +263,12 @@ export function recordBmsElevatorAccess(
   payload: { floor_number: number; result?: BmsElevatorAccessResult; notes?: string },
 ) {
   return fetchOne<{ card: BmsElevatorAccessCard; log: BmsElevatorAccessLog }>(
-    `/dashboard/ballroom/bms/elevator-cards/${id}/record_access/`,
+    `/dashboard/bms/elevator-cards/${id}/record_access/`,
     { method: "POST", body: JSON.stringify(payload) },
     "Failed to record access.",
   );
 }
 
 export function fetchBmsElevatorAccessLogs(query?: Query) {
-  return fetchList<BmsElevatorAccessLog>("/dashboard/ballroom/bms/elevator-access-logs/", query);
+  return fetchList<BmsElevatorAccessLog>("/dashboard/bms/elevator-access-logs/", query);
 }

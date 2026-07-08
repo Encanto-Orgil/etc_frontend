@@ -542,7 +542,7 @@ export default function BmsManagement({ view }: BmsManagementProps) {
           </div>
           <Space wrap>
             {view !== "dashboard" ? (
-              <Button onClick={() => router.push("/dashboard/ballroom/bms")}>BMS Dashboard</Button>
+              <Button onClick={() => router.push("/dashboard/bms")}>BMS Dashboard</Button>
             ) : null}
             <Button icon={<ReloadOutlined />} onClick={() => void load()}>
               Refresh

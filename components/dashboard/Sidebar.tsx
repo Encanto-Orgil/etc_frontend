@@ -3,6 +3,7 @@
 import {
   AppstoreOutlined,
   CalendarOutlined,
+  ClusterOutlined,
   DownOutlined,
   FormOutlined,
   GlobalOutlined,
@@ -34,6 +35,7 @@ type MenuItem = Required<MenuProps>["items"][number];
 const managementIcons: Record<string, ReactNode> = {
   "property-management": <ShopOutlined />,
   "ballroom-management": <CalendarOutlined />,
+  "bms-management": <ClusterOutlined />,
   "site-management": <GlobalOutlined />,
 };
 
