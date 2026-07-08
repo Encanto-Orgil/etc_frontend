@@ -20,6 +20,8 @@ export type ConstructionMilestone = {
 };
 
 export type NewsItem = {
+  id?: number;
+  slug?: string;
   category: string;
   title: string;
   date: string;

@@ -4,7 +4,9 @@ export type SiteNewsArticle = {
   id: number;
   category: string;
   title: string;
+  slug: string;
   excerpt: string;
+  body: string;
   image: string;
   published_at: string;
   date_label: string;
@@ -19,11 +21,18 @@ export type PublicSiteNewsItem = {
   id: number;
   category: string;
   title: string;
+  slug: string;
   excerpt: string;
   image: string;
   date: string;
   is_featured: boolean;
   external_url?: string;
+};
+
+export type PublicSiteNewsDetail = PublicSiteNewsItem & {
+  body: string;
+  date_label: string;
+  published_at: string;
 };
 
 type ListEnvelope<T> = T[] | { results: T[] };
@@ -80,10 +89,12 @@ export function createDashboardSiteNews(payload: {
   category: string;
   title: string;
   excerpt?: string;
+  body?: string;
   image: string;
   published_at: string;
   is_published?: boolean;
   is_featured?: boolean;
+  external_url?: string;
 }) {
   return send<SiteNewsArticle>("/dashboard/site/news/", "POST", payload, "Failed to create news article.");
 }
@@ -94,10 +105,12 @@ export function updateDashboardSiteNews(
     category: string;
     title: string;
     excerpt: string;
+    body: string;
     image: string;
     published_at: string;
     is_published: boolean;
     is_featured: boolean;
+    external_url: string;
   }>,
 ) {
   return send<SiteNewsArticle>(`/dashboard/site/news/${id}/`, "PATCH", payload, "Failed to update news article.");
@@ -105,4 +118,15 @@ export function updateDashboardSiteNews(
 
 export function deleteDashboardSiteNews(id: number) {
   return remove(`/dashboard/site/news/${id}/`, "Failed to delete news article.");
+}
+
+export async function uploadDashboardNewsImage(file: File, folder: "cover" | "content" = "content") {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("folder", folder);
+  return fetchOne<{ url: string; folder: string }>(
+    "/dashboard/site/news/upload/",
+    { method: "POST", body: formData },
+    "Failed to upload image.",
+  );
 }

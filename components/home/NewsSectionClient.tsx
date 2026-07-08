@@ -8,12 +8,14 @@ import NewsSectionView from "./NewsSectionView";
 
 function mapNewsItem(item: PublicSiteNewsItem): NewsItem {
   return {
+    id: item.id,
+    slug: item.slug,
     category: item.category,
     title: item.title,
     date: item.date,
     image: item.image,
     excerpt: item.excerpt || undefined,
-    url: item.external_url || undefined,
+    url: item.external_url || (item.slug ? `/news/${item.slug}` : undefined),
   };
 }
 

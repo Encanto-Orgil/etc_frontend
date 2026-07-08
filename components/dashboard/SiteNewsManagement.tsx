@@ -3,19 +3,18 @@
 import {
   DeleteOutlined,
   EditOutlined,
-  FilterOutlined,
+  EyeOutlined,
   PlusOutlined,
   ReloadOutlined,
-  SearchOutlined,
-  StarFilled,
-  StarOutlined,
+  UploadOutlined,
 } from "@ant-design/icons";
 import {
   Button,
+  Card,
   DatePicker,
   Form,
+  Image,
   Input,
-  message,
   Modal,
   Popconfirm,
   Select,
@@ -24,287 +23,334 @@ import {
   Switch,
   Table,
   Tag,
+  Upload,
+  message,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import RichTextEditor from "@/components/dashboard/RichTextEditor";
 import {
   createDashboardSiteNews,
   deleteDashboardSiteNews,
   fetchDashboardSiteNews,
   updateDashboardSiteNews,
-  type SiteNewsArticle,
+  uploadDashboardNewsImage,
 } from "@/lib/siteNewsManagement";
-import styles from "./PropertyManagement.module.css";
-
-const NEWS_CATEGORIES = [
-  "Construction Update",
-  "Sales Launch",
-  "Awards",
-  "Events",
-  "Press Release",
-  "Other",
-];
+import type { SiteNewsArticle } from "@/lib/siteNewsManagement";
+import styles from "./SiteNewsManagement.module.css";
 
 type NewsFormValues = {
   category: string;
   title: string;
   excerpt?: string;
+  body?: string;
   image: string;
   published_at: dayjs.Dayjs;
-  is_published: boolean;
-  is_featured: boolean;
+  is_published?: boolean;
+  is_featured?: boolean;
+  external_url?: string;
 };
+
+const STATUS_OPTIONS = [
+  { value: "all", label: "All" },
+  { value: "published", label: "Published" },
+  { value: "draft", label: "Draft" },
+];
 
 export default function SiteNewsManagement() {
   const [loading, setLoading] = useState(true);
   const [articles, setArticles] = useState<SiteNewsArticle[]>([]);
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [status, setStatus] = useState("all");
   const [modalOpen, setModalOpen] = useState(false);
-  const [editing, setEditing] = useState<SiteNewsArticle | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
+  const [editingArticle, setEditingArticle] = useState<SiteNewsArticle | null>(null);
   const [form] = Form.useForm<NewsFormValues>();
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      setArticles(
-        await fetchDashboardSiteNews({
-          search: search || undefined,
-          status: statusFilter === "all" ? undefined : statusFilter,
-        }),
-      );
+      const data = await fetchDashboardSiteNews({
+        search: search || undefined,
+        status: status === "all" ? undefined : status,
+      });
+      setArticles(data);
     } catch (error) {
       message.error(error instanceof Error ? error.message : "Failed to load news.");
     } finally {
       setLoading(false);
     }
-  }, [search, statusFilter]);
+  }, [search, status]);
 
   useEffect(() => {
-    load();
+    void load();
   }, [load]);
 
   const openCreate = () => {
-    setEditing(null);
+    setEditingArticle(null);
     form.setFieldsValue({
-      category: NEWS_CATEGORIES[0],
+      category: "",
+      title: "",
+      excerpt: "",
+      body: "",
+      image: "",
       published_at: dayjs(),
       is_published: true,
       is_featured: false,
-      image: "/images/renders/render-8.jpg",
+      external_url: "",
     });
     setModalOpen(true);
   };
 
-  const openEdit = (record: SiteNewsArticle) => {
-    setEditing(record);
+  const openEdit = (article: SiteNewsArticle) => {
+    setEditingArticle(article);
     form.setFieldsValue({
-      category: record.category,
-      title: record.title,
-      excerpt: record.excerpt,
-      image: record.image,
-      published_at: dayjs(record.published_at),
-      is_published: record.is_published,
-      is_featured: record.is_featured,
+      category: article.category,
+      title: article.title,
+      excerpt: article.excerpt,
+      body: article.body,
+      image: article.image,
+      published_at: dayjs(article.published_at),
+      is_published: article.is_published,
+      is_featured: article.is_featured,
+      external_url: article.external_url || "",
     });
     setModalOpen(true);
   };
 
-  const save = async () => {
-    const values = await form.validateFields();
-    setSaving(true);
+  const handleCoverUpload = async (file: File) => {
+    setUploadingCover(true);
     try {
+      const result = await uploadDashboardNewsImage(file, "cover");
+      form.setFieldValue("image", result.url);
+      message.success("Cover image uploaded.");
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Cover upload failed.");
+    } finally {
+      setUploadingCover(false);
+    }
+    return false;
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      setSaving(true);
       const payload = {
-        category: values.category,
-        title: values.title,
-        excerpt: values.excerpt || "",
-        image: values.image,
+        category: values.category.trim(),
+        title: values.title.trim(),
+        excerpt: values.excerpt?.trim() || "",
+        body: values.body || "",
+        image: values.image.trim(),
         published_at: values.published_at.format("YYYY-MM-DD"),
-        is_published: values.is_published,
-        is_featured: values.is_featured,
+        is_published: values.is_published ?? true,
+        is_featured: values.is_featured ?? false,
+        external_url: values.external_url?.trim() || "",
       };
-      if (editing) {
-        await updateDashboardSiteNews(editing.id, payload);
+
+      if (editingArticle) {
+        await updateDashboardSiteNews(editingArticle.id, payload);
         message.success("News article updated.");
       } else {
         await createDashboardSiteNews(payload);
         message.success("News article created.");
       }
+
       setModalOpen(false);
-      load();
+      await load();
     } catch (error) {
-      message.error(error instanceof Error ? error.message : "Failed to save news article.");
+      if (error instanceof Error && error.message) {
+        message.error(error.message);
+      }
     } finally {
       setSaving(false);
     }
   };
 
-  const toggleFeatured = async (record: SiteNewsArticle) => {
+  const handleDelete = async (id: number) => {
     try {
-      await updateDashboardSiteNews(record.id, { is_featured: !record.is_featured });
-      message.success(record.is_featured ? "Removed from featured." : "Set as featured story.");
-      load();
+      await deleteDashboardSiteNews(id);
+      message.success("News article deleted.");
+      await load();
     } catch (error) {
-      message.error(error instanceof Error ? error.message : "Failed to update featured status.");
+      message.error(error instanceof Error ? error.message : "Delete failed.");
     }
   };
 
-  const columns: ColumnsType<SiteNewsArticle> = [
-    {
-      title: "Title",
-      dataIndex: "title",
-      render: (value, record) => (
-        <div>
-          <strong>{value}</strong>
-          <div className={styles.muted}>{record.category}</div>
-        </div>
-      ),
-    },
-    {
-      title: "Published",
-      dataIndex: "date_label",
-      width: 120,
-    },
-    {
-      title: "Status",
-      key: "status",
-      width: 140,
-      render: (_, record) => (
-        <Space size={4} wrap>
-          <Tag color={record.is_published ? "green" : "default"}>
-            {record.is_published ? "Published" : "Draft"}
-          </Tag>
-          {record.is_featured ? <Tag color="gold">Featured</Tag> : null}
-        </Space>
-      ),
-    },
-    {
-      title: "Actions",
-      key: "actions",
-      width: 180,
-      render: (_, record) => (
-        <Space size={4}>
-          <Button
-            size="small"
-            icon={record.is_featured ? <StarFilled /> : <StarOutlined />}
-            onClick={() => toggleFeatured(record)}
-            title={record.is_featured ? "Remove featured" : "Set as featured"}
-          />
-          <Button size="small" icon={<EditOutlined />} onClick={() => openEdit(record)} />
-          <Popconfirm
-            title="Delete this article?"
-            onConfirm={async () => {
-              try {
-                await deleteDashboardSiteNews(record.id);
-                message.success("Article deleted.");
-                load();
-              } catch (error) {
-                message.error(error instanceof Error ? error.message : "Delete failed.");
-              }
-            }}
-          >
-            <Button size="small" danger icon={<DeleteOutlined />} />
-          </Popconfirm>
-        </Space>
-      ),
-    },
-  ];
+  const columns: ColumnsType<SiteNewsArticle> = useMemo(
+    () => [
+      {
+        title: "Cover",
+        dataIndex: "image",
+        width: 88,
+        render: (image: string) =>
+          image ? <Image src={image} alt="" width={56} height={40} className={styles.thumb} /> : "—",
+      },
+      {
+        title: "Title",
+        dataIndex: "title",
+        render: (title: string, record) => (
+          <div>
+            <strong>{title}</strong>
+            <div className={styles.slug}>{record.slug}</div>
+          </div>
+        ),
+      },
+      {
+        title: "Category",
+        dataIndex: "category",
+        width: 140,
+      },
+      {
+        title: "Date",
+        dataIndex: "date_label",
+        width: 100,
+      },
+      {
+        title: "Status",
+        key: "status",
+        width: 130,
+        render: (_, record) => (
+          <Space size={4} wrap>
+            <Tag color={record.is_published ? "green" : "default"}>
+              {record.is_published ? "Published" : "Draft"}
+            </Tag>
+            {record.is_featured ? <Tag color="gold">Featured</Tag> : null}
+          </Space>
+        ),
+      },
+      {
+        title: "Actions",
+        key: "actions",
+        width: 150,
+        render: (_, record) => (
+          <Space>
+            {record.is_published ? (
+              <Button
+                size="small"
+                icon={<EyeOutlined />}
+                href={`/news/${record.slug}`}
+                target="_blank"
+              />
+            ) : null}
+            <Button size="small" icon={<EditOutlined />} onClick={() => openEdit(record)} />
+            <Popconfirm title="Delete this article?" onConfirm={() => void handleDelete(record.id)}>
+              <Button size="small" danger icon={<DeleteOutlined />} />
+            </Popconfirm>
+          </Space>
+        ),
+      },
+    ],
+    [],
+  );
+
+  const coverImage = Form.useWatch("image", form);
 
   return (
-    <div className={styles.shell}>
-      <div className={styles.workspace}>
-        <div className={styles.pageHead}>
-          <div>
-            <h1>News</h1>
-            <p>Manage homepage news stories shown in the Latest News section.</p>
-          </div>
-          <Space>
+    <div className={styles.page}>
+      <Card
+        title="Site News"
+        extra={
+          <Space wrap>
+            <Input.Search
+              allowClear
+              placeholder="Search news"
+              style={{ width: 220 }}
+              onSearch={setSearch}
+            />
+            <Select value={status} options={STATUS_OPTIONS} style={{ width: 130 }} onChange={setStatus} />
+            <Button icon={<ReloadOutlined />} onClick={() => void load()}>
+              Refresh
+            </Button>
             <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>
               New article
             </Button>
-            <Button icon={<ReloadOutlined />} onClick={load}>
-              Refresh
-            </Button>
           </Space>
-        </div>
-
-        <div className={styles.searchArea}>
-          <Input
-            allowClear
-            prefix={<SearchOutlined />}
-            placeholder="Search news..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onPressEnter={load}
-            style={{ maxWidth: 280 }}
-          />
-          <Select
-            value={statusFilter}
-            onChange={setStatusFilter}
-            style={{ width: 160 }}
-            options={[
-              { value: "all", label: "All statuses" },
-              { value: "published", label: "Published" },
-              { value: "draft", label: "Draft" },
-            ]}
-          />
-          <Button icon={<FilterOutlined />} onClick={load}>
-            Apply
-          </Button>
-        </div>
-
+        }
+      >
         <Spin spinning={loading}>
-          <Table rowKey="id" columns={columns} dataSource={articles} pagination={{ pageSize: 20 }} />
+          <Table rowKey="id" columns={columns} dataSource={articles} pagination={{ pageSize: 10 }} />
         </Spin>
-      </div>
+      </Card>
 
       <Modal
-        title={editing ? "Edit article" : "New article"}
+        title={editingArticle ? "Edit news article" : "Create news article"}
         open={modalOpen}
         onCancel={() => setModalOpen(false)}
-        onOk={save}
+        onOk={() => void handleSubmit()}
         confirmLoading={saving}
-        width={720}
-        destroyOnClose
+        width={920}
+        destroyOnHidden
       >
-        <Form form={form} layout="vertical">
-          <Form.Item name="category" label="Category" rules={[{ required: true }]}>
-            <Select
-              options={NEWS_CATEGORIES.map((value) => ({ value, label: value }))}
-              showSearch
-              allowClear
+        <Form form={form} layout="vertical" className={styles.form}>
+          <div className={styles.formGrid}>
+            <Form.Item name="category" label="Category" rules={[{ required: true, message: "Category is required." }]}>
+              <Input placeholder="Construction Update" />
+            </Form.Item>
+            <Form.Item
+              name="published_at"
+              label="Published date"
+              rules={[{ required: true, message: "Published date is required." }]}
+            >
+              <DatePicker style={{ width: "100%" }} />
+            </Form.Item>
+          </div>
+
+          <Form.Item name="title" label="Title" rules={[{ required: true, message: "Title is required." }]}>
+            <Input placeholder="Article headline" />
+          </Form.Item>
+
+          <Form.Item name="excerpt" label="Excerpt">
+            <Input.TextArea rows={2} placeholder="Short summary for the homepage card" />
+          </Form.Item>
+
+          <Form.Item label="Cover image" required>
+            <div className={styles.coverRow}>
+              {coverImage ? (
+                <Image src={coverImage} alt="Cover preview" width={160} height={110} className={styles.coverPreview} />
+              ) : (
+                <div className={styles.coverPlaceholder}>No cover image</div>
+              )}
+              <Space direction="vertical">
+                <Upload
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  showUploadList={false}
+                  beforeUpload={(file) => {
+                    void handleCoverUpload(file as File);
+                    return false;
+                  }}
+                >
+                  <Button icon={<UploadOutlined />} loading={uploadingCover}>
+                    Upload to R2
+                  </Button>
+                </Upload>
+                <Form.Item name="image" noStyle rules={[{ required: true, message: "Cover image is required." }]}>
+                  <Input placeholder="Or paste image URL" />
+                </Form.Item>
+              </Space>
+            </div>
+          </Form.Item>
+
+          <Form.Item name="body" label="Article body">
+            <RichTextEditor
+              onUploadImage={(file) => uploadDashboardNewsImage(file, "content").then((result) => result.url)}
             />
           </Form.Item>
-          <Form.Item name="title" label="Title" rules={[{ required: true }]}>
-            <Input />
+
+          <Form.Item name="external_url" label="External URL (optional)">
+            <Input placeholder="https://… (overrides internal detail page when set)" />
           </Form.Item>
-          <Form.Item name="excerpt" label="Excerpt">
-            <Input.TextArea rows={3} placeholder="Optional summary for the featured story card" />
-          </Form.Item>
-          <Form.Item
-            name="image"
-            label="Image path"
-            rules={[{ required: true }]}
-            extra="Public path, e.g. /images/renders/render-8.jpg"
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item name="published_at" label="Published date" rules={[{ required: true }]}>
-            <DatePicker style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item name="is_published" label="Published on homepage" valuePropName="checked">
-            <Switch />
-          </Form.Item>
-          <Form.Item
-            name="is_featured"
-            label="Featured story"
-            valuePropName="checked"
-            extra="The featured story appears large in the homepage news section."
-          >
-            <Switch />
-          </Form.Item>
+
+          <div className={styles.switchRow}>
+            <Form.Item name="is_published" label="Published" valuePropName="checked">
+              <Switch />
+            </Form.Item>
+            <Form.Item name="is_featured" label="Featured on homepage" valuePropName="checked">
+              <Switch />
+            </Form.Item>
+          </div>
         </Form>
       </Modal>
     </div>

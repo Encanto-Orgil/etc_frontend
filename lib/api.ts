@@ -41,6 +41,30 @@ export async function fetchSiteNewsClient(): Promise<import("./siteNewsManagemen
   return res.json();
 }
 
+export async function fetchSiteNewsDetail(
+  slug: string,
+): Promise<import("./siteNewsManagement").PublicSiteNewsDetail | null> {
+  try {
+    const res = await fetch(`${API_BASE}/news/${encodeURIComponent(slug)}/`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchSiteNewsDetailClient(
+  slug: string,
+): Promise<import("./siteNewsManagement").PublicSiteNewsDetail> {
+  const res = await fetch(`${API_BASE}/news/${encodeURIComponent(slug)}/`, { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error(`Failed to load news article: ${res.status}`);
+  }
+  return res.json();
+}
+
 export async function fetchOfficeStackingPlan(): Promise<import("./officeStacking").OfficeStackingPlan | null> {
   try {
     const res = await fetch(`${API_BASE}/office/stacking-plan/`, {

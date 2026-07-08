@@ -1,0 +1,61 @@
+.shell {
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+
+.editorContent {
+  min-height: 260px;
+  padding: 16px 18px;
+  outline: none;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #1f1f1f;
+}
+
+.editorContent :global(p) {
+  margin: 0 0 0.9em;
+}
+
+.editorContent :global(h2),
+.editorContent :global(h3) {
+  margin: 1.2em 0 0.6em;
+  line-height: 1.25;
+}
+
+.editorContent :global(ul),
+.editorContent :global(ol) {
+  margin: 0 0 1em;
+  padding-left: 1.4em;
+}
+
+.editorContent :global(img) {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1em 0;
+  border-radius: 12px;
+}
+
+.editorContent :global(a) {
+  color: #1677ff;
+  text-decoration: underline;
+}
+
+.editorContent :global(.is-editor-empty:first-child::before) {
+  color: #bfbfbf;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}

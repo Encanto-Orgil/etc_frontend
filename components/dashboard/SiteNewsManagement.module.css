@@ -1,0 +1,59 @@
+.page {
+  display: grid;
+  gap: 16px;
+}
+
+.form {
+  margin-top: 8px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 16px;
+}
+
+.coverRow {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.coverPreview,
+.coverPlaceholder,
+.thumb {
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #f0f0f0;
+}
+
+.coverPlaceholder {
+  display: grid;
+  place-items: center;
+  width: 160px;
+  height: 110px;
+  background: #fafafa;
+  color: #8c8c8c;
+  font-size: 13px;
+}
+
+.switchRow {
+  display: flex;
+  gap: 24px;
+}
+
+.slug {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+@media (max-width: 720px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .coverRow {
+    flex-direction: column;
+  }
+}

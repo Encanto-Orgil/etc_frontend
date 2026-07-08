@@ -402,3 +402,23 @@ export function sitemapEntries() {
 
   return [...staticPages, ...towerPages];
 }
+
+export function newsArticleMetadata(article: {
+  title: string;
+  excerpt: string;
+  image: string;
+  slug: string;
+}): Metadata {
+  const description = article.excerpt || article.title;
+  const image = /^https?:\/\//i.test(article.image)
+    ? article.image
+    : absoluteUrl(article.image);
+
+  return buildPageMetadata({
+    title: article.title,
+    description,
+    path: `/news/${article.slug}`,
+    image,
+    absoluteTitle: true,
+  });
+}

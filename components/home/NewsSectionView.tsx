@@ -1,9 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import type { NewsItem } from "@/lib/i18n/types";
 import { useTranslations } from "@/lib/i18n";
 import shared from "./home.shared.module.css";
 import styles from "./NewsSection.module.css";
+
+function isExternalUrl(url: string) {
+  return /^https?:\/\//i.test(url);
+}
 
 function NewsCard({
   item,
@@ -50,11 +55,26 @@ function NewsCard({
     );
   }
 
+  if (isExternalUrl(item.url)) {
+    return (
+      <a
+        href={item.url}
+        target="_blank"
+        rel="noreferrer"
+        className={variant === "featured" ? styles.featuredLink : styles.compactLink}
+      >
+        {variant === "featured" ? (
+          <article className={styles.featured}>{content}</article>
+        ) : (
+          <article className={styles.compact}>{content}</article>
+        )}
+      </a>
+    );
+  }
+
   return (
-    <a
+    <Link
       href={item.url}
-      target="_blank"
-      rel="noreferrer"
       className={variant === "featured" ? styles.featuredLink : styles.compactLink}
     >
       {variant === "featured" ? (
@@ -62,7 +82,7 @@ function NewsCard({
       ) : (
         <article className={styles.compact}>{content}</article>
       )}
-    </a>
+    </Link>
   );
 }
 
@@ -88,7 +108,7 @@ export default function NewsSectionView({ items }: { items: NewsItem[] }) {
 
           <div className={styles.secondaryList}>
             {rest.map((item) => (
-              <div key={`${item.title}-${item.date}`} data-home-reveal>
+              <div key={item.id ?? `${item.title}-${item.date}`} data-home-reveal>
                 <NewsCard item={item} variant="compact" />
               </div>
             ))}
