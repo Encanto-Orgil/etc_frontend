@@ -7,7 +7,6 @@ import {
   officeAmenitiesSection,
   officeBusinessIntro,
   officeFaq,
-  officeFeatures,
   officeGallery,
   officeNearby,
   officeTypes,
@@ -126,24 +125,6 @@ export function OfficeAmenitiesSection() {
               </article>
             );
           })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function OfficeFeaturesSection() {
-  return (
-    <section className={styles.sectionCream} id="features">
-      <div className={styles.inner}>
-        <p className={styles.eyebrow}>Office Features</p>
-        <h2 className={styles.title}>Engineered for Excellence</h2>
-        <div className={styles.featureGrid}>
-          {officeFeatures.map((feature) => (
-            <div key={feature} className={styles.featureItem} data-office-reveal>
-              {feature}
-            </div>
-          ))}
         </div>
       </div>
     </section>

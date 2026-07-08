@@ -5,7 +5,6 @@ import OfficeContactSection from "./OfficeContactSection";
 import OfficeHero from "./OfficeHero";
 import OfficePresentationVideo from "./OfficePresentationVideo";
 import OfficeHighlightsSection from "./OfficeHighlightsSection";
-import OfficeInvestmentSection from "./OfficeInvestmentSection";
 import OfficeCtaSection from "./OfficeCtaSection";
 import OfficePortalSection from "./OfficePortalSection";
 import OfficeWhySection from "./OfficeWhySection";
@@ -13,7 +12,6 @@ import {
   OfficeAmenitiesSection,
   OfficeBusinessSection,
   OfficeFaqSection,
-  OfficeFeaturesSection,
   OfficeGallerySection,
   OfficeLocationSection,
   OfficeTypesSection,
@@ -41,10 +39,8 @@ export default function OfficePage({ others }: Props) {
         <OfficeStackingPlan />
         <OfficeAmenitiesSection />
         <OfficeWhySection />
-        <OfficeFeaturesSection />
         <OfficePortalSection />
         <OfficeLocationSection />
-        <OfficeInvestmentSection />
         <OfficeGallerySection />
         <OfficeFaqSection />
         <OfficeCtaSection />

@@ -154,22 +154,24 @@ export default function GalleryFullscreenSlider({
             </button>
           </div>
 
-          <div className={styles.thumbs} aria-hidden={items.length <= 1}>
-            {items.map((item, thumbIndex) => (
-              <button
-                key={`${item.image}-${thumbIndex}`}
-                type="button"
-                className={`${styles.thumb} ${thumbIndex === index ? styles.thumbActive : ""}`}
-                onClick={() => {
-                  setDirection(thumbIndex > index ? 1 : -1);
-                  setIndex(thumbIndex);
-                }}
-                aria-label={`${labels.viewImage}: ${item.title}`}
-              >
-                <img src={item.image} alt="" />
-              </button>
-            ))}
-          </div>
+          {items.length > 1 && items.length <= 16 ? (
+            <div className={styles.thumbs}>
+              {items.map((item, thumbIndex) => (
+                <button
+                  key={`${item.image}-${thumbIndex}`}
+                  type="button"
+                  className={`${styles.thumb} ${thumbIndex === index ? styles.thumbActive : ""}`}
+                  onClick={() => {
+                    setDirection(thumbIndex > index ? 1 : -1);
+                    setIndex(thumbIndex);
+                  }}
+                  aria-label={`${labels.viewImage}: ${item.title}`}
+                >
+                  <img src={item.image} alt="" loading="lazy" decoding="async" />
+                </button>
+              ))}
+            </div>
+          ) : null}
         </motion.div>
       ) : null}
     </AnimatePresence>,

@@ -158,6 +158,7 @@ export const officeWhySection = {
   eyebrow: "Why Businesses Choose Encanto",
   title: "A Tower Built for Leaders",
   lead: "More than an address — Encanto Trade Center positions your organization at the center of Ulaanbaatar's most connected business district.",
+  featuresTitle: "Engineered for Excellence",
   image: "/images/renders/render-8.jpg",
   imageAlt: "Encanto Trade Center exterior at dusk",
 };
@@ -298,52 +299,6 @@ export const officeFaq = [
     a: "Yes. Tenants can log in at /portal/login to view contracts, invoices, and submit support requests. Access is set up by the property management team after your lease is active.",
   },
 ];
-
-export type OfficeInvestmentPillarIcon = "value" | "location" | "timing";
-
-export const officeInvestment = {
-  eyebrow: "Investment Opportunity",
-  title: "An Address That Adds Value",
-  lead: "Secure a premium office space in one of Ulaanbaatar's most distinguished mixed-use developments and position your business for long-term growth.",
-  pillars: [
-    {
-      icon: "value" as OfficeInvestmentPillarIcon,
-      title: "Landmark asset class",
-      description:
-        "Mongolia's tallest commercial tower delivers prestige, visibility, and a workplace that reinforces your brand.",
-    },
-    {
-      icon: "location" as OfficeInvestmentPillarIcon,
-      title: "Connected district",
-      description:
-        "900 m from Sukhbaatar Square — surrounded by government, banking, embassies, retail, and everyday services.",
-    },
-    {
-      icon: "timing" as OfficeInvestmentPillarIcon,
-      title: "Early tenant advantage",
-      description:
-        "Leasing is open now. Reserve your floor and plan a custom fit-out ahead of Q4 2026 handover.",
-    },
-  ],
-  timeline: [
-    {
-      step: "01",
-      title: "Leasing open",
-      detail: "Choose your floor plan and secure availability today.",
-    },
-    {
-      step: "02",
-      title: "Custom fit-out",
-      detail: "Plan interiors to match your corporate requirements.",
-    },
-    {
-      step: "03",
-      title: "Q4 2026 handover",
-      detail: "Move into a Grade-A workspace built for the long term.",
-    },
-  ],
-  cta: { label: "Request Investment Brief", href: "#contact" },
-};
 
 export const officeCta = {
   eyebrow: "Get Started",

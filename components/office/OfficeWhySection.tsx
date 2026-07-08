@@ -5,6 +5,7 @@ import type { IconType } from "react-icons";
 import Image from "next/image";
 import { LuBuilding2, LuMapPin, LuNetwork, LuSettings2 } from "react-icons/lu";
 import {
+  officeFeatures,
   officeWhyReasons,
   officeWhySection,
   officeWhyStats,
@@ -112,6 +113,17 @@ export default function OfficeWhySection() {
                   </article>
                 );
               })}
+            </div>
+          </div>
+
+          <div className={styles.features}>
+            <h3 className={styles.featuresTitle}>{officeWhySection.featuresTitle}</h3>
+            <div className={styles.featureGrid}>
+              {officeFeatures.map((feature) => (
+                <div key={feature} className={styles.featureItem} data-office-reveal>
+                  {feature}
+                </div>
+              ))}
             </div>
           </div>
 

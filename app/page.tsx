@@ -8,7 +8,7 @@ import WhyEncanto from "@/components/home/WhyEncanto";
 import InteractiveBuilding from "@/components/home/InteractiveBuilding";
 import AmenitiesScroll from "@/components/home/AmenitiesScroll";
 import FloorPlans from "@/components/home/FloorPlans";
-import GalleryMasonry from "@/components/home/GalleryMasonry";
+import GallerySection from "@/components/home/GallerySection";
 import LocationSection from "@/components/home/LocationSection";
 import ConstructionProgress from "@/components/home/ConstructionProgress";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
@@ -38,7 +38,7 @@ export default function Home() {
         </Suspense>
         <FloorPlans />
         <AmenitiesScroll />
-        <GalleryMasonry />
+        <GallerySection />
         <NewsSection />
         <ContactSection />
       </HomeExperience>
