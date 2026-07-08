@@ -4,9 +4,9 @@ export const apartmentHero = {
   title: "Encanto Trade Center - Residence",
   description:
     "Encanto Trade Center - Residence is a 34-story luxury residential tower offering breathtaking panoramic views of the city from every unit. Designed for modern urban living, it combines premium interiors, smart home systems, centralized services, and world-class security into one elevated lifestyle.",
-  imageDay: "/images/hero/residence-day.webp",
-  imageSunset: "/images/hero/residence-sunset.webp",
-  imageNight: "/images/hero/residence-night.webp",
+  imageDay: "/images/renders/render-20.jpg",
+  imageSunset: "/images/renders/render-35.jpg",
+  imageNight: "/images/renders/render-25.jpg",
   primaryCta: { label: "Explore Residences", href: "#types" },
   secondaryCta: { label: "View Floor Plans", href: "#floor-plans" },
   tertiaryCta: { label: "Book a Private Tour", href: "#contact" },

@@ -2,17 +2,14 @@
 
 import Link from "next/link";
 import { officeHero } from "@/lib/officeContent";
-import HeroBackgroundImage from "@/components/HeroBackgroundImage";
 import styles from "./OfficeHero.module.css";
 
 export default function OfficeHero() {
   return (
     <section className={styles.hero} id="hero">
-      <HeroBackgroundImage
-        src={officeHero.image}
-        wrapperClassName={styles.bg}
-        imageClassName={styles.bgImage}
-        priority
+      <div
+        className={styles.bg}
+        style={{ backgroundImage: `url(${officeHero.image})` }}
         data-office-parallax
       />
       <div className={styles.sheen} aria-hidden />

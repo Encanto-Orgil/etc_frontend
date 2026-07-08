@@ -11,12 +11,9 @@
 .bg {
   position: absolute;
   inset: 0;
+  background-size: cover;
+  background-position: center;
   transform: scale(1.05);
-}
-
-.bgImage {
-  object-fit: cover;
-  object-position: center;
 }
 
 .chandelierGlow {

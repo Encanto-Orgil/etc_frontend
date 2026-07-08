@@ -3,11 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import HeroBackgroundImage from "@/components/HeroBackgroundImage";
 import { useTranslations } from "@/lib/i18n";
 import styles from "./HeroSlider.module.css";
 
-const slideImage = "/images/hero/home.webp";
+const slideImage = "/images/renders/render-34.jpg";
 
 export default function HeroSlider() {
   const t = useTranslations();
@@ -40,14 +39,8 @@ export default function HeroSlider() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <HeroBackgroundImage
-            src={slideImage}
-            wrapperClassName={styles.slideMedia}
-            imageClassName={styles.slideImage}
-            priority
-          />
-        </motion.div>
+          style={{ backgroundImage: `url(${slideImage})` }}
+        />
       </AnimatePresence>
 
       <div className={styles.overlay} />

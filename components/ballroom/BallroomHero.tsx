@@ -2,17 +2,14 @@
 
 import Link from "next/link";
 import { ballroomHero } from "@/lib/ballroomContent";
-import HeroBackgroundImage from "@/components/HeroBackgroundImage";
 import styles from "./BallroomHero.module.css";
 
 export default function BallroomHero() {
   return (
     <section className={styles.hero} id="hero">
-      <HeroBackgroundImage
-        src={ballroomHero.image}
-        wrapperClassName={styles.bg}
-        imageClassName={styles.bgImage}
-        priority
+      <div
+        className={styles.bg}
+        style={{ backgroundImage: `url(${ballroomHero.image})` }}
         data-ballroom-parallax
       />
       <div className={styles.chandelierGlow} aria-hidden />

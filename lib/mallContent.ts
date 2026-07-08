@@ -4,8 +4,8 @@ export const mallHero = {
   title: "Encanto Mall",
   description:
     "A curated retail and lifestyle experience where global brands, dining, entertainment, and culture meet under one iconic roof.",
-  image: "/images/hero/mall-day.webp",
-  imageNight: "/images/hero/mall-night.webp",
+  image: "/images/mall/mall-1.jpg",
+  imageNight: "/images/mall/mall-12.jpg",
   primaryCta: { label: "Explore Mall", href: "#zones" },
   secondaryCta: { label: "View Brands", href: "#brands" },
   tertiaryCta: { label: "Plan a Visit", href: "#visit" },

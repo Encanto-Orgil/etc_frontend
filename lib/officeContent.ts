@@ -4,7 +4,7 @@ export const officeHero = {
   title: "Premium Office Spaces",
   description:
     "Designed for forward-thinking businesses seeking prestige, efficiency, and an exceptional working environment in the heart of the city.",
-  image: "/images/hero/office.webp",
+  image: "/images/drone/drone-6.jpg",
   primaryCta: { label: "Explore Office", href: "#stacking-plan" },
   secondaryCta: { label: "Schedule a Tour", href: "#contact" },
 };
