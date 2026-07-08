@@ -4,17 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { fetchOfficeStackingPlan } from "@/lib/api";
 import {
-  STATUS_META,
+  getOfficeUnitStatusMeta,
   type OfficeFloor,
   type OfficeUnit,
 } from "@/lib/officeStacking";
-import {
-  OFFICE_ZONES,
-  availableCount,
-  floorsInZone,
-  zoneForFloor,
-  type OfficeZone,
-} from "@/lib/officeZones";
+import { availableCount } from "@/lib/officeZones";
 import OfficeFacadeStack from "./OfficeFacadeStack";
 import OfficeUnitModal from "./OfficeUnitModal";
 import { officeLegend, officeStackingIntro } from "@/lib/officeContent";
@@ -31,7 +25,6 @@ function sortUnits(units: OfficeUnit[]) {
 export default function OfficeStackingPlan() {
   const [data, setData] = useState<Awaited<ReturnType<typeof fetchOfficeStackingPlan>>>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedZone, setSelectedZone] = useState<OfficeZone>(OFFICE_ZONES[1]);
   const [selectedFloor, setSelectedFloor] = useState<number | null>(null);
   const [hoverFloor, setHoverFloor] = useState<number | null>(null);
   const [availableOnly, setAvailableOnly] = useState(false);
@@ -44,10 +37,11 @@ export default function OfficeStackingPlan() {
     fetchOfficeStackingPlan().then((plan) => {
       setData(plan);
       if (plan?.floors.length) {
-        const mid = plan.floors.find((f) => f.floor_number === 12) ?? plan.floors[0];
-        setSelectedFloor(mid.floor_number);
-        const zone = zoneForFloor(mid.floor_number);
-        if (zone) setSelectedZone(zone);
+        const pick =
+          plan.floors.find((f) => f.units.some((u) => u.status === "available")) ??
+          plan.floors.find((f) => f.floor_number === 12) ??
+          plan.floors[0];
+        setSelectedFloor(pick.floor_number);
       }
       setLoading(false);
     });
@@ -60,33 +54,18 @@ export default function OfficeStackingPlan() {
     [floors, selectedFloor, hoverFloor]
   );
 
-  const visibleFloors = useMemo(() => {
-    let list = floorsInZone(floors, selectedZone);
-    if (availableOnly) list = list.filter((f) => availableCount(f) > 0);
-    return list;
-  }, [floors, selectedZone, availableOnly]);
-
   const displayUnits = activeFloor ? sortUnits(activeFloor.units) : [];
   const filteredUnits = availableOnly
     ? displayUnits.filter((u) => u.status === "available")
     : displayUnits;
 
-  const zoneAvailable = visibleFloors.reduce((n, f) => n + availableCount(f), 0);
-
-  const selectZone = (zone: OfficeZone) => {
-    setSelectedZone(zone);
-    const inZone = floorsInZone(floors, zone);
-    const pick =
-      inZone.find((f) => availableCount(f) > 0) ??
-      inZone[Math.floor(inZone.length / 2)] ??
-      inZone[0];
-    if (pick) setSelectedFloor(pick.floor_number);
-  };
+  const totalAvailable = useMemo(
+    () => floors.reduce((count, floor) => count + availableCount(floor), 0),
+    [floors],
+  );
 
   const selectFloor = (floorNumber: number) => {
     setSelectedFloor(floorNumber);
-    const zone = zoneForFloor(floorNumber);
-    if (zone) setSelectedZone(zone);
   };
 
   return (
@@ -126,7 +105,6 @@ export default function OfficeStackingPlan() {
                 floors={floors}
                 selectedFloor={selectedFloor}
                 hoverFloor={hoverFloor}
-                selectedZone={selectedZone}
                 availableOnly={availableOnly}
                 onSelectFloor={selectFloor}
                 onHoverFloor={setHoverFloor}
@@ -134,50 +112,26 @@ export default function OfficeStackingPlan() {
             </div>
 
             <div className={styles.detailCard}>
-              <div className={styles.zoneGrid}>
-                {OFFICE_ZONES.map((zone) => (
-                  <button
-                    key={zone.id}
-                    type="button"
-                    className={`${styles.zoneBtn} ${
-                      selectedZone.id === zone.id ? styles.zoneActive : ""
-                    }`}
-                    onClick={() => selectZone(zone)}
-                  >
-                    <span className={styles.zoneRange}>{zone.label}</span>
-                    <span className={styles.zoneName}>{zone.title}</span>
-                  </button>
-                ))}
+              <div className={styles.filterRow}>
                 <button
                   type="button"
-                  className={`${styles.zoneBtn} ${styles.zoneFilter} ${
-                    availableOnly ? styles.zoneFilterActive : ""
-                  }`}
+                  className={`${styles.filterBtn} ${availableOnly ? styles.filterBtnActive : ""}`}
                   onClick={() => setAvailableOnly((v) => !v)}
                 >
-                  <span className={styles.zoneRange}>Filter</span>
-                  <span className={styles.zoneName}>Available only</span>
+                  {availableOnly ? "Showing available floors only" : "Show available floors only"}
                 </button>
               </div>
 
               <div className={styles.detailHead}>
                 <span className={styles.badge}>
-                  {activeFloor ? activeFloor.floor_number : selectedZone.label}
+                  {activeFloor ? activeFloor.floor_number : "—"}
                 </span>
-                <h3>{activeFloor ? activeFloor.label : selectedZone.title}</h3>
-                <p>
-                  {activeFloor
-                    ? activeFloor.layout_notes
-                    : selectedZone.description}
-                </p>
+                <h3>{activeFloor ? activeFloor.label : "Select a floor"}</h3>
+                <p>{activeFloor ? activeFloor.layout_notes : "Click a floor on the tower to view office units."}</p>
               </div>
 
               {!activeFloor ? (
-                <ul className={styles.bullets}>
-                  {selectedZone.bullets.map((b) => (
-                    <li key={b}>{b}</li>
-                  ))}
-                </ul>
+                <p className={styles.empty}>Select a floor to view unit availability.</p>
               ) : filteredUnits.length === 0 ? (
                 <p className={styles.empty}>
                   {availableOnly
@@ -188,7 +142,7 @@ export default function OfficeStackingPlan() {
                 <>
                   <div className={styles.unitRow}>
                     {filteredUnits.map((unit) => {
-                      const meta = STATUS_META[unit.status];
+                      const meta = getOfficeUnitStatusMeta(activeFloor, unit);
                       const isAvailable = unit.status === "available";
                       const content = (
                         <>
@@ -234,8 +188,10 @@ export default function OfficeStackingPlan() {
                   </div>
 
                   <div className={styles.metaRow}>
-                    <span>{availableCount(activeFloor)}/4 available</span>
-                    <span>{selectedZone.label} zone · {zoneAvailable} available</span>
+                    <span>
+                      {availableCount(activeFloor)}/{activeFloor.units.length} available
+                    </span>
+                    <span>{totalAvailable} available across tower</span>
                   </div>
                 </>
               )}

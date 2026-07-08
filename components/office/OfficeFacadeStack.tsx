@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import type { OfficeFloor } from "@/lib/officeStacking";
-import type { OfficeZone } from "@/lib/officeZones";
 import { useOfficeFacadeCalibration } from "@/hooks/useOfficeFacadeCalibration";
 import BuildingFacadeCalibrator from "./BuildingFacadeCalibrator";
 import BuildingFacadeOverlay from "./BuildingFacadeOverlay";
@@ -12,7 +11,6 @@ type Props = {
   floors: OfficeFloor[];
   selectedFloor: number | null;
   hoverFloor: number | null;
-  selectedZone: OfficeZone | null;
   availableOnly: boolean;
   onSelectFloor: (floorNumber: number) => void;
   onHoverFloor: (floorNumber: number | null) => void;

@@ -37,3 +37,26 @@ export const STATUS_META: Record<
   reserved: { label: "Reserved", color: "#f59e0b", bg: "rgba(245,158,11,0.12)" },
   unavailable: { label: "Unavailable", color: "#ef4444", bg: "rgba(239,68,68,0.12)" },
 };
+
+export const OFFICE_SOLD_OUT_FLOOR_MIN = 17;
+export const OFFICE_SOLD_OUT_FLOOR_MAX = 24;
+
+export function isSoldOutFloor(floor: OfficeFloor): boolean {
+  return (
+    floor.floor_number >= OFFICE_SOLD_OUT_FLOOR_MIN &&
+    floor.floor_number <= OFFICE_SOLD_OUT_FLOOR_MAX &&
+    floor.units.length > 0 &&
+    floor.units.every((unit) => unit.status === "unavailable")
+  );
+}
+
+export function getOfficeUnitStatusMeta(floor: OfficeFloor, unit: OfficeUnit) {
+  if (
+    unit.status === "unavailable" &&
+    floor.floor_number >= OFFICE_SOLD_OUT_FLOOR_MIN &&
+    floor.floor_number <= OFFICE_SOLD_OUT_FLOOR_MAX
+  ) {
+    return { ...STATUS_META.unavailable, label: "Sold out" };
+  }
+  return STATUS_META[unit.status];
+}

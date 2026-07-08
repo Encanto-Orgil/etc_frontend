@@ -8,14 +8,14 @@ import {
   OFFICE_FACADE_IMAGE,
   type FacadeCalibration,
 } from "@/lib/officeFacadeFloors";
-import { availableCount, isFullyRented, type OfficeZone } from "@/lib/officeZones";
+import { availableCount, isFullyRented } from "@/lib/officeZones";
+import { isSoldOutFloor } from "@/lib/officeStacking";
 import styles from "./BuildingFacadeOverlay.module.css";
 
 type Props = {
   floors: OfficeFloor[];
   selectedFloor: number | null;
   hoverFloor: number | null;
-  selectedZone: OfficeZone | null;
   availableOnly: boolean;
   calibration?: FacadeCalibration | null;
   onSelectFloor: (floorNumber: number) => void;
@@ -25,22 +25,17 @@ type Props = {
 function floorState(
   floor: OfficeFloor,
   selectedFloor: number | null,
-  selectedZone: OfficeZone | null,
   availableOnly: boolean
 ) {
-  const inZone =
-    selectedZone &&
-    floor.floor_number >= selectedZone.min &&
-    floor.floor_number <= selectedZone.max;
   const available = availableCount(floor);
   const fullyRented = isFullyRented(floor);
-  const dimmed =
-    availableOnly && available === 0 ? true : selectedZone ? !inZone : false;
+  const soldOut = isSoldOutFloor(floor);
+  const dimmed = availableOnly && available === 0;
 
   return {
-    inZone: !!inZone,
     available,
     fullyRented,
+    soldOut,
     dimmed,
     selected: selectedFloor === floor.floor_number,
   };
@@ -50,7 +45,6 @@ export default function BuildingFacadeOverlay({
   floors,
   selectedFloor,
   hoverFloor,
-  selectedZone,
   availableOnly,
   calibration,
   onSelectFloor,
@@ -81,7 +75,7 @@ export default function BuildingFacadeOverlay({
           aria-label="Office Tower interactive floor map"
         >
           {sorted.map((floor) => {
-            const state = floorState(floor, selectedFloor, selectedZone, availableOnly);
+            const state = floorState(floor, selectedFloor, availableOnly);
             const isHovered = hoverFloor === floor.floor_number;
             const points = getFacadeFloorPoints(floor.floor_number, calibration);
             const label = getFacadeFloorLabel(floor.floor_number, calibration);
@@ -92,8 +86,11 @@ export default function BuildingFacadeOverlay({
                   points={points}
                   className={[
                     styles.floor,
-                    state.fullyRented ? styles.rented : state.available > 0 ? styles.available : "",
-                    state.inZone && !state.selected ? styles.inZone : "",
+                    state.fullyRented || state.soldOut
+                      ? styles.rented
+                      : state.available > 0
+                        ? styles.available
+                        : "",
                     state.selected ? styles.selected : "",
                     isHovered && !state.selected ? styles.hovered : "",
                     state.dimmed ? styles.dimmed : "",
@@ -123,7 +120,11 @@ export default function BuildingFacadeOverlay({
         {focusData ? (
           <div className={styles.callout} aria-live="polite">
             <strong>Floor {focusData.floor_number}</strong>
-            <span>{availableCount(focusData)}/4 available</span>
+            <span>
+              {isSoldOutFloor(focusData)
+                ? "Sold out"
+                : `${availableCount(focusData)}/${focusData.units.length} available`}
+            </span>
           </div>
         ) : null}
       </div>
@@ -133,10 +134,7 @@ export default function BuildingFacadeOverlay({
           <i className={styles.dotGreen} /> Available
         </span>
         <span>
-          <i className={styles.dotRed} /> Fully leased
-        </span>
-        <span>
-          <i className={styles.dotBlue} /> Selected zone
+          <i className={styles.dotRed} /> Fully leased / Sold out
         </span>
       </div>
 

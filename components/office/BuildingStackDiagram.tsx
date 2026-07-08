@@ -1,13 +1,13 @@
 "use client";
 
 import type { OfficeFloor } from "@/lib/officeStacking";
-import { availableCount, isFullyRented, type OfficeZone } from "@/lib/officeZones";
+import { availableCount, isFullyRented } from "@/lib/officeZones";
+import { isSoldOutFloor } from "@/lib/officeStacking";
 import styles from "./BuildingStackDiagram.module.css";
 
 type Props = {
   floors: OfficeFloor[];
   selectedFloor: number | null;
-  selectedZone: OfficeZone | null;
   availableOnly: boolean;
   onSelectFloor: (floorNumber: number) => void;
   onHoverFloor: (floorNumber: number | null) => void;
@@ -16,7 +16,6 @@ type Props = {
 export default function BuildingStackDiagram({
   floors,
   selectedFloor,
-  selectedZone,
   availableOnly,
   onSelectFloor,
   onHoverFloor,
@@ -29,18 +28,10 @@ export default function BuildingStackDiagram({
         <div className={styles.crown} aria-hidden />
         <div className={styles.stack}>
           {sorted.map((floor) => {
-            const inZone =
-              selectedZone &&
-              floor.floor_number >= selectedZone.min &&
-              floor.floor_number <= selectedZone.max;
             const available = availableCount(floor);
             const fullyRented = isFullyRented(floor);
-            const dimmed =
-              availableOnly && available === 0
-                ? true
-                : selectedZone
-                  ? !inZone
-                  : false;
+            const soldOut = isSoldOutFloor(floor);
+            const dimmed = availableOnly && available === 0;
 
             return (
               <button
@@ -48,8 +39,12 @@ export default function BuildingStackDiagram({
                 type="button"
                 className={`${styles.band} ${
                   selectedFloor === floor.floor_number ? styles.bandSelected : ""
-                } ${inZone && !selectedFloor ? styles.bandInZone : ""} ${
-                  fullyRented ? styles.bandFullyRented : available > 0 ? styles.bandHasAvailable : ""
+                } ${
+                  fullyRented || soldOut
+                    ? styles.bandFullyRented
+                    : available > 0
+                      ? styles.bandHasAvailable
+                      : ""
                 } ${dimmed ? styles.bandDimmed : ""}`}
                 onClick={() => onSelectFloor(floor.floor_number)}
                 onMouseEnter={() => onHoverFloor(floor.floor_number)}
