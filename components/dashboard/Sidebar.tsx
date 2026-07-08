@@ -17,7 +17,7 @@ import {
   SearchOutlined,
   ShopOutlined,
 } from "@ant-design/icons";
-import { Avatar, Dropdown, Layout, Menu } from "antd";
+import { Avatar, Badge, Dropdown, Layout, Menu } from "antd";
 import type { MenuProps } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import type { ReactNode } from "react";
@@ -37,6 +37,8 @@ import {
   type DashboardProjectId,
 } from "@/lib/dashboardProjects";
 import { useDashboardProject } from "@/components/dashboard/DashboardProjectProvider";
+import { fetchInquirySummary } from "@/lib/inquiryManagement";
+import { fetchSupportTicketSummary } from "@/lib/supportManagement";
 import styles from "./DashboardShell.module.css";
 
 const { Sider } = Layout;
@@ -59,6 +61,16 @@ const centroIcons: Record<string, ReactNode> = {
   "/dashboard/centro/pages": <FileTextOutlined />,
 };
 
+function MenuLabel({ text, count }: { text: string; count?: number }) {
+  if (!count || count <= 0) return <span>{text}</span>;
+  return (
+    <span className={styles.menuLabelInner}>
+      <span>{text}</span>
+      <Badge count={count} size="small" overflowCount={99} />
+    </span>
+  );
+}
+
 export default function Sidebar({ user }: { user: AuthUser }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -69,12 +81,48 @@ export default function Sidebar({ user }: { user: AuthUser }) {
 
   const selectedKeys = [getDashboardSelectedKey(pathname, activeProjectId)];
   const [openKeys, setOpenKeys] = useState<string[]>(getDashboardOpenKeys(pathname));
+  const [navCounts, setNavCounts] = useState({ inquiries: 0, support: 0 });
+
+  useEffect(() => {
+    if (isCentro) return;
+
+    let cancelled = false;
+
+    async function loadNavCounts() {
+      try {
+        const [inquirySummary, supportSummary] = await Promise.all([
+          fetchInquirySummary(),
+          fetchSupportTicketSummary(),
+        ]);
+        if (cancelled) return;
+        setNavCounts({
+          inquiries: inquirySummary.summary.pending,
+          support: supportSummary.summary.open + supportSummary.summary.in_progress,
+        });
+      } catch {
+        // Keep sidebar usable if count endpoints fail.
+      }
+    }
+
+    loadNavCounts();
+    return () => {
+      cancelled = true;
+    };
+  }, [pathname, isCentro]);
 
   const managementItems = useMemo<MenuItem[]>(
     () => [
       { key: "/dashboard", icon: <AppstoreOutlined />, label: "Dashboard" },
-      { key: "/dashboard/inquiries", icon: <FormOutlined />, label: "Inquiries" },
-      { key: "/dashboard/support", icon: <MessageOutlined />, label: "Support Tickets" },
+      {
+        key: "/dashboard/inquiries",
+        icon: <FormOutlined />,
+        label: <MenuLabel text="Inquiries" count={navCounts.inquiries} />,
+      },
+      {
+        key: "/dashboard/support",
+        icon: <MessageOutlined />,
+        label: <MenuLabel text="Support Tickets" count={navCounts.support} />,
+      },
       ...DASHBOARD_MANAGEMENT_GROUPS.filter(
         (group) => group.key !== "admin-management" || user.is_superuser,
       ).map((group) => ({
@@ -87,7 +135,7 @@ export default function Sidebar({ user }: { user: AuthUser }) {
         })),
       })),
     ],
-    [user.is_superuser],
+    [user.is_superuser, navCounts.inquiries, navCounts.support],
   );
 
   const centroItems = useMemo<MenuItem[]>(

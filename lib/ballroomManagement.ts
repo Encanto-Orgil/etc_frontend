@@ -1,4 +1,5 @@
 import { authFetch } from "./auth";
+import { API_BASE } from "./api";
 import type { BallroomCustomBookingPayload } from "./ballroomAvailability";
 
 export type BallroomBookingStatus = "pending" | "confirmed" | "declined" | "cancelled";
@@ -78,6 +79,10 @@ export type DashboardBallroomInvoice = {
   status_label: string;
   notes: string;
   billing_profile: BallroomBillingProfile;
+  public_token: string;
+  public_url: string;
+  sent_at: string | null;
+  sent_to_email: string;
   created_at: string;
   updated_at: string;
 };
@@ -115,8 +120,48 @@ export type DashboardBallroomQuote = {
   status_label: string;
   notes: string;
   billing_profile: BallroomBillingProfile;
+  public_token: string;
+  public_url: string;
+  sent_at: string | null;
+  sent_to_email: string;
   created_at: string;
   updated_at: string;
+};
+
+export type PublicBallroomDocument = {
+  document_type: "invoice" | "quote";
+  invoice_number?: string;
+  quote_number?: string;
+  customer_name: string;
+  customer_phone?: string;
+  customer_email?: string;
+  event_type_label?: string;
+  event_date?: string | null;
+  event_start?: string | null;
+  event_end?: string | null;
+  guest_count?: number | null;
+  issue_date: string;
+  due_date?: string;
+  valid_until?: string;
+  lines: Array<{
+    id?: number;
+    description: string;
+    quantity: string | number;
+    unit_price: string | number;
+    amount: string | number;
+    order?: number;
+  }>;
+  subtotal: string | number;
+  discount_amount: string | number;
+  vat_mode: BallroomVatMode;
+  vat_mode_label: string;
+  net_amount: string | number;
+  vat_amount: string | number;
+  total_amount: string | number;
+  status: string;
+  status_label: string;
+  notes: string;
+  billing_profile: BallroomBillingProfile;
 };
 
 export type BallroomSummary = {
@@ -333,6 +378,14 @@ export function markBallroomInvoicePaid(id: number) {
   );
 }
 
+export function sendBallroomInvoiceEmail(id: number, email?: string) {
+  return fetchOne<DashboardBallroomInvoice>(
+    `/dashboard/ballroom/invoices/${id}/send-email/`,
+    { method: "POST", body: JSON.stringify(email ? { email } : {}) },
+    "Failed to send invoice email.",
+  );
+}
+
 export function fetchBallroomBillingProfile() {
   return fetchOne<BallroomBillingProfile>(
     "/dashboard/ballroom/billing-profile/",
@@ -436,6 +489,39 @@ export function markBallroomQuoteDeclined(id: number) {
     { method: "POST" },
     "Failed to mark quote as declined.",
   );
+}
+
+export function sendBallroomQuoteEmail(id: number, email?: string) {
+  return fetchOne<DashboardBallroomQuote>(
+    `/dashboard/ballroom/quotes/${id}/send-email/`,
+    { method: "POST", body: JSON.stringify(email ? { email } : {}) },
+    "Failed to send quote email.",
+  );
+}
+
+export async function fetchPublicBallroomInvoice(token: string) {
+  const res = await fetch(`${API_BASE}/public/ballroom/invoices/${token}/`);
+  if (!res.ok) throw new Error("Invoice not found.");
+  return res.json() as Promise<PublicBallroomDocument>;
+}
+
+export async function fetchPublicBallroomQuote(token: string) {
+  const res = await fetch(`${API_BASE}/public/ballroom/quotes/${token}/`);
+  if (!res.ok) throw new Error("Quote not found.");
+  return res.json() as Promise<PublicBallroomDocument>;
+}
+
+export async function respondPublicBallroomQuote(token: string, action: "accept" | "decline") {
+  const res = await fetch(`${API_BASE}/public/ballroom/quotes/${token}/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action }),
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(typeof data.detail === "string" ? data.detail : "Failed to submit response.");
+  }
+  return res.json() as Promise<PublicBallroomDocument>;
 }
 
 export type BallroomContractStatus = "draft" | "final" | "signed" | "cancelled";
