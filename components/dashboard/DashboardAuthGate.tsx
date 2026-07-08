@@ -4,7 +4,7 @@ import { Spin } from "antd";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import DashboardShell from "@/components/dashboard/DashboardShell";
-import { getMe, type AuthUser } from "@/lib/auth";
+import { getMe, ensureCsrf, type AuthUser } from "@/lib/auth";
 
 export default function DashboardAuthGate({
   children,
@@ -15,17 +15,19 @@ export default function DashboardAuthGate({
   const [user, setUser] = useState<AuthUser | null>(null);
 
   useEffect(() => {
-    getMe().then((nextUser) => {
-      if (!nextUser) {
-        router.replace("/dashboard/login");
-        return;
-      }
-      if (!nextUser.is_staff) {
-        router.replace(nextUser.role === "tenant" ? "/portal" : "/portal/login");
-        return;
-      }
-      setUser(nextUser);
-    });
+    ensureCsrf()
+      .then(() => getMe())
+      .then((nextUser) => {
+        if (!nextUser) {
+          router.replace("/dashboard/login");
+          return;
+        }
+        if (!nextUser.is_staff) {
+          router.replace(nextUser.role === "tenant" ? "/portal" : "/portal/login");
+          return;
+        }
+        setUser(nextUser);
+      });
   }, [router]);
 
   if (!user) {

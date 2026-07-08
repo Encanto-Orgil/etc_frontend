@@ -98,35 +98,90 @@ export type DashboardStats = {
   };
 };
 
+let cachedCsrfToken = "";
+let csrfRefreshPromise: Promise<string> | null = null;
+
 function getCookie(name: string) {
   if (typeof document === "undefined") return "";
   const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
   return match ? decodeURIComponent(match[1]) : "";
 }
 
+function readCsrfToken() {
+  return getCookie("csrftoken") || cachedCsrfToken;
+}
+
+async function refreshCsrfToken(): Promise<string> {
+  if (csrfRefreshPromise) return csrfRefreshPromise;
+
+  csrfRefreshPromise = (async () => {
+    const res = await fetch(`${API_BASE}/auth/csrf/`, {
+      credentials: "include",
+    });
+    if (!res.ok) return "";
+    const data = await res.json().catch(() => ({}));
+    const token = typeof data.csrfToken === "string" ? data.csrfToken : "";
+    if (token) cachedCsrfToken = token;
+    return token;
+  })().finally(() => {
+    csrfRefreshPromise = null;
+  });
+
+  return csrfRefreshPromise;
+}
+
+async function attachCsrfHeader(headers: Headers) {
+  let csrf = readCsrfToken();
+  if (!csrf) csrf = await refreshCsrfToken();
+  if (csrf) headers.set("X-CSRFToken", csrf);
+}
+
 export async function authFetch(path: string, init: RequestInit = {}) {
   const headers = new Headers(init.headers);
+  const method = (init.method || "GET").toUpperCase();
 
-  if (init.method && init.method !== "GET") {
-    const csrf = getCookie("csrftoken");
-    if (csrf) headers.set("X-CSRFToken", csrf);
+  if (method !== "GET" && method !== "HEAD" && method !== "OPTIONS") {
+    await attachCsrfHeader(headers);
   }
 
   if (!headers.has("Content-Type") && init.body && !(init.body instanceof FormData)) {
     headers.set("Content-Type", "application/json");
   }
 
-  const res = await fetch(`${API_BASE}${path}`, {
+  let res = await fetch(`${API_BASE}${path}`, {
     ...init,
     headers,
     credentials: "include",
   });
 
+  if (
+    res.status === 403 &&
+    method !== "GET" &&
+    method !== "HEAD" &&
+    method !== "OPTIONS"
+  ) {
+    const data = await res.clone().json().catch(() => ({}));
+    const detail = typeof data.detail === "string" ? data.detail : "";
+    if (detail.toLowerCase().includes("csrf")) {
+      cachedCsrfToken = "";
+      const retryHeaders = new Headers(init.headers);
+      await attachCsrfHeader(retryHeaders);
+      if (!retryHeaders.has("Content-Type") && init.body && !(init.body instanceof FormData)) {
+        retryHeaders.set("Content-Type", "application/json");
+      }
+      res = await fetch(`${API_BASE}${path}`, {
+        ...init,
+        headers: retryHeaders,
+        credentials: "include",
+      });
+    }
+  }
+
   return res;
 }
 
 export async function ensureCsrf() {
-  await authFetch("/auth/csrf/");
+  await refreshCsrfToken();
 }
 
 export async function login(

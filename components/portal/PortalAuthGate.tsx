@@ -4,7 +4,7 @@ import { Spin } from "antd";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PortalShell from "@/components/portal/PortalShell";
-import { getMe, type AuthUser } from "@/lib/auth";
+import { getMe, ensureCsrf, type AuthUser } from "@/lib/auth";
 
 export default function PortalAuthGate({
   children,
@@ -15,7 +15,9 @@ export default function PortalAuthGate({
   const [user, setUser] = useState<AuthUser | null>(null);
 
   useEffect(() => {
-    getMe().then((nextUser) => {
+    ensureCsrf()
+      .then(() => getMe())
+      .then((nextUser) => {
       if (!nextUser) {
         router.replace("/portal/login");
         return;
