@@ -17,4 +17,11 @@ export {
   getAmenities,
   getGalleryItems,
   getFloorPlanTabs,
+  getBallroomHighlights,
+  getBallroomGalleryCategories,
+  getBallroomEventTypes,
+  getBallroomLayouts,
+  getBallroomSkyfold,
+  getBallroomBookingEventTypes,
+  translateBallroomCheckTimeMessage,
 } from "./translations";

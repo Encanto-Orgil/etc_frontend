@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import type { Tower } from "@/lib/data";
+import { useTranslations } from "@/lib/i18n";
 import BallroomExperience from "./BallroomExperience";
 import BallroomHero from "./BallroomHero";
 import {
@@ -21,6 +24,8 @@ type Props = {
 };
 
 export default function BallroomPage({ others }: Props) {
+  const explore = useTranslations().ballroom.explore;
+
   return (
     <BallroomExperience>
       <div className={styles.page}>
@@ -39,8 +44,8 @@ export default function BallroomPage({ others }: Props) {
         <section className={`${styles.section} ${styles.sectionSoft}`} id="explore">
           <div className={styles.inner}>
             <header className={styles.sectionHead}>
-              <span className={styles.eyebrow}>Project</span>
-              <h2 className={styles.title}>Explore Other Destinations</h2>
+              <span className={styles.eyebrow}>{explore.eyebrow}</span>
+              <h2 className={styles.title}>{explore.title}</h2>
             </header>
             <div className={styles.otherGrid}>
               {others.map((item) => (

@@ -1,4 +1,8 @@
 import type { Translations } from "../types";
+import { ballroomMn } from "./ballroomMn";
+import { mallMn } from "./mallMn";
+import { officeMn } from "./officeMn";
+import { residenceMn } from "./residenceMn";
 
 export const mn: Translations = {
   nav: {
@@ -277,4 +281,8 @@ export const mn: Translations = {
       viewLabel: "Дэлгэрэнгүй үзэх",
     },
   },
+  ballroom: ballroomMn,
+  office: officeMn,
+  mall: mallMn,
+  residence: residenceMn,
 };

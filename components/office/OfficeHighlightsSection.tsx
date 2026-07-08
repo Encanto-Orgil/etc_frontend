@@ -9,12 +9,8 @@ import {
   LuWifi,
   LuZap,
 } from "react-icons/lu";
-import {
-  officeHighlightCards,
-  officeHighlightsSection,
-  type OfficeHighlightIcon,
-} from "@/lib/officeContent";
-import { officeHighlights } from "@/lib/officeBrochure";
+import { type OfficeHighlightIcon } from "@/lib/officeContent";
+import { useTranslations } from "@/lib/i18n";
 import styles from "./OfficeHighlightsSection.module.css";
 
 const iconMap: Record<OfficeHighlightIcon, IconType> = {
@@ -27,19 +23,21 @@ const iconMap: Record<OfficeHighlightIcon, IconType> = {
 };
 
 export default function OfficeHighlightsSection() {
+  const copy = useTranslations().office;
+
   return (
     <section className={styles.section} id="highlights">
       <div className={styles.inner}>
         <header className={styles.header} data-office-reveal>
           <div className={styles.headerCopy}>
-            <p className={styles.eyebrow}>{officeHighlightsSection.eyebrow}</p>
-            <h2 className={styles.title}>{officeHighlightsSection.title}</h2>
+            <p className={styles.eyebrow}>{copy.highlightsSection.eyebrow}</p>
+            <h2 className={styles.title}>{copy.highlightsSection.title}</h2>
           </div>
-          <p className={styles.lead}>{officeHighlightsSection.lead}</p>
+          <p className={styles.lead}>{copy.highlightsSection.lead}</p>
         </header>
 
         <div className={styles.metricsRail} data-office-reveal>
-          {officeHighlights.map((stat) => (
+          {copy.metrics.map((stat) => (
             <div key={stat.label} className={styles.metric}>
               <span className={styles.metricValue}>
                 {stat.value}
@@ -52,7 +50,7 @@ export default function OfficeHighlightsSection() {
         </div>
 
         <div className={styles.grid}>
-          {officeHighlightCards.map((card, index) => {
+          {copy.highlightCards.map((card, index) => {
             const Icon = iconMap[card.icon];
 
             return (

@@ -11,9 +11,12 @@ import {
   getOfficeSalesProfile,
   OFFICE_SALES_DEPARTMENT,
 } from "@/lib/officeSalesDisplay";
+import { useLocale, useTranslations } from "@/lib/i18n";
 import styles from "./OfficeContactSection.module.css";
 
 export default function OfficeContactSection() {
+  const { locale } = useLocale();
+  const copy = useTranslations().office.contact;
   const contacts = getSalesContacts("home");
   const featured = contacts.find((person) => person.scopes.includes("office")) ?? contacts[0];
   const others = contacts.filter((person) => person.id !== featured.id);
@@ -23,12 +26,9 @@ export default function OfficeContactSection() {
     <section className={styles.section} id="contact">
       <div className={styles.inner}>
         <header className={styles.header} data-office-reveal>
-          <p className={styles.eyebrow}>Contact</p>
-          <h2 className={styles.title}>Schedule a Private Office Presentation</h2>
-          <p className={styles.lead}>
-            Connect with our sales team for availability, pricing, floor plans, and guided tours
-            of Grade-A office spaces at Encanto Trade Center.
-          </p>
+          <p className={styles.eyebrow}>{copy.eyebrow}</p>
+          <h2 className={styles.title}>{copy.title}</h2>
+          <p className={styles.lead}>{copy.lead}</p>
         </header>
 
         <div className={styles.layout}>
@@ -60,7 +60,7 @@ export default function OfficeContactSection() {
                     <p className={styles.featuredName}>{featuredProfile.displayName}</p>
                     <p className={styles.featuredRole}>{featuredProfile.title}</p>
                   </div>
-                  <span className={styles.featuredBadge}>Office contact</span>
+                  <span className={styles.featuredBadge}>{copy.primaryContact}</span>
                 </div>
                 <p className={styles.featuredFocus}>{featuredProfile.focus}</p>
                 <div className={styles.featuredActions}>
@@ -84,7 +84,7 @@ export default function OfficeContactSection() {
 
             {others.length > 0 ? (
               <div className={styles.otherTeam}>
-                <p className={styles.otherLabel}>Also available</p>
+                <p className={styles.otherLabel}>{copy.alsoAvailable}</p>
                 <div className={styles.otherList}>
                   {others.map((person) => {
                     const profile = getOfficeSalesProfile(person.id, person.name);
@@ -124,10 +124,10 @@ export default function OfficeContactSection() {
           <div className={styles.formColumn} data-office-reveal>
             <div className={styles.formPanel}>
               <div className={styles.formIntro}>
-                <h3>Send an inquiry</h3>
-                <p>Tell us your preferred floor size, move-in timeline, or questions. We respond within one business day.</p>
+                <h3>{copy.formTitle}</h3>
+                <p>{copy.formLead}</p>
               </div>
-              <InquiryForm defaultInterest="office" locale="en" />
+              <InquiryForm defaultInterest="office" locale={locale} />
             </div>
           </div>
         </div>

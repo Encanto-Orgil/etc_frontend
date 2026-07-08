@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { apartmentHero } from "@/lib/apartmentContent";
+import { useTranslations } from "@/lib/i18n";
 import styles from "./ApartmentHero.module.css";
 
 export default function ApartmentHero() {
+  const copy = useTranslations().residence.hero;
+
   return (
     <section className={styles.hero} id="hero">
       <div
@@ -26,19 +29,19 @@ export default function ApartmentHero() {
       <div className={styles.overlay} />
 
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>{apartmentHero.eyebrow}</p>
-        <p className={styles.headline}>{apartmentHero.headline}</p>
-        <h1 className={styles.title}>{apartmentHero.title}</h1>
-        <p className={styles.description}>{apartmentHero.description}</p>
+        <p className={styles.eyebrow}>{copy.eyebrow}</p>
+        <p className={styles.headline}>{copy.headline}</p>
+        <h1 className={styles.title}>{copy.title}</h1>
+        <p className={styles.description}>{copy.description}</p>
         <div className={styles.actions}>
           <Link href={apartmentHero.primaryCta.href} className={styles.primary}>
-            {apartmentHero.primaryCta.label}
+            {copy.primaryCta}
           </Link>
           <Link href={apartmentHero.secondaryCta.href} className={styles.secondary}>
-            {apartmentHero.secondaryCta.label}
+            {copy.secondaryCta}
           </Link>
           <Link href={apartmentHero.tertiaryCta.href} className={styles.tertiary}>
-            {apartmentHero.tertiaryCta.label}
+            {copy.tertiaryCta}
           </Link>
         </div>
       </div>

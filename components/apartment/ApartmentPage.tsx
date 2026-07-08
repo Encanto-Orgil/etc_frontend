@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import type { Tower } from "@/lib/data";
+import { useTranslations } from "@/lib/i18n";
 import ApartmentExperience from "./ApartmentExperience";
 import ApartmentFloorPlans from "./ApartmentFloorPlans";
 import ApartmentHero from "./ApartmentHero";
@@ -27,6 +30,8 @@ type Props = {
 };
 
 export default function ApartmentPage({ others }: Props) {
+  const explore = useTranslations().residence.explore;
+
   return (
     <ApartmentExperience>
       <div className={styles.page}>
@@ -51,8 +56,8 @@ export default function ApartmentPage({ others }: Props) {
         <section className={`${styles.section} ${styles.sectionSoft}`} id="explore">
           <div className={styles.inner}>
             <header className={styles.sectionHead}>
-              <span className={styles.eyebrow}>Project</span>
-              <h2 className={styles.title}>Explore Other Destinations</h2>
+              <span className={styles.eyebrow}>{explore.eyebrow}</span>
+              <h2 className={styles.title}>{explore.title}</h2>
             </header>
             <div className={styles.otherGrid}>
               {others.map((item) => (

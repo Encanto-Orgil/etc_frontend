@@ -1,11 +1,105 @@
 import type { Locale, NearbyPlace, Translations } from "../types";
 import { en, amenityImages, galleryImages } from "./en";
 import { mn } from "./mn";
+import {
+  ballroomEventTypes as ballroomEventTypeAssets,
+  ballroomGalleryCategories as ballroomGalleryAssets,
+  ballroomHighlights as ballroomHighlightAssets,
+  ballroomLayouts as ballroomLayoutAssets,
+} from "../../ballroomContent";
+import { ballroomSkyfold as ballroomSkyfoldAssets } from "../../ballroomBrochure";
+import type { BallroomEventIcon } from "../types";
 
 const catalogs: Record<Locale, Translations> = { en, mn };
 
 export function getTranslations(locale: Locale): Translations {
   return catalogs[locale] ?? en;
+}
+
+export function getBallroomHighlights(locale: Locale) {
+  const copy = getTranslations(locale).ballroom.highlights;
+  return ballroomHighlightAssets.map((item) => ({
+    icon: item.icon,
+    title: copy[item.icon].title,
+    description: copy[item.icon].description,
+  }));
+}
+
+export function getBallroomGalleryCategories(locale: Locale) {
+  const copy = getTranslations(locale).ballroom.gallery;
+  return ballroomGalleryAssets.map((category) => {
+    const text = copy.categories[category.id];
+    return {
+      id: category.id,
+      label: text.label,
+      description: text.description,
+      images: category.images.map((image, index) => ({
+        ...image,
+        alt: text.images[index]?.alt ?? image.alt,
+        caption: text.images[index]?.caption ?? image.caption,
+      })),
+    };
+  });
+}
+
+export function getBallroomEventTypes(locale: Locale) {
+  const copy = getTranslations(locale).ballroom.capacity;
+  return (Object.keys(copy.eventTypes) as BallroomEventIcon[]).map((icon) => {
+    const asset = ballroomEventTypeAssets.find((item) => item.icon === icon);
+    const event = copy.eventTypes[icon];
+    return {
+      icon,
+      title: event.title,
+      layout: event.layout,
+      image: asset?.image ?? "",
+    };
+  });
+}
+
+export function getBallroomLayouts(locale: Locale) {
+  const copy = getTranslations(locale).ballroom.capacity;
+  return ballroomLayoutAssets.map((layout) => ({
+    ...layout,
+    label: copy.layouts[layout.layout].label,
+    note: copy.layouts[layout.layout].note,
+  }));
+}
+
+export function getBallroomSkyfold(locale: Locale) {
+  const copy = getTranslations(locale).ballroom.skyfold;
+  return {
+    image: ballroomSkyfoldAssets.image,
+    title: copy.title,
+    subtitle: copy.eyebrow,
+    tagline: copy.tagline,
+    imageAlt: copy.imageAlt,
+    modes: ballroomSkyfoldAssets.modes.map((mode) => ({
+      ...mode,
+      label: copy.modes[mode.id].label,
+      hint: copy.modes[mode.id].hint,
+    })),
+    points: copy.points,
+  };
+}
+
+export function getBallroomBookingEventTypes(locale: Locale) {
+  const copy = getTranslations(locale).ballroom.availability.eventTypes;
+  return (Object.keys(copy) as Array<keyof typeof copy>).map((value) => ({
+    value,
+    label: copy[value],
+  }));
+}
+
+export function translateBallroomCheckTimeMessage(message: string, locale: Locale) {
+  const copy = getTranslations(locale).ballroom.availability;
+  if (copy.checkTimeMessages[message]) return copy.checkTimeMessages[message];
+
+  const conflictMatch = message.match(/^Сонгосон цаг давхцаж байна: (.+)$/);
+  if (conflictMatch) {
+    return `${copy.conflictPrefix} ${conflictMatch[1]}`;
+  }
+
+  return message;
 }
 
 export function getNearbyPlaces(locale: Locale): NearbyPlace[] {

@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import type { Tower } from "@/lib/data";
+import { useTranslations } from "@/lib/i18n";
 import OfficeExperience from "./OfficeExperience";
 import OfficeContactSection from "./OfficeContactSection";
 import OfficeHero from "./OfficeHero";
@@ -12,10 +15,10 @@ import {
   OfficeAmenitiesSection,
   OfficeBusinessSection,
   OfficeFaqSection,
-  OfficeGallerySection,
   OfficeLocationSection,
   OfficeTypesSection,
 } from "./OfficeLandingSections";
+import OfficeGallerySection from "./OfficeGallerySection";
 import OfficeStackingPlan from "./OfficeStackingPlan";
 import OfficeStickySidebar from "./OfficeStickySidebar";
 import styles from "./OfficePage.module.css";
@@ -26,6 +29,8 @@ type Props = {
 };
 
 export default function OfficePage({ others }: Props) {
+  const explore = useTranslations().office.explore;
+
   return (
     <OfficeExperience>
       <div className={styles.page}>
@@ -50,8 +55,8 @@ export default function OfficePage({ others }: Props) {
         <section className={`${styles.section} ${styles.sectionSoft}`} id="explore">
           <div className={styles.inner}>
             <header className={styles.sectionHead}>
-              <span className={styles.eyebrow}>Project</span>
-              <h2 className={styles.title}>Explore Other Destinations</h2>
+              <span className={styles.eyebrow}>{explore.eyebrow}</span>
+              <h2 className={styles.title}>{explore.title}</h2>
             </header>
             <div className={styles.otherGrid}>
               {others.map((t) => (

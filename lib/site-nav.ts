@@ -36,7 +36,7 @@ export const SITE_SECTION_NAV: SiteSectionNav[] = [
 
 /**
  * Global header — conversion-focused, max clarity:
- * Project overview → 4 destinations → location → contact
+ * Project overview → 4 destinations → location (contact is the header CTA)
  */
 export const GLOBAL_HEADER_NAV: SiteSectionNav[] = [
   { slug: "project", href: "/#about", label: "Project", sectionId: "about" },
@@ -45,7 +45,6 @@ export const GLOBAL_HEADER_NAV: SiteSectionNav[] = [
   { slug: "ballroom", href: "/ballroom", label: "Ballroom" },
   { slug: "residence", href: "/residence", label: "Residences", navLabel: "Residences" },
   { slug: "location", href: "/#location", label: "Location", sectionId: "location" },
-  { slug: "contact", href: "/#contact", label: "Contact", sectionId: "contact" },
 ];
 
 /** @deprecated Use GLOBAL_HEADER_NAV */

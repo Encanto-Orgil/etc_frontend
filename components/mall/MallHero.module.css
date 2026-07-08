@@ -8,54 +8,12 @@
   color: #fff;
 }
 
-.bgDay,
-.bgNight {
+.bg {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
   transform: scale(1.05);
-}
-
-.bgNight {
-  opacity: 0;
-  animation: mallDayNight 14s ease-in-out infinite;
-}
-
-.dayNightCycle {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 200, 120, 0.08) 0%,
-    transparent 35%,
-    rgba(20, 30, 80, 0.15) 100%
-  );
-  animation: mallTint 14s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes mallDayNight {
-  0%,
-  45% {
-    opacity: 0;
-  }
-  55%,
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes mallTint {
-  0%,
-  45% {
-    opacity: 0.3;
-  }
-  55%,
-  100% {
-    opacity: 1;
-  }
 }
 
 .overlay {
@@ -167,15 +125,4 @@
 .tertiary:hover {
   background: rgba(255, 255, 255, 0.06);
   transform: translateY(-1px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .bgNight,
-  .dayNightCycle {
-    animation: none;
-  }
-
-  .bgNight {
-    opacity: 0.35;
-  }
 }

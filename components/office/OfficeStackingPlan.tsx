@@ -11,7 +11,8 @@ import {
 import { availableCount } from "@/lib/officeZones";
 import OfficeFacadeStack from "./OfficeFacadeStack";
 import OfficeUnitModal from "./OfficeUnitModal";
-import { officeLegend, officeStackingIntro } from "@/lib/officeContent";
+import { officeLegend } from "@/lib/officeContent";
+import { useTranslations } from "@/lib/i18n";
 import styles from "./OfficeStackingPlan.module.css";
 
 const UNIT_ORDER = ["A", "B", "C", "D"];
@@ -23,6 +24,8 @@ function sortUnits(units: OfficeUnit[]) {
 }
 
 export default function OfficeStackingPlan() {
+  const stackingCopy = useTranslations().office.stackingIntro;
+  const legendCopy = useTranslations().office.legend;
   const [data, setData] = useState<Awaited<ReturnType<typeof fetchOfficeStackingPlan>>>(null);
   const [loading, setLoading] = useState(true);
   const [selectedFloor, setSelectedFloor] = useState<number | null>(null);
@@ -75,14 +78,14 @@ export default function OfficeStackingPlan() {
 
       <div className={styles.inner}>
         <div className={styles.heroCopy}>
-          <span className={styles.eyebrow}>{officeStackingIntro.eyebrow}</span>
-          <h2 className={styles.title}>{officeStackingIntro.title}</h2>
-          <p className={styles.sub}>{officeStackingIntro.subtitle}</p>
+          <span className={styles.eyebrow}>{stackingCopy.eyebrow}</span>
+          <h2 className={styles.title}>{stackingCopy.title}</h2>
+          <p className={styles.sub}>{stackingCopy.subtitle}</p>
           <ul className={styles.legend}>
-            {officeLegend.map((item) => (
+            {officeLegend.map((item, index) => (
               <li key={item.label}>
                 <span className={styles.legendDot} style={{ background: item.color }} />
-                {item.label}
+                {legendCopy[index]?.label ?? item.label}
               </li>
             ))}
           </ul>
@@ -208,8 +211,8 @@ export default function OfficeStackingPlan() {
         {!loading && data && floors.length > 0 ? (
           <div className={styles.sectionFoot}>
             <div>
-              <h3>{officeStackingIntro.footerTitle}</h3>
-              <p>{officeStackingIntro.footerBody}</p>
+              <h3>{stackingCopy.footerTitle}</h3>
+              <p>{stackingCopy.footerBody}</p>
             </div>
             <Link href="#contact" className="btn-primary">
               Contact Sales

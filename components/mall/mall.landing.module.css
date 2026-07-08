@@ -101,6 +101,152 @@
   color: rgba(0, 0, 0, 0.58);
 }
 
+.featureList,
+.featureListLight {
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.featureList li,
+.featureListLight li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.featureList li::before,
+.featureListLight li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #b98e4c;
+}
+
+.featureList li {
+  color: rgba(0, 0, 0, 0.68);
+}
+
+.featureListLight li {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.outcomeGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.outcomeChip {
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.landmarkGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.landmarkCard {
+  padding: 18px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.landmarkCard strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+
+.landmarkCard p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: rgba(0, 0, 0, 0.58);
+}
+
+.address {
+  margin: 24px 0 0;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: rgba(0, 0, 0, 0.62);
+}
+
+.advantageGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.advantageCard {
+  position: relative;
+  padding: 24px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.advantageIndex {
+  display: block;
+  margin-bottom: 14px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.advantageCard p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.leasingContact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  max-width: 720px;
+  margin: 24px auto 0;
+  text-align: left;
+}
+
+.leasingContact strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #b98e4c;
+}
+
+.leasingContact p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+}
+
 .zoneTrack {
   display: flex;
   gap: 16px;
@@ -269,6 +415,70 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.5);
+}
+
+.statItemLight {
+  padding: 20px 18px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  text-align: center;
+}
+
+.statValueLight {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 300;
+  color: var(--luxury-black);
+}
+
+.statValueLight small {
+  font-size: 0.72em;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.statLabelLight {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.faqList {
+  display: grid;
+  gap: 12px;
+  margin-top: 40px;
+}
+
+.faqItem {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.faqItem summary {
+  padding: 20px 24px;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 400;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem p {
+  margin: 0;
+  padding: 0 24px 20px;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.68);
 }
 
 .galleryGrid {

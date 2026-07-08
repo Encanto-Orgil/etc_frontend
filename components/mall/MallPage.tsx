@@ -1,22 +1,20 @@
+"use client";
+
 import Link from "next/link";
 import type { Tower } from "@/lib/data";
+import { useTranslations } from "@/lib/i18n";
 import MallExperience from "./MallExperience";
-import MallFlowSection from "./MallFlowSection";
-import MallFloorNav from "./MallFloorNav";
+import MallContactSection from "./MallContactSection";
+import MallFloorPlan from "./MallFloorPlan";
+import MallGallerySection from "./MallGallerySection";
 import MallHero from "./MallHero";
+import { MallHighlightsSection } from "./MallHighlightsSection";
 import {
-  MallAtriumSection,
-  MallBrandsSection,
-  MallContactSection,
-  MallDiningSection,
-  MallEntertainmentSection,
-  MallExperienceSection,
-  MallGallerySection,
-  MallHighlightsSection,
-  MallLeasingSection,
-  MallVisitSection,
-  MallWhySection,
-  MallZonesSection,
+  MallFaqSection,
+  MallIntroSection,
+  MallLayoutSection,
+  MallLocationSection,
+  MallTenantSection,
 } from "./MallLandingSections";
 import styles from "./MallPage.module.css";
 
@@ -26,31 +24,27 @@ type Props = {
 };
 
 export default function MallPage({ others }: Props) {
+  const explore = useTranslations().mall.explore;
+
   return (
     <MallExperience>
       <div className={styles.page}>
         <MallHero />
-
-        <MallExperienceSection />
+        <MallIntroSection />
         <MallHighlightsSection />
-        <MallZonesSection />
-        <MallBrandsSection />
-        <MallFlowSection />
-        <MallAtriumSection />
-        <MallDiningSection />
-        <MallEntertainmentSection />
-        <MallFloorNav />
-        <MallWhySection />
+        <MallTenantSection />
+        <MallLayoutSection />
+        <MallFloorPlan />
+        <MallLocationSection />
         <MallGallerySection />
-        <MallLeasingSection />
-        <MallVisitSection />
         <MallContactSection />
+        <MallFaqSection />
 
         <section className={`${styles.section} ${styles.sectionSoft}`} id="explore">
           <div className={styles.inner}>
             <header className={styles.sectionHead}>
-              <span className={styles.eyebrow}>Project</span>
-              <h2 className={styles.title}>Explore Other Destinations</h2>
+              <span className={styles.eyebrow}>{explore.eyebrow}</span>
+              <h2 className={styles.title}>{explore.title}</h2>
             </header>
             <div className={styles.otherGrid}>
               {others.map((item) => (

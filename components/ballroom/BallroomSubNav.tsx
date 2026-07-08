@@ -1,21 +1,26 @@
-import LandingSubNav from "@/components/LandingSubNav";
+"use client";
 
-const links = [
-  { href: "#hero", label: "Overview" },
-  { href: "#experience", label: "Experience" },
-  { href: "#gallery", label: "Gallery" },
-  { href: "#capacity", label: "Capacity" },
-  { href: "#skyfold", label: "Skyfold" },
-  { href: "#highlights", label: "Highlights" },
-  { href: "#contact", label: "Contact" },
-  { href: "#faq", label: "FAQ" },
-] as const;
+import LandingSubNav from "@/components/LandingSubNav";
+import { useTranslations } from "@/lib/i18n";
 
 export default function BallroomSubNav() {
+  const copy = useTranslations().ballroom.subNav;
+
+  const links = [
+    { href: "#hero", label: copy.overview },
+    { href: "#experience", label: copy.experience },
+    { href: "#gallery", label: copy.gallery },
+    { href: "#capacity", label: copy.capacity },
+    { href: "#skyfold", label: copy.skyfold },
+    { href: "#highlights", label: copy.highlights },
+    { href: "#contact", label: copy.contact },
+    { href: "#faq", label: copy.faq },
+  ] as const;
+
   return (
     <LandingSubNav
       links={[...links]}
-      ariaLabel="Ballroom sections"
+      ariaLabel={copy.ariaLabel}
       variant="compact"
     />
   );

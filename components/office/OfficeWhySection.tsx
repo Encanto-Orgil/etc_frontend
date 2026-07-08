@@ -4,13 +4,8 @@ import { useEffect, useRef } from "react";
 import type { IconType } from "react-icons";
 import Image from "next/image";
 import { LuBuilding2, LuMapPin, LuNetwork, LuSettings2 } from "react-icons/lu";
-import {
-  officeFeatures,
-  officeWhyReasons,
-  officeWhySection,
-  officeWhyStats,
-  type OfficeWhyReasonIcon,
-} from "@/lib/officeContent";
+import { officeWhySection, type OfficeWhyReasonIcon } from "@/lib/officeContent";
+import { useTranslations } from "@/lib/i18n";
 import styles from "./OfficeWhySection.module.css";
 
 const iconMap: Record<OfficeWhyReasonIcon, IconType> = {
@@ -68,6 +63,8 @@ function StatCounter({ value, suffix, label }: { value: string; suffix: string; 
 }
 
 export default function OfficeWhySection() {
+  const copy = useTranslations().office;
+
   return (
     <section className={styles.section} id="why-choose">
       <div className={styles.inner}>
@@ -76,17 +73,17 @@ export default function OfficeWhySection() {
 
           <header className={styles.header}>
             <div className={styles.headerCopy}>
-              <p className={styles.eyebrow}>{officeWhySection.eyebrow}</p>
-              <h2 className={styles.title}>{officeWhySection.title}</h2>
+              <p className={styles.eyebrow}>{copy.whySection.eyebrow}</p>
+              <h2 className={styles.title}>{copy.whySection.title}</h2>
             </div>
-            <p className={styles.lead}>{officeWhySection.lead}</p>
+            <p className={styles.lead}>{copy.whySection.lead}</p>
           </header>
 
           <div className={styles.showcase}>
             <div className={styles.visual}>
               <Image
                 src={officeWhySection.image}
-                alt={officeWhySection.imageAlt}
+                alt={copy.whySection.imageAlt}
                 fill
                 sizes="(max-width: 960px) 100vw, 45vw"
                 className={styles.visualImage}
@@ -98,7 +95,7 @@ export default function OfficeWhySection() {
             </div>
 
             <div className={styles.reasons}>
-              {officeWhyReasons.map((reason) => {
+              {copy.whyReasons.map((reason) => {
                 const Icon = iconMap[reason.icon];
 
                 return (
@@ -117,9 +114,9 @@ export default function OfficeWhySection() {
           </div>
 
           <div className={styles.features}>
-            <h3 className={styles.featuresTitle}>{officeWhySection.featuresTitle}</h3>
+            <h3 className={styles.featuresTitle}>{copy.whySection.featuresTitle}</h3>
             <div className={styles.featureGrid}>
-              {officeFeatures.map((feature) => (
+              {copy.whySection.features.map((feature) => (
                 <div key={feature} className={styles.featureItem} data-office-reveal>
                   {feature}
                 </div>
@@ -128,7 +125,7 @@ export default function OfficeWhySection() {
           </div>
 
           <div className={styles.statsRail}>
-            {officeWhyStats.map((stat) => (
+            {copy.whyStats.map((stat) => (
               <StatCounter key={stat.label} {...stat} />
             ))}
           </div>

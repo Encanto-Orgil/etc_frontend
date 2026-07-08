@@ -9,14 +9,16 @@ import {
 } from "@/lib/api";
 import type { BallroomTimeSlot } from "@/lib/ballroomAvailability";
 import {
-  ballroomBookingEventTypes,
   dayAvailabilitySummary,
   groupSlotsByDate,
-  translateCheckTimeMessage,
 } from "@/lib/ballroomAvailability";
+import {
+  getBallroomBookingEventTypes,
+  translateBallroomCheckTimeMessage,
+  useLocale,
+  useTranslations,
+} from "@/lib/i18n";
 import styles from "./BallroomAvailability.module.css";
-
-const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
 function toDateKey(year: number, month: number, day: number) {
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -46,6 +48,9 @@ export default function BallroomAvailability({
   variant?: "light" | "dark";
   embedded?: boolean;
 }) {
+  const { locale } = useLocale();
+  const copy = useTranslations().ballroom.availability;
+  const eventTypes = getBallroomBookingEventTypes(locale);
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
@@ -102,10 +107,10 @@ export default function BallroomAvailability({
         end_time: customEnd,
       });
       if (!result) {
-        message.error("Unable to check availability. Please try again.");
+        message.error(copy.checkError);
         return;
       }
-      const translated = translateCheckTimeMessage(result.message);
+      const translated = translateBallroomCheckTimeMessage(result.message, locale);
       setCustomChecked(true);
       setCustomAvailable(result.available);
       setCustomMessage(translated);
@@ -116,7 +121,7 @@ export default function BallroomAvailability({
       }
     } catch (error) {
       message.error(
-        error instanceof Error ? error.message : "Unable to check availability. Please try again.",
+        error instanceof Error ? error.message : copy.checkError,
       );
     } finally {
       setCheckingCustom(false);
@@ -130,13 +135,13 @@ export default function BallroomAvailability({
     phone: string;
     email?: string;
     guest_count: number;
-    event_type: (typeof ballroomBookingEventTypes)[number]["value"];
+    event_type: "wedding" | "corporate" | "gala" | "conference" | "other";
     message?: string;
   }) => {
     if (!selectedDate) return;
 
     if (!canSubmit) {
-      message.warning("Please check your custom time before submitting.");
+      message.warning(copy.submitWarning);
       return;
     }
 
@@ -151,12 +156,12 @@ export default function BallroomAvailability({
 
       await submitBallroomBooking(payload);
       setDone(true);
-      message.success("Your booking request has been submitted.");
+      message.success(copy.bookingSuccess);
       form.resetFields();
       resetCustomCheck();
       await loadAvailability();
     } catch (error) {
-      message.error(error instanceof Error ? error.message : "Unable to submit. Please try again.");
+      message.error(error instanceof Error ? error.message : copy.bookingError);
     } finally {
       setSubmitting(false);
     }
@@ -169,19 +174,19 @@ export default function BallroomAvailability({
       <div className={styles.layout}>
         <div className={styles.calendarPanel}>
           <div className={styles.calendarHead}>
-            <button type="button" className={styles.navBtn} onClick={() => shiftMonth(-1)} aria-label="Previous month">
+            <button type="button" className={styles.navBtn} onClick={() => shiftMonth(-1)} aria-label={copy.prevMonth}>
               ←
             </button>
             <h3 className={styles.monthLabel}>
               {year}.{String(month).padStart(2, "0")}
             </h3>
-            <button type="button" className={styles.navBtn} onClick={() => shiftMonth(1)} aria-label="Next month">
+            <button type="button" className={styles.navBtn} onClick={() => shiftMonth(1)} aria-label={copy.nextMonth}>
               →
             </button>
           </div>
 
           <div className={styles.weekdays}>
-            {WEEKDAYS.map((day) => (
+            {copy.weekdays.map((day) => (
               <span key={day}>{day}</span>
             ))}
           </div>
@@ -223,33 +228,31 @@ export default function BallroomAvailability({
           </div>
 
           <div className={styles.legend}>
-            <span><i data-status="available" /> Available</span>
-            <span><i data-status="full" /> Fully booked</span>
-            <span><i data-status="blocked" /> Closed</span>
+            <span><i data-status="available" /> {copy.available}</span>
+            <span><i data-status="full" /> {copy.fullyBooked}</span>
+            <span><i data-status="blocked" /> {copy.closed}</span>
           </div>
         </div>
 
         <div className={styles.detailPanel}>
           {!selectedDate ? (
             <div className={styles.placeholder}>
-              <h3>Select a Date</h3>
-              <p>Choose a date on the calendar, then enter your preferred start and end time.</p>
+              <h3>{copy.selectDateTitle}</h3>
+              <p>{copy.selectDateBody}</p>
             </div>
           ) : (
             <>
               <div className={styles.detailHead}>
                 <h3>{selectedDate}</h3>
-                <p>Enter a custom time</p>
+                <p>{copy.customTimeLead}</p>
               </div>
 
               <div className={styles.customPanel}>
-                <p className={styles.customHint}>
-                  Choose a start and end time between 09:00 and 23:00, then check availability.
-                </p>
+                <p className={styles.customHint}>{copy.customTimeHint}</p>
 
                 <div className={styles.customTimeRow}>
                   <label className={styles.timeField}>
-                    <span>Start</span>
+                    <span>{copy.start}</span>
                     <input
                       type="time"
                       value={customStart}
@@ -262,7 +265,7 @@ export default function BallroomAvailability({
                     />
                   </label>
                   <label className={styles.timeField}>
-                    <span>End</span>
+                    <span>{copy.end}</span>
                     <input
                       type="time"
                       value={customEnd}
@@ -282,7 +285,7 @@ export default function BallroomAvailability({
                   loading={checkingCustom}
                   className={styles.checkBtn}
                 >
-                  Check Availability
+                  {copy.checkAvailability}
                 </Button>
 
                 {customChecked ? (
@@ -297,9 +300,9 @@ export default function BallroomAvailability({
 
               {done ? (
                 <div className={styles.successBox}>
-                  <h4>Request Submitted</h4>
-                  <p>We will review your selected date and time and contact you shortly.</p>
-                  <Button onClick={() => setDone(false)}>Submit Another Request</Button>
+                  <h4>{copy.requestSubmittedTitle}</h4>
+                  <p>{copy.requestSubmittedBody}</p>
+                  <Button onClick={() => setDone(false)}>{copy.submitAnother}</Button>
                 </div>
               ) : (
                 <Form
@@ -311,45 +314,48 @@ export default function BallroomAvailability({
                 >
                   <Form.Item
                     name="name"
-                    label="Name"
-                    rules={[{ required: true, message: "Please enter your name" }]}
+                    label={copy.name}
+                    rules={[{ required: true, message: copy.nameRequired }]}
                   >
-                    <Input size="large" placeholder="Your name" />
+                    <Input size="large" placeholder={copy.namePlaceholder} />
                   </Form.Item>
 
                   <div className={styles.formRow}>
                     <Form.Item
                       name="phone"
-                      label="Phone"
-                      rules={[{ required: true, message: "Please enter your phone number" }]}
+                      label={copy.phone}
+                      rules={[{ required: true, message: copy.phoneRequired }]}
                     >
-                      <Input size="large" placeholder="99xxxxxx" />
+                      <Input size="large" placeholder={copy.phonePlaceholder} />
                     </Form.Item>
-                    <Form.Item name="email" label="Email">
-                      <Input size="large" placeholder="name@example.com" />
+                    <Form.Item name="email" label={copy.email}>
+                      <Input size="large" placeholder={copy.emailPlaceholder} />
                     </Form.Item>
                   </div>
 
                   <div className={styles.formRow}>
                     <Form.Item
                       name="guest_count"
-                      label="Guest Count"
-                      rules={[{ required: true, message: "Please enter guest count" }]}
+                      label={copy.guestCount}
+                      rules={[{ required: true, message: copy.guestCountRequired }]}
                     >
                       <InputNumber min={20} max={1200} size="large" style={{ width: "100%" }} />
                     </Form.Item>
-                    <Form.Item name="event_type" label="Event Type">
-                      <Select size="large" options={[...ballroomBookingEventTypes]} />
+                    <Form.Item name="event_type" label={copy.eventType}>
+                      <Select size="large" options={eventTypes} />
                     </Form.Item>
                   </div>
 
-                  <Form.Item name="message" label="Additional Details">
-                    <Input.TextArea rows={3} placeholder="Setup, catering, special requests..." />
+                  <Form.Item name="message" label={copy.additionalDetails}>
+                    <Input.TextArea rows={3} placeholder={copy.detailsPlaceholder} />
                   </Form.Item>
 
                   {customChecked && customAvailable ? (
                     <p className={styles.selectedSummary}>
-                      Selected: {selectedDate} · {customStart}–{customEnd} (custom time)
+                      {copy.selectedSummary
+                        .replace("{date}", selectedDate)
+                        .replace("{start}", customStart)
+                        .replace("{end}", customEnd)}
                     </p>
                   ) : null}
 
@@ -361,7 +367,7 @@ export default function BallroomAvailability({
                     disabled={!canSubmit}
                     className={styles.submitBtn}
                   >
-                    Submit Booking Request
+                    {copy.submitBooking}
                   </Button>
                 </Form>
               )}

@@ -1,4 +1,8 @@
 import type { Translations } from "../types";
+import { ballroomEn } from "./ballroomEn";
+import { mallEn } from "./mallEn";
+import { officeEn } from "./officeEn";
+import { residenceEn } from "./residenceEn";
 
 const amenityImages = [
   "/images/renders/render-18.jpg",
@@ -301,6 +305,10 @@ export const en: Translations = {
       viewLabel: "View",
     },
   },
+  ballroom: ballroomEn,
+  office: officeEn,
+  mall: mallEn,
+  residence: residenceEn,
 };
 
 export { amenityImages, galleryImages };

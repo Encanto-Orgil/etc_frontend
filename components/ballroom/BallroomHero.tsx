@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { ballroomHero } from "@/lib/ballroomContent";
+import { useTranslations } from "@/lib/i18n";
 import styles from "./BallroomHero.module.css";
 
 export default function BallroomHero() {
+  const copy = useTranslations().ballroom.hero;
+
   return (
     <section className={styles.hero} id="hero">
       <div
@@ -16,16 +19,16 @@ export default function BallroomHero() {
       <div className={styles.overlay} />
 
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>{ballroomHero.eyebrow}</p>
-        <p className={styles.headline}>{ballroomHero.headline}</p>
-        <h1 className={styles.title}>{ballroomHero.title}</h1>
-        <p className={styles.description}>{ballroomHero.description}</p>
+        <p className={styles.eyebrow}>{copy.eyebrow}</p>
+        <p className={styles.headline}>{copy.headline}</p>
+        <h1 className={styles.title}>{copy.title}</h1>
+        <p className={styles.description}>{copy.description}</p>
         <div className={styles.actions}>
           <Link href={ballroomHero.primaryCta.href} className={styles.primary}>
-            {ballroomHero.primaryCta.label}
+            {copy.primaryCta}
           </Link>
           <Link href={ballroomHero.secondaryCta.href} className={styles.secondary}>
-            {ballroomHero.secondaryCta.label}
+            {copy.secondaryCta}
           </Link>
         </div>
       </div>

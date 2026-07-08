@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { ballroomSkyfold } from "@/lib/ballroomBrochure";
+import { getBallroomSkyfold, useLocale } from "@/lib/i18n";
+import type { BallroomSkyfoldModeId } from "@/lib/i18n/types";
 import styles from "./BallroomSkyfold.module.css";
 
-type ModeId = (typeof ballroomSkyfold.modes)[number]["id"];
-
 export default function BallroomSkyfold() {
-  const [active, setActive] = useState<ModeId>("full");
-  const activeMode = ballroomSkyfold.modes.find((m) => m.id === active) ?? ballroomSkyfold.modes[0];
+  const { locale } = useLocale();
+  const ballroomSkyfold = getBallroomSkyfold(locale);
+  const [active, setActive] = useState<BallroomSkyfoldModeId>("full");
+  const activeMode = ballroomSkyfold.modes.find((mode) => mode.id === active) ?? ballroomSkyfold.modes[0];
 
   return (
     <section className={styles.section} id="skyfold">

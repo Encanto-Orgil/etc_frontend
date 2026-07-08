@@ -132,6 +132,8 @@ export type BallroomSummary = {
     total_quotes: number;
     draft_quotes: number;
     sent_quotes: number;
+    total_contracts?: number;
+    draft_contracts?: number;
   };
   recent_bookings: DashboardBallroomBooking[];
   recent_invoices: DashboardBallroomInvoice[];
@@ -434,4 +436,99 @@ export function markBallroomQuoteDeclined(id: number) {
     { method: "POST" },
     "Failed to mark quote as declined.",
   );
+}
+
+export type BallroomContractStatus = "draft" | "final" | "signed" | "cancelled";
+
+export type DashboardBallroomContract = {
+  id: number;
+  booking: number | null;
+  contract_number: string;
+  client_name: string;
+  client_organization: string;
+  client_registration: string;
+  client_representative: string;
+  client_address: string;
+  client_phone: string;
+  client_email: string;
+  event_date: string | null;
+  event_start: string | null;
+  event_end: string | null;
+  guest_count: number | null;
+  event_type: BallroomEventType | "";
+  event_type_label: string;
+  venue_name: string;
+  rental_fee: string | number;
+  service_fee: string | number;
+  deposit_amount: string | number;
+  total_amount: string | number;
+  payment_terms: string;
+  cancellation_terms: string;
+  additional_terms: string;
+  status: BallroomContractStatus;
+  status_label: string;
+  signed_date: string | null;
+  notes: string;
+  booking_name: string;
+  booking_phone: string;
+  booking_date: string | null;
+  booking_start: string | null;
+  booking_end: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export function fetchDashboardBallroomContracts(query?: Query) {
+  return fetchList<DashboardBallroomContract>("/dashboard/ballroom/contracts/", query);
+}
+
+export function fetchDashboardBallroomContract(id: number) {
+  return fetchOne<DashboardBallroomContract>(`/dashboard/ballroom/contracts/${id}/`);
+}
+
+export function createDashboardBallroomContract(payload: Partial<DashboardBallroomContract>) {
+  return send<DashboardBallroomContract>(
+    "/dashboard/ballroom/contracts/",
+    "POST",
+    payload,
+    "Failed to create contract.",
+  );
+}
+
+export function createBallroomContractFromBooking(bookingId: number) {
+  return fetchOne<DashboardBallroomContract>(
+    "/dashboard/ballroom/contracts/from-booking/",
+    { method: "POST", body: JSON.stringify({ booking: bookingId }) },
+    "Failed to create contract from booking.",
+  );
+}
+
+export function updateDashboardBallroomContract(
+  id: number,
+  payload: Partial<DashboardBallroomContract>,
+) {
+  return send<DashboardBallroomContract>(
+    `/dashboard/ballroom/contracts/${id}/`,
+    "PATCH",
+    payload,
+    "Failed to update contract.",
+  );
+}
+
+export function deleteDashboardBallroomContract(id: number) {
+  return remove(`/dashboard/ballroom/contracts/${id}/`, "Failed to delete contract.");
+}
+
+export async function downloadBallroomContractDocx(id: number, filename: string) {
+  const res = await authFetch(`/dashboard/ballroom/contracts/${id}/download-docx/`);
+  if (!res.ok) throw new Error(await parseError(res, "Failed to download contract."));
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename.endsWith(".docx") ? filename : `${filename}.docx`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }

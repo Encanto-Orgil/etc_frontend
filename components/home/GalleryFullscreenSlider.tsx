@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { LuChevronLeft, LuChevronRight, LuX } from "react-icons/lu";
@@ -33,6 +33,7 @@ export default function GalleryFullscreenSlider({
 }: Props) {
   const [index, setIndex] = useState(initialIndex);
   const [direction, setDirection] = useState(0);
+  const thumbsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (open) setIndex(initialIndex);
@@ -68,6 +69,12 @@ export default function GalleryFullscreenSlider({
     };
   }, [open, onClose, items.length]);
 
+  useEffect(() => {
+    if (!open || !thumbsRef.current) return;
+    const activeThumb = thumbsRef.current.querySelector<HTMLElement>(`[data-thumb-index="${index}"]`);
+    activeThumb?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }, [index, open]);
+
   const goPrev = useCallback(() => {
     if (!items.length) return;
     setDirection(-1);
@@ -85,6 +92,8 @@ export default function GalleryFullscreenSlider({
   const active = items[index];
   if (!active) return null;
 
+  const slideLabel = active.title.trim() || `${labels.viewImage} ${index + 1}`;
+
   return createPortal(
     <AnimatePresence>
       {open ? (
@@ -92,7 +101,7 @@ export default function GalleryFullscreenSlider({
           className={styles.overlay}
           role="dialog"
           aria-modal="true"
-          aria-label={active.title}
+          aria-label={slideLabel}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -110,7 +119,7 @@ export default function GalleryFullscreenSlider({
               <span className={styles.counter}>
                 {String(index + 1).padStart(2, "0")} / {String(items.length).padStart(2, "0")}
               </span>
-              <span className={styles.title}>{active.title}</span>
+              {active.title.trim() ? <span className={styles.title}>{active.title}</span> : null}
             </div>
             <button type="button" className={styles.closeBtn} onClick={onClose} aria-label={labels.close}>
               <LuX aria-hidden />
@@ -132,7 +141,7 @@ export default function GalleryFullscreenSlider({
                 <motion.img
                   key={active.image}
                   src={active.image}
-                  alt={active.title}
+                  alt={slideLabel}
                   className={styles.image}
                   custom={direction}
                   initial={{ opacity: 0, x: direction >= 0 ? 48 : -48, scale: 0.98 }}
@@ -154,18 +163,20 @@ export default function GalleryFullscreenSlider({
             </button>
           </div>
 
-          {items.length > 1 && items.length <= 16 ? (
-            <div className={styles.thumbs}>
+          {items.length > 1 ? (
+            <div className={styles.thumbs} ref={thumbsRef}>
               {items.map((item, thumbIndex) => (
                 <button
                   key={`${item.image}-${thumbIndex}`}
                   type="button"
+                  data-thumb-index={thumbIndex}
                   className={`${styles.thumb} ${thumbIndex === index ? styles.thumbActive : ""}`}
                   onClick={() => {
                     setDirection(thumbIndex > index ? 1 : -1);
                     setIndex(thumbIndex);
                   }}
-                  aria-label={`${labels.viewImage}: ${item.title}`}
+                  aria-label={`${labels.viewImage} ${thumbIndex + 1}`}
+                  aria-current={thumbIndex === index ? "true" : undefined}
                 >
                   <img src={item.image} alt="" loading="lazy" decoding="async" />
                 </button>

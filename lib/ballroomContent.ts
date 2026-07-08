@@ -1,9 +1,9 @@
 import { ballroomCapacitySetups, ballroomDimensions } from "./ballroomBrochure";
 
 export const ballroomHero = {
-  eyebrow: "Encanto Grande Ballroom",
+  eyebrow: "Encanto Grand Ballroom",
   headline: "WHERE UNFORGETTABLE MOMENTS BEGIN",
-  title: "Encanto Grande Ballroom",
+  title: "Encanto Grand Ballroom",
   description:
     "A world-class venue crafted for weddings, galas, conferences, and extraordinary celebrations.",
   image: "/images/ballroom/ballroom-5.jpg",
@@ -14,7 +14,7 @@ export const ballroomHero = {
 export const ballroomExperience = {
   image: "/images/ballroom/ballroom-5.jpg",
   title: "Crafted for Extraordinary Events",
-  body: "Whether you are hosting an elegant wedding, an international conference, or a prestigious gala dinner, Encanto Grande Ballroom delivers an exceptional experience through timeless design, advanced technology, and impeccable service.",
+  body: "Whether you are hosting an elegant wedding, an international conference, or a prestigious gala dinner, Encanto Grand Ballroom delivers an exceptional experience through timeless design, advanced technology, and impeccable service.",
 };
 
 export type BallroomHighlightIcon =
@@ -309,7 +309,7 @@ export const ballroomFlexibleUses = [
 
 export const ballroomSignature = {
   title: "Every Celebration Deserves a Grand Stage",
-  body: "Elegant design, exceptional service, and unforgettable experiences come together at Encanto Grande Ballroom.",
+  body: "Elegant design, exceptional service, and unforgettable experiences come together at Encanto Grand Ballroom.",
   image: "/images/ballroom/ballroom-5.jpg",
 };
 
@@ -351,7 +351,7 @@ export const ballroomFaq = [
 export const ballroomContact = {
   title: "Plan Your Next Event",
   body: "Our event specialists are ready to help you create an unforgettable experience.",
-  footer: "Extraordinary Events Begin at Encanto Grande Ballroom",
+  footer: "Extraordinary Events Begin at Encanto Grand Ballroom",
 };
 
 export const ballroomThemes = {

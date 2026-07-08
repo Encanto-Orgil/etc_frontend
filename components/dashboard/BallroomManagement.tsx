@@ -8,6 +8,7 @@ import {
   DollarOutlined,
   EditOutlined,
   EyeOutlined,
+  FileWordOutlined,
   FilterOutlined,
   PlusOutlined,
   ReloadOutlined,
@@ -40,9 +41,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   cancelDashboardBallroomBooking,
   confirmDashboardBallroomBooking,
+  createBallroomContractFromBooking,
   createDashboardBallroomBooking,
+  createDashboardBallroomContract,
   createDashboardBallroomInvoice,
   createDashboardBallroomQuote,
+  deleteDashboardBallroomContract,
   declineDashboardBallroomBooking,
   deleteDashboardBallroomBooking,
   deleteDashboardBallroomInvoice,
@@ -50,6 +54,7 @@ import {
   fetchBallroomBillingProfile,
   fetchBallroomSummary,
   fetchDashboardBallroomBookings,
+  fetchDashboardBallroomContracts,
   fetchDashboardBallroomInvoices,
   fetchDashboardBallroomQuotes,
   updateBallroomBillingProfile,
@@ -61,8 +66,10 @@ import {
   type BallroomEventType,
   type BallroomInvoiceStatus,
   type BallroomQuoteStatus,
+  type BallroomContractStatus,
   type BallroomSummary,
   type DashboardBallroomBooking,
+  type DashboardBallroomContract,
   type DashboardBallroomInvoice,
   type DashboardBallroomQuote,
 } from "@/lib/ballroomManagement";
@@ -73,7 +80,7 @@ import BallroomInvoiceFormFields, {
 } from "@/components/dashboard/BallroomInvoiceFormFields";
 import styles from "./PropertyManagement.module.css";
 
-export type BallroomManagementView = "dashboard" | "bookings" | "invoices" | "quotes" | "settings";
+export type BallroomManagementView = "dashboard" | "bookings" | "invoices" | "quotes" | "contracts" | "settings";
 
 const BOOKING_STATUS_LABELS: Record<BallroomBookingStatus, string> = {
   pending: "Pending",
@@ -119,11 +126,26 @@ const QUOTE_STATUS_COLORS: Record<BallroomQuoteStatus, string> = {
   cancelled: "default",
 };
 
+const CONTRACT_STATUS_LABELS: Record<BallroomContractStatus, string> = {
+  draft: "Draft",
+  final: "Final",
+  signed: "Signed",
+  cancelled: "Cancelled",
+};
+
+const CONTRACT_STATUS_COLORS: Record<BallroomContractStatus, string> = {
+  draft: "default",
+  final: "blue",
+  signed: "green",
+  cancelled: "red",
+};
+
 const VIEW_TITLES: Record<BallroomManagementView, string> = {
   dashboard: "Ballroom Dashboard",
   bookings: "Bookings",
   invoices: "Invoices",
   quotes: "Quotes",
+  contracts: "Service Contracts",
   settings: "Invoice settings",
 };
 
@@ -180,6 +202,7 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
   const [bookings, setBookings] = useState<DashboardBallroomBooking[]>([]);
   const [invoices, setInvoices] = useState<DashboardBallroomInvoice[]>([]);
   const [quotes, setQuotes] = useState<DashboardBallroomQuote[]>([]);
+  const [contracts, setContracts] = useState<DashboardBallroomContract[]>([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
@@ -220,6 +243,13 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
       } else if (view === "quotes") {
         setQuotes(
           await fetchDashboardBallroomQuotes({
+            search: search || undefined,
+            status: statusFilter === "all" ? undefined : statusFilter,
+          }),
+        );
+      } else if (view === "contracts") {
+        setContracts(
+          await fetchDashboardBallroomContracts({
             search: search || undefined,
             status: statusFilter === "all" ? undefined : statusFilter,
           }),
@@ -552,6 +582,20 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
           <Popconfirm title="Remove this booking?" onConfirm={() => runBookingAction(record.id, "delete")}>
             <Button size="small" danger icon={<DeleteOutlined />} />
           </Popconfirm>
+          <Button
+            size="small"
+            icon={<FileWordOutlined />}
+            title="Create service contract"
+            onClick={async () => {
+              try {
+                const created = await createBallroomContractFromBooking(record.id);
+                message.success("Contract created.");
+                router.push(`/dashboard/ballroom/contracts/${created.id}`);
+              } catch (error) {
+                message.error(error instanceof Error ? error.message : "Failed to create contract.");
+              }
+            }}
+          />
         </Space>
       ),
     },
@@ -694,6 +738,55 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
     },
   ];
 
+  const contractColumns: ColumnsType<DashboardBallroomContract> = [
+    {
+      title: "Contract",
+      dataIndex: "contract_number",
+      render: (value, record) => (
+        <div>
+          <strong>{value || `Draft #${record.id}`}</strong>
+          <div className={styles.muted}>{record.client_name}</div>
+        </div>
+      ),
+    },
+    {
+      title: "Event",
+      dataIndex: "event_type_label",
+      width: 120,
+    },
+    {
+      title: "Date",
+      key: "date",
+      render: (_, record) => formatDate(record.event_date),
+    },
+    {
+      title: "Total",
+      dataIndex: "total_amount",
+      width: 120,
+      render: (value) => formatMoney(value),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      width: 100,
+      render: (status: BallroomContractStatus) => (
+        <Tag color={CONTRACT_STATUS_COLORS[status]}>{CONTRACT_STATUS_LABELS[status]}</Tag>
+      ),
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      width: 120,
+      render: (_, record) => (
+        <Button
+          size="small"
+          icon={<EyeOutlined />}
+          onClick={() => router.push(`/dashboard/ballroom/contracts/${record.id}`)}
+        />
+      ),
+    },
+  ];
+
   return (
     <div className={styles.shell}>
       <div className={styles.workspace}>
@@ -718,6 +811,27 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
                 New quote
               </Button>
             )}
+            {view === "contracts" && (
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={async () => {
+                  try {
+                    const created = await createDashboardBallroomContract({
+                      client_name: "New client",
+                      venue_name: "Encanto Grand Ballroom",
+                      status: "draft",
+                    });
+                    message.success("Contract created.");
+                    router.push(`/dashboard/ballroom/contracts/${created.id}`);
+                  } catch (error) {
+                    message.error(error instanceof Error ? error.message : "Failed to create contract.");
+                  }
+                }}
+              >
+                New contract
+              </Button>
+            )}
             {view === "settings" && (
               <Button type="primary" loading={saving} onClick={saveBillingProfile}>
                 Save settings
@@ -734,7 +848,7 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
           </Space>
         </div>
 
-        {(view === "bookings" || view === "invoices" || view === "quotes") && (
+        {view !== "dashboard" && view !== "settings" && (
           <div className={styles.searchArea}>
             <Input
               allowClear
@@ -761,6 +875,11 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
                         value: s,
                         label: INVOICE_STATUS_LABELS[s],
                       }))
+                    : view === "contracts"
+                      ? (Object.keys(CONTRACT_STATUS_LABELS) as BallroomContractStatus[]).map((s) => ({
+                          value: s,
+                          label: CONTRACT_STATUS_LABELS[s],
+                        }))
                     : (Object.keys(QUOTE_STATUS_LABELS) as BallroomQuoteStatus[]).map((s) => ({
                         value: s,
                         label: QUOTE_STATUS_LABELS[s],
@@ -851,6 +970,10 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
 
           {view === "quotes" && (
             <Table rowKey="id" columns={quoteColumns} dataSource={quotes} pagination={{ pageSize: 20 }} />
+          )}
+
+          {view === "contracts" && (
+            <Table rowKey="id" columns={contractColumns} dataSource={contracts} pagination={{ pageSize: 20 }} />
           )}
 
           {view === "settings" && billingProfile && (

@@ -127,10 +127,11 @@
   z-index: 2;
   display: flex;
   gap: 10px;
-  justify-content: center;
+  justify-content: flex-start;
   overflow-x: auto;
   padding: 0 clamp(20px, 4vw, 40px) 24px;
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.28) transparent;
 }
 
 .thumbs::-webkit-scrollbar {

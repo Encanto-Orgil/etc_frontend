@@ -1,0 +1,172 @@
+.section {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(72px, 10vw, 120px) 0;
+  background: var(--luxury-cream);
+  color: var(--luxury-black);
+}
+
+.inner {
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #b98e4c;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: end;
+  margin-bottom: clamp(36px, 5vw, 52px);
+}
+
+.headerCopy {
+  max-width: clamp(280px, 34vw, 520px);
+}
+
+.lead {
+  margin: 0;
+  max-width: 48ch;
+  justify-self: end;
+  font-size: clamp(0.98rem, 1.35vw, 1.08rem);
+  line-height: 1.75;
+  color: rgba(0, 0, 0, 0.62);
+}
+
+.metricsRail {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin-bottom: clamp(28px, 4vw, 40px);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(18px, 2.5vw, 24px) clamp(14px, 2vw, 20px);
+  background: #fff;
+}
+
+.metricValue {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.metricUnit {
+  font-size: 0.72em;
+  letter-spacing: 0.04em;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.metricLabel {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  padding: 24px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.04);
+}
+
+.index {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(0, 0, 0, 0.22);
+}
+
+.cardTop {
+  margin-bottom: 18px;
+}
+
+.iconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(185, 142, 76, 0.12);
+  color: #9a7338;
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+}
+
+.cardBody h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.cardBody p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: rgba(0, 0, 0, 0.58);
+}
+
+@media (max-width: 900px) {
+  .header {
+    grid-template-columns: 1fr;
+  }
+
+  .lead {
+    justify-self: start;
+  }
+
+  .metricsRail {
+    grid-template-columns: 1fr;
+  }
+}

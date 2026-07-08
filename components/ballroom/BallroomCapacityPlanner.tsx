@@ -13,10 +13,12 @@ import {
   LuWine,
 } from "react-icons/lu";
 import {
-  ballroomEventTypes,
-  ballroomLayouts,
-  type BallroomEventIcon,
-} from "@/lib/ballroomContent";
+  getBallroomEventTypes,
+  getBallroomLayouts,
+  useLocale,
+  useTranslations,
+} from "@/lib/i18n";
+import type { BallroomEventIcon } from "@/lib/i18n/types";
 import styles from "./BallroomCapacityPlanner.module.css";
 
 const eventIconMap: Record<BallroomEventIcon, IconType> = {
@@ -31,36 +33,38 @@ const eventIconMap: Record<BallroomEventIcon, IconType> = {
 };
 
 export default function BallroomCapacityPlanner() {
-  const [selectedEvent, setSelectedEvent] = useState(ballroomEventTypes[0].title);
+  const { locale } = useLocale();
+  const copy = useTranslations().ballroom.capacity;
+  const eventTypes = getBallroomEventTypes(locale);
+  const layouts = getBallroomLayouts(locale);
+  const [selectedEvent, setSelectedEvent] = useState<BallroomEventIcon>(eventTypes[0].icon);
 
   const activeLayout = useMemo(() => {
-    const event = ballroomEventTypes.find((e) => e.title === selectedEvent);
+    const event = eventTypes.find((item) => item.icon === selectedEvent);
     const layoutName = event?.layout ?? "Banquet";
-    return ballroomLayouts.find((l) => l.layout === layoutName) ?? ballroomLayouts[0];
-  }, [selectedEvent]);
+    return layouts.find((layout) => layout.layout === layoutName) ?? layouts[0];
+  }, [eventTypes, layouts, selectedEvent]);
 
   return (
     <section className={styles.section} id="capacity">
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>Capacity & Layouts</p>
-        <h2 className={styles.title}>Designed for Every Occasion</h2>
-        <p className={styles.lead}>
-          Select your event type to preview the recommended seating configuration and capacity.
-        </p>
+        <p className={styles.eyebrow}>{copy.eyebrow}</p>
+        <h2 className={styles.title}>{copy.title}</h2>
+        <p className={styles.lead}>{copy.lead}</p>
 
         <div className={styles.planner}>
           <div className={styles.eventPicker} data-ballroom-reveal>
-            <p className={styles.pickerLabel}>Event Type</p>
+            <p className={styles.pickerLabel}>{copy.eventType}</p>
             <div className={styles.eventChips}>
-              {ballroomEventTypes.map((event) => {
+              {eventTypes.map((event) => {
                 const Icon = eventIconMap[event.icon];
 
                 return (
                   <button
-                    key={event.title}
+                    key={event.icon}
                     type="button"
-                    className={`${styles.chip} ${selectedEvent === event.title ? styles.chipActive : ""}`}
-                    onClick={() => setSelectedEvent(event.title)}
+                    className={`${styles.chip} ${selectedEvent === event.icon ? styles.chipActive : ""}`}
+                    onClick={() => setSelectedEvent(event.icon)}
                   >
                     <span className={styles.chipIconWrap} aria-hidden>
                       <Icon className={styles.chipIcon} />
@@ -73,7 +77,7 @@ export default function BallroomCapacityPlanner() {
           </div>
 
           <div className={styles.layoutGrid}>
-            {ballroomLayouts.map((layout) => {
+            {layouts.map((layout) => {
               const isActive = layout.layout === activeLayout.layout;
               return (
                 <article
@@ -81,11 +85,11 @@ export default function BallroomCapacityPlanner() {
                   className={`${styles.layoutCard} ${isActive ? styles.layoutActive : ""}`}
                   data-ballroom-reveal
                 >
-                  <span className={styles.layoutName}>{layout.layout}</span>
+                  <span className={styles.layoutName}>{layout.label}</span>
                   <strong className={styles.capacity}>{layout.capacity}</strong>
-                  <span className={styles.guests}>Guests</span>
+                  <span className={styles.guests}>{copy.guests}</span>
                   <p className={styles.note}>{layout.note}</p>
-                  {isActive ? <span className={styles.recommended}>Recommended</span> : null}
+                  {isActive ? <span className={styles.recommended}>{copy.recommended}</span> : null}
                 </article>
               );
             })}

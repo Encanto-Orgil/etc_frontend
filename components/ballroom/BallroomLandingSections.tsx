@@ -20,16 +20,14 @@ import { Button, DatePicker, Form, Input, InputNumber, Select, message } from "a
 import { useEffect, useState } from "react";
 import SalesContacts from "@/components/SalesContacts";
 import { submitInquiry } from "@/lib/api";
-import { ballroomEventTypes as brochureEventTypes } from "@/lib/ballroomBrochure";
+import { ballroomExperience, ballroomSignature } from "@/lib/ballroomContent";
 import {
-  ballroomContact,
-  ballroomExperience,
-  ballroomFaq,
-  ballroomHighlights,
-  ballroomHighlightsSection,
-  ballroomSignature,
-  type BallroomHighlightIcon,
-} from "@/lib/ballroomContent";
+  getBallroomBookingEventTypes,
+  getBallroomHighlights,
+  useLocale,
+  useTranslations,
+} from "@/lib/i18n";
+import type { BallroomHighlightIcon } from "@/lib/i18n/types";
 import BallroomAvailability from "./BallroomAvailability";
 import styles from "./ballroom.landing.module.css";
 import formStyles from "./BallroomReservationForm.module.css";
@@ -52,6 +50,8 @@ const highlightIconMap: Record<BallroomHighlightIcon, IconType> = {
 };
 
 export function BallroomExperienceSection() {
+  const copy = useTranslations().ballroom.experience;
+
   return (
     <section className={styles.sectionCream} id="experience">
       <div className={styles.inner}>
@@ -59,15 +59,15 @@ export function BallroomExperienceSection() {
           <div className={styles.splitImage} data-ballroom-reveal>
             <Image
               src={ballroomExperience.image}
-              alt="Encanto Grande Ballroom panoramic view"
+              alt={copy.imageAlt}
               width={900}
               height={700}
             />
           </div>
           <div data-ballroom-reveal>
-            <p className={styles.eyebrow}>The Grand Experience</p>
-            <h2 className={styles.title}>{ballroomExperience.title}</h2>
-            <p className={styles.lead}>{ballroomExperience.body}</p>
+            <p className={styles.eyebrow}>{copy.eyebrow}</p>
+            <h2 className={styles.title}>{copy.title}</h2>
+            <p className={styles.lead}>{copy.body}</p>
           </div>
         </div>
       </div>
@@ -76,18 +76,22 @@ export function BallroomExperienceSection() {
 }
 
 export function BallroomHighlightsSection() {
+  const { locale } = useLocale();
+  const section = useTranslations().ballroom.highlightsSection;
+  const highlights = getBallroomHighlights(locale);
+
   return (
     <section className={styles.sectionDark} id="highlights">
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>{ballroomHighlightsSection.eyebrow}</p>
-        <h2 className={styles.title}>{ballroomHighlightsSection.title}</h2>
-        <p className={styles.lead}>{ballroomHighlightsSection.lead}</p>
+        <p className={styles.eyebrow}>{section.eyebrow}</p>
+        <h2 className={styles.title}>{section.title}</h2>
+        <p className={styles.lead}>{section.lead}</p>
         <div className={styles.highlightGrid}>
-          {ballroomHighlights.map((card) => {
+          {highlights.map((card) => {
             const Icon = highlightIconMap[card.icon];
 
             return (
-              <article key={card.title} className={styles.highlightCard} data-ballroom-reveal>
+              <article key={card.icon} className={styles.highlightCard} data-ballroom-reveal>
                 <span className={styles.highlightIconWrap} aria-hidden>
                   <Icon className={styles.highlightIcon} />
                 </span>
@@ -103,6 +107,8 @@ export function BallroomHighlightsSection() {
 }
 
 export function BallroomSignatureSection() {
+  const copy = useTranslations().ballroom.signature;
+
   return (
     <section className={styles.signature} id="signature">
       <div
@@ -113,9 +119,9 @@ export function BallroomSignatureSection() {
       <div className={styles.signatureOverlay} />
       <div className={`${styles.inner} ${styles.signatureInner}`}>
         <div data-ballroom-reveal>
-          <p className={styles.eyebrow}>Signature Moments</p>
-          <h2 className={styles.title}>{ballroomSignature.title}</h2>
-          <p className={styles.lead}>{ballroomSignature.body}</p>
+          <p className={styles.eyebrow}>{copy.eyebrow}</p>
+          <h2 className={styles.title}>{copy.title}</h2>
+          <p className={styles.lead}>{copy.body}</p>
         </div>
       </div>
     </section>
@@ -123,13 +129,15 @@ export function BallroomSignatureSection() {
 }
 
 export function BallroomFaqSection() {
+  const copy = useTranslations().ballroom.faq;
+
   return (
     <section className={styles.sectionDark} id="faq">
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>FAQ</p>
-        <h2 className={styles.title}>Planning Questions</h2>
+        <p className={styles.eyebrow}>{copy.eyebrow}</p>
+        <h2 className={styles.title}>{copy.title}</h2>
         <div className={styles.faqList}>
-          {ballroomFaq.map((item) => (
+          {copy.items.map((item) => (
             <details key={item.q} className={styles.faqItem} data-ballroom-reveal>
               <summary>{item.q}</summary>
               <p>{item.a}</p>
@@ -142,6 +150,9 @@ export function BallroomFaqSection() {
 }
 
 export function BallroomReservationForm({ onCheckAvailability }: { onCheckAvailability?: () => void }) {
+  const { locale } = useLocale();
+  const copy = useTranslations().ballroom.reservationForm;
+  const eventTypeOptions = getBallroomBookingEventTypes(locale);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
@@ -176,9 +187,9 @@ export function BallroomReservationForm({ onCheckAvailability }: { onCheckAvaila
       });
       setDone(true);
       form.resetFields();
-      message.success("Your request has been received. We will contact you shortly.");
+      message.success(copy.successMessage);
     } catch {
-      message.error("Unable to submit. Please try again or call our sales team.");
+      message.error(copy.errorMessage);
     } finally {
       setLoading(false);
     }
@@ -187,9 +198,9 @@ export function BallroomReservationForm({ onCheckAvailability }: { onCheckAvaila
   if (done) {
     return (
       <div className={formStyles.done}>
-        <h3>Thank You</h3>
-        <p>Our event specialists will contact you shortly.</p>
-        <Button onClick={() => setDone(false)}>Submit Another Request</Button>
+        <h3>{copy.thankYouTitle}</h3>
+        <p>{copy.thankYouBody}</p>
+        <Button onClick={() => setDone(false)}>{copy.submitAnother}</Button>
       </div>
     );
   }
@@ -197,40 +208,43 @@ export function BallroomReservationForm({ onCheckAvailability }: { onCheckAvaila
   return (
     <Form form={form} layout="vertical" className={formStyles.form} onFinish={onFinish} requiredMark={false}>
       <div className={formStyles.row}>
-        <Form.Item name="name" label="Name" rules={[{ required: true, message: "Required" }]}>
-          <Input placeholder="Your name" size="large" />
+        <Form.Item name="name" label={copy.name} rules={[{ required: true, message: copy.required }]}>
+          <Input placeholder={copy.namePlaceholder} size="large" />
         </Form.Item>
-        <Form.Item name="phone" label="Phone" rules={[{ required: true, message: "Required" }]}>
-          <Input placeholder="99xxxxxx" size="large" />
+        <Form.Item name="phone" label={copy.phone} rules={[{ required: true, message: copy.required }]}>
+          <Input placeholder={copy.phonePlaceholder} size="large" />
         </Form.Item>
       </div>
-      <Form.Item name="email" label="Email" rules={[{ type: "email", message: "Invalid email" }]}>
-        <Input placeholder="name@example.com" size="large" />
+      <Form.Item name="email" label={copy.email} rules={[{ type: "email", message: copy.invalidEmail }]}>
+        <Input placeholder={copy.emailPlaceholder} size="large" />
       </Form.Item>
       <div className={formStyles.row}>
-        <Form.Item name="eventType" label="Event Type">
+        <Form.Item name="eventType" label={copy.eventType}>
           <Select
             size="large"
-            placeholder="Select event type"
-            options={brochureEventTypes.map((e) => ({ value: e.label, label: e.label }))}
+            placeholder={copy.eventTypePlaceholder}
+            options={eventTypeOptions.map((option) => ({
+              value: option.label,
+              label: option.label,
+            }))}
           />
         </Form.Item>
-        <Form.Item name="eventDate" label="Event Date">
+        <Form.Item name="eventDate" label={copy.eventDate}>
           <DatePicker size="large" className={formStyles.datePicker} popupClassName={formStyles.datePopup} />
         </Form.Item>
       </div>
-      <Form.Item name="guestCount" label="Estimated Guests">
-        <InputNumber min={1} max={2000} size="large" className={formStyles.guests} placeholder="500" />
+      <Form.Item name="guestCount" label={copy.guestCount}>
+        <InputNumber min={1} max={2000} size="large" className={formStyles.guests} placeholder={copy.guestCountPlaceholder} />
       </Form.Item>
-      <Form.Item name="message" label="Message">
-        <TextArea rows={4} placeholder="Tell us about your event vision..." />
+      <Form.Item name="message" label={copy.message}>
+        <TextArea rows={4} placeholder={copy.messagePlaceholder} />
       </Form.Item>
       <div className={formStyles.actions}>
         <Button type="primary" htmlType="submit" size="large" loading={loading} className={formStyles.submit}>
-          Request a Proposal
+          {copy.submit}
         </Button>
         <button type="button" className={formStyles.secondary} onClick={onCheckAvailability}>
-          Check Availability
+          {copy.checkAvailability}
         </button>
       </div>
     </Form>
@@ -240,6 +254,7 @@ export function BallroomReservationForm({ onCheckAvailability }: { onCheckAvaila
 type ContactTab = "availability" | "proposal";
 
 export function BallroomContactSection() {
+  const copy = useTranslations().ballroom.contact;
   const [activeTab, setActiveTab] = useState<ContactTab>("availability");
 
   useEffect(() => {
@@ -266,13 +281,13 @@ export function BallroomContactSection() {
     <section className={styles.contactSection} id="contact">
       <div className={styles.inner}>
         <header className={styles.contactHeader} data-ballroom-reveal>
-          <p className={styles.contactEyebrow}>Contact & Reservation</p>
-          <h2 className={styles.contactTitle}>{ballroomContact.title}</h2>
-          <p className={styles.contactLead}>{ballroomContact.body}</p>
+          <p className={styles.contactEyebrow}>{copy.eyebrow}</p>
+          <h2 className={styles.contactTitle}>{copy.title}</h2>
+          <p className={styles.contactLead}>{copy.body}</p>
         </header>
 
         <div className={styles.contactCard} data-ballroom-reveal>
-          <div className={styles.contactTabs} role="tablist" aria-label="Contact options">
+          <div className={styles.contactTabs} role="tablist" aria-label={copy.tabAriaLabel}>
             <button
               type="button"
               role="tab"
@@ -283,7 +298,7 @@ export function BallroomContactSection() {
               data-active={activeTab === "availability" ? "true" : "false"}
               onClick={() => selectTab("availability")}
             >
-              Check Availability
+              {copy.tabAvailability}
             </button>
             <button
               type="button"
@@ -295,7 +310,7 @@ export function BallroomContactSection() {
               data-active={activeTab === "proposal" ? "true" : "false"}
               onClick={() => selectTab("proposal")}
             >
-              Request a Proposal
+              {copy.tabProposal}
             </button>
           </div>
 
@@ -307,9 +322,7 @@ export function BallroomContactSection() {
                 aria-labelledby="tab-availability"
                 className={styles.contactTabPanel}
               >
-                <p className={styles.contactColHint}>
-                  Select a date to view open time slots and submit a booking request.
-                </p>
+                <p className={styles.contactColHint}>{copy.availabilityHint}</p>
                 <div className={styles.availabilityWrap}>
                   <BallroomAvailability variant="light" />
                 </div>
@@ -321,9 +334,7 @@ export function BallroomContactSection() {
                 aria-labelledby="tab-proposal"
                 className={styles.contactTabPanel}
               >
-                <p className={styles.contactColHint}>
-                  Share your event details and our specialists will prepare a tailored proposal.
-                </p>
+                <p className={styles.contactColHint}>{copy.proposalHint}</p>
                 <BallroomReservationForm onCheckAvailability={() => selectTab("availability")} />
               </div>
             )}
@@ -335,7 +346,7 @@ export function BallroomContactSection() {
         </div>
 
         <p className={styles.footerCta} data-ballroom-reveal>
-          {ballroomContact.footer}
+          {copy.footer}
         </p>
       </div>
     </section>

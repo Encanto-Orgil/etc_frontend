@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Drawer } from "antd";
-import { CalendarOutlined, MenuOutlined } from "@ant-design/icons";
+import { MailOutlined, MenuOutlined } from "@ant-design/icons";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 import Logo from "@/components/Logo";
 import { useTranslations } from "@/lib/i18n";
@@ -23,7 +23,6 @@ const NAV_LABEL_KEYS: Record<string, keyof ReturnType<typeof useTranslations>["n
   ballroom: "ballroom",
   residence: "residences",
   location: "location",
-  contact: "contact",
 };
 
 const SCROLL_THRESHOLD = 48;
@@ -79,8 +78,8 @@ export default function Navbar() {
   );
 
   const contactHref = getContactHref(pathname);
-  const ctaLabel = t.nav.bookTour;
-  const CtaIcon = CalendarOutlined;
+  const ctaLabel = t.nav.contact;
+  const CtaIcon = MailOutlined;
 
   const updateScroll = useCallback(() => {
     setScrolled(window.scrollY > SCROLL_THRESHOLD);

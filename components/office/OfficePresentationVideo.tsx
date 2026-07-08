@@ -2,13 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { OFFICE_VIDEO_SRC } from "@/lib/media";
-import { officeVideoSection } from "@/lib/officeContent";
+import { useTranslations } from "@/lib/i18n";
 import styles from "./OfficePresentationVideo.module.css";
 
 /** Seconds into the reel used as the preview frame before play. */
 const THUMBNAIL_TIME = 2;
 
 export default function OfficePresentationVideo() {
+  const copy = useTranslations().office.videoSection;
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const [thumbReady, setThumbReady] = useState(false);
@@ -66,10 +67,10 @@ export default function OfficePresentationVideo() {
       <div className={styles.inner}>
         <header className={styles.header} data-office-reveal>
           <div className={styles.headerCopy}>
-            <p className={styles.eyebrow}>{officeVideoSection.eyebrow}</p>
-            <h2 className={styles.title}>{officeVideoSection.title}</h2>
+            <p className={styles.eyebrow}>{copy.eyebrow}</p>
+            <h2 className={styles.title}>{copy.title}</h2>
           </div>
-          <p className={styles.lead}>{officeVideoSection.lead}</p>
+          <p className={styles.lead}>{copy.lead}</p>
         </header>
 
         <div className={styles.playerWrap} data-office-reveal>

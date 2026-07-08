@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { officeHero } from "@/lib/officeContent";
+import { useTranslations } from "@/lib/i18n";
 import styles from "./OfficeHero.module.css";
 
 export default function OfficeHero() {
+  const copy = useTranslations().office.hero;
+
   return (
     <section className={styles.hero} id="hero">
       <div
@@ -12,20 +15,19 @@ export default function OfficeHero() {
         style={{ backgroundImage: `url(${officeHero.image})` }}
         data-office-parallax
       />
-      <div className={styles.sheen} aria-hidden />
       <div className={styles.overlay} />
 
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>{officeHero.eyebrow}</p>
-        <p className={styles.headline}>{officeHero.headline}</p>
-        <h1 className={styles.title}>{officeHero.title}</h1>
-        <p className={styles.description}>{officeHero.description}</p>
+        <p className={styles.eyebrow}>{copy.eyebrow}</p>
+        <p className={styles.headline}>{copy.headline}</p>
+        <h1 className={styles.title}>{copy.title}</h1>
+        <p className={styles.description}>{copy.description}</p>
         <div className={styles.actions}>
           <Link href={officeHero.primaryCta.href} className={styles.primary}>
-            {officeHero.primaryCta.label}
+            {copy.primaryCta}
           </Link>
           <Link href={officeHero.secondaryCta.href} className={styles.secondary}>
-            {officeHero.secondaryCta.label}
+            {copy.secondaryCta}
           </Link>
         </div>
       </div>
