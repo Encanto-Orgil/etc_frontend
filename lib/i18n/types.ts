@@ -180,7 +180,6 @@ export type Translations = {
     interactiveBuilding: {
       eyebrow: string;
       title: string;
-      lead: string;
       ariaLabel: string;
       calibrateZones: string;
       hoverHint: string;

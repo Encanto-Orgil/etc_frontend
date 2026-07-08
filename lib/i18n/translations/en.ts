@@ -293,7 +293,6 @@ export const en: Translations = {
     interactiveBuilding: {
       eyebrow: "Interactive Building",
       title: "Explore the full development.",
-      lead: "Hover the exterior render to discover office, retail, ballroom, Encanto Tower, residence, and connected destinations.",
       ariaLabel: "Interactive building map",
       calibrateZones: "Calibrate zones",
       hoverHint: "Hover a destination",

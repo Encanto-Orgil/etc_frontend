@@ -82,7 +82,6 @@ export default function InteractiveBuilding() {
         <div className={styles.header} data-home-reveal>
           <p className={shared.eyebrow}>{copy.eyebrow}</p>
           <h2 className={shared.title}>{copy.title}</h2>
-          <p className={shared.lead}>{copy.lead}</p>
         </div>
 
         <div className={styles.stage} data-home-reveal>
