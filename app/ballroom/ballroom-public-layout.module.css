@@ -1,0 +1,19 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px 16px 56px;
+  background: #f3f3f3;
+}
+
+.inner {
+  width: 100%;
+  max-width: 900px;
+}
+
+.centered {
+  min-height: calc(100vh - 96px);
+  display: grid;
+  place-items: center;
+}

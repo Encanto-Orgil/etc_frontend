@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { use, useCallback, useEffect, useState } from "react";
 import BallroomPublicDocument from "@/components/ballroom/BallroomPublicDocument";
 import { fetchPublicBallroomInvoice, type PublicBallroomDocument } from "@/lib/ballroomManagement";
+import layoutStyles from "../../ballroom-public-layout.module.css";
 
 export default function PublicBallroomInvoicePage({
   params,
@@ -37,7 +38,7 @@ export default function PublicBallroomInvoicePage({
 
   if (loading) {
     return (
-      <div style={{ minHeight: "60vh", display: "grid", placeItems: "center" }}>
+      <div className={layoutStyles.centered}>
         <Spin size="large" />
       </div>
     );
@@ -45,8 +46,8 @@ export default function PublicBallroomInvoicePage({
 
   if (error || !document) {
     return (
-      <div style={{ maxWidth: 640, margin: "48px auto", padding: "0 16px" }}>
-        <Alert type="error" message={error || "Not found"} showIcon />
+      <div className={layoutStyles.centered}>
+        <Alert type="error" message={error || "Not found"} showIcon style={{ width: "100%" }} />
       </div>
     );
   }
