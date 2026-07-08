@@ -4,6 +4,7 @@ import { ConfigProvider, Layout } from "antd";
 import { usePathname } from "next/navigation";
 import type { AuthUser } from "@/lib/auth";
 import { getDashboardPageMeta } from "@/lib/dashboardNav";
+import DashboardProjectProvider from "@/components/dashboard/DashboardProjectProvider";
 import styles from "./DashboardShell.module.css";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
@@ -35,13 +36,15 @@ export default function DashboardShell({
       }}
     >
       <div className={styles.scope}>
-        <Layout className={styles.main}>
-          <Sidebar user={user} />
-          <Layout className={styles.contentShell}>
-            <TopBar eyebrow={pageMeta.eyebrow} title={pageMeta.title} user={user} />
-            <Content className={styles.content}>{children}</Content>
+        <DashboardProjectProvider>
+          <Layout className={styles.main}>
+            <Sidebar user={user} />
+            <Layout className={styles.contentShell}>
+              <TopBar eyebrow={pageMeta.eyebrow} title={pageMeta.title} user={user} />
+              <Content className={styles.content}>{children}</Content>
+            </Layout>
           </Layout>
-        </Layout>
+        </DashboardProjectProvider>
       </div>
     </ConfigProvider>
   );

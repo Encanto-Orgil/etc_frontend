@@ -5,11 +5,14 @@ import {
   CalendarOutlined,
   ClusterOutlined,
   DownOutlined,
+  FileTextOutlined,
   FormOutlined,
   GlobalOutlined,
+  InboxOutlined,
   LogoutOutlined,
   MessageOutlined,
   MoreOutlined,
+  ReadOutlined,
   SafetyCertificateOutlined,
   SearchOutlined,
   ShopOutlined,
@@ -27,6 +30,13 @@ import {
   getDashboardOpenKeys,
   getDashboardSelectedKey,
 } from "@/lib/dashboardNav";
+import {
+  CENTRO_NAV_ITEMS,
+  DASHBOARD_PROJECTS,
+  getProjectIdFromPathname,
+  type DashboardProjectId,
+} from "@/lib/dashboardProjects";
+import { useDashboardProject } from "@/components/dashboard/DashboardProjectProvider";
 import styles from "./DashboardShell.module.css";
 
 const { Sider } = Layout;
@@ -41,11 +51,25 @@ const managementIcons: Record<string, ReactNode> = {
   "admin-management": <SafetyCertificateOutlined />,
 };
 
+const centroIcons: Record<string, ReactNode> = {
+  "/dashboard/centro": <AppstoreOutlined />,
+  "/dashboard/centro/brands": <ShopOutlined />,
+  "/dashboard/centro/news": <ReadOutlined />,
+  "/dashboard/centro/inquiries": <InboxOutlined />,
+  "/dashboard/centro/pages": <FileTextOutlined />,
+};
+
 export default function Sidebar({ user }: { user: AuthUser }) {
   const pathname = usePathname();
   const router = useRouter();
-  const selectedKeys = [getDashboardSelectedKey(pathname)];
+  const { projectId, setProject } = useDashboardProject();
+  const activeProjectId = getProjectIdFromPathname(pathname) ?? projectId;
+  const isCentro = activeProjectId === "encanto-centro";
+  const currentProject = DASHBOARD_PROJECTS[activeProjectId];
+
+  const selectedKeys = [getDashboardSelectedKey(pathname, activeProjectId)];
   const [openKeys, setOpenKeys] = useState<string[]>(getDashboardOpenKeys(pathname));
+
   const managementItems = useMemo<MenuItem[]>(
     () => [
       { key: "/dashboard", icon: <AppstoreOutlined />, label: "Dashboard" },
@@ -66,13 +90,34 @@ export default function Sidebar({ user }: { user: AuthUser }) {
     [user.is_superuser],
   );
 
+  const centroItems = useMemo<MenuItem[]>(
+    () =>
+      CENTRO_NAV_ITEMS.map((item) => ({
+        key: item.key,
+        icon: centroIcons[item.key],
+        label: item.label,
+      })),
+    [],
+  );
+
+  const menuItems = isCentro ? centroItems : managementItems;
+
   useEffect(() => {
+    if (isCentro) return;
     const activeOpenKeys = getDashboardOpenKeys(pathname);
     setOpenKeys((current) => Array.from(new Set([...current, ...activeOpenKeys])));
-  }, [pathname]);
+  }, [pathname, isCentro]);
 
   const adminUrl = `${API_BASE.replace(/\/api\/?$/, "")}/admin/`;
   const displayName = [user.first_name, user.last_name].filter(Boolean).join(" ") || user.username;
+
+  const projectMenuItems: MenuProps["items"] = (Object.keys(DASHBOARD_PROJECTS) as DashboardProjectId[]).map(
+    (id) => ({
+      key: id,
+      label: DASHBOARD_PROJECTS[id].label,
+      onClick: () => setProject(id),
+    }),
+  );
 
   const userMenu: MenuProps = {
     items: [
@@ -106,19 +151,11 @@ export default function Sidebar({ user }: { user: AuthUser }) {
   return (
     <Sider className={styles.sider} width={260}>
       <div className={styles.siderInner}>
-        <Dropdown
-          menu={{
-            items: [
-              { key: "team", label: "Encanto Trade Center" },
-              { key: "settings", label: "Team settings" },
-            ],
-          }}
-          trigger={["click"]}
-        >
+        <Dropdown menu={{ items: projectMenuItems }} trigger={["click"]}>
           <button type="button" className={styles.teamSwitcher}>
-            <span className={styles.teamAvatar}>E</span>
+            <span className={styles.teamAvatar}>{currentProject.avatar}</span>
             <span className={styles.teamCopy}>
-              <strong>Encanto Trade Center</strong>
+              <strong>{currentProject.label}</strong>
             </span>
             <DownOutlined className={styles.teamChevron} />
           </button>
@@ -134,18 +171,16 @@ export default function Sidebar({ user }: { user: AuthUser }) {
           <Menu
             className={styles.menu}
             mode="inline"
-            items={managementItems}
+            items={menuItems}
             selectedKeys={selectedKeys}
-            openKeys={openKeys}
-            onOpenChange={setOpenKeys}
+            openKeys={isCentro ? undefined : openKeys}
+            onOpenChange={isCentro ? undefined : setOpenKeys}
             onClick={onMenuClick}
           />
         </nav>
 
         <div className={styles.userRow}>
-          <Avatar className={styles.userAvatar}>
-            {displayName.slice(0, 1).toUpperCase()}
-          </Avatar>
+          <Avatar className={styles.userAvatar}>{displayName.slice(0, 1).toUpperCase()}</Avatar>
           <span className={styles.userName}>{displayName}</span>
           <Dropdown menu={userMenu} placement="topRight" trigger={["click"]}>
             <button type="button" className={styles.footerIcon} aria-label="Open user menu">

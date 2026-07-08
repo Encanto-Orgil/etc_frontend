@@ -1,4 +1,5 @@
 import { TOWER_KIND_LABELS, type TowerKind } from "./stacking";
+import { CENTRO_PAGES, type DashboardProjectId } from "./dashboardProjects";
 
 export type DashboardSubmenuItem = {
   key: string;
@@ -148,6 +149,10 @@ export function getDashboardPageMeta(pathname: string) {
     return { eyebrow: "Ballroom Management / Contracts", title: "Contract Detail" };
   }
 
+  if (CENTRO_PAGES[pathname]) {
+    return CENTRO_PAGES[pathname];
+  }
+
   return (
     DASHBOARD_MANAGEMENT_PAGES[pathname] ??
     DASHBOARD_PAGES[pathname] ?? { eyebrow: "Удирдлага", title: "Хяналтын самбар" }
@@ -158,7 +163,14 @@ export function isStackingSection(pathname: string) {
   return pathname === "/dashboard/stacking" || pathname.startsWith("/dashboard/stacking/");
 }
 
-export function getDashboardSelectedKey(pathname: string) {
+export function getDashboardSelectedKey(pathname: string, projectId?: DashboardProjectId) {
+  if (projectId === "encanto-centro") {
+    if (pathname === "/dashboard/centro") return "/dashboard/centro";
+    const centroItem = CENTRO_PAGES[pathname];
+    if (centroItem) return pathname;
+    return "/dashboard/centro";
+  }
+
   if (pathname === "/dashboard") return "/dashboard";
   if (pathname === "/dashboard/inquiries" || pathname.startsWith("/dashboard/inquiries/")) {
     return "/dashboard/inquiries";
