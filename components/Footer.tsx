@@ -7,15 +7,16 @@ import styles from "./Footer.module.css";
 
 const NAV_LINKS = [
   { href: "/", key: "home" as const },
-  { href: "/#about", key: "about" as const },
-  { href: "/residence", key: "towerResidence" as const },
+  { href: "/office", key: "towerOffice" as const },
   { href: "/mall", key: "towerMall" as const },
+  { href: "/ballroom", key: "towerBallroom" as const },
+  { href: "/residence", key: "towerResidence" as const },
   { href: "/#contact", key: "contact" as const },
 ];
 
 const SOCIAL_LINKS = [
   {
-    href: "https://facebook.com",
+    href: "https://www.facebook.com/profile.php?id=61589971258581",
     label: "Facebook",
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden>

@@ -295,6 +295,7 @@ export type Translations = {
       eyebrow: string;
       title: string;
       viewDetails: string;
+      scrollHint: string;
       destinationLabels: Record<string, string>;
       towers: Record<
         string,

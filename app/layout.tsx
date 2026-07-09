@@ -7,9 +7,10 @@ import SiteShell from "@/components/SiteShell";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import SiteSchema from "@/components/SiteSchema";
 import { fontDisplay } from "@/lib/fonts";
-import { rootMetadata } from "@/lib/seo";
+import { rootMetadata, rootViewport } from "@/lib/seo";
 
 export const metadata: Metadata = rootMetadata;
+export const viewport = rootViewport;
 
 export default function RootLayout({
   children,

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { project, towers, type Tower } from "@/lib/data";
 import { SITE_SECTION_NAV } from "@/lib/site-nav";
 
@@ -150,6 +150,14 @@ export const rootMetadata: Metadata = {
   alternates: {
     canonical: canonicalUrl("/"),
   },
+};
+
+export const rootViewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
 };
 
 export function homeMetadata(): Metadata {

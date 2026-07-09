@@ -56,8 +56,8 @@ export const en: Translations = {
     rightsReserved: "All rights reserved.",
     towerOffice: "Office",
     towerMall: "Mall",
-    towerBallroom: "Encanto Grand Ballroom",
-    towerResidence: "Encanto Trade Center - Residence",
+    towerBallroom: "Ballroom",
+    towerResidence: "Residence",
   },
   project: {
     tagline: "Luxury. Living. Business. Connected.",
@@ -103,6 +103,7 @@ export const en: Translations = {
       eyebrow: "Explore Encanto",
       title: "Four destinations, one landmark.",
       viewDetails: "View details",
+      scrollHint: "Swipe to explore",
       destinationLabels: {
         office: "Office",
         mall: "Mall",

@@ -1,7 +1,7 @@
 .section {
   position: relative;
   background: #fff;
-  overflow: visible;
+  overflow-x: clip;
 }
 
 .sticky {
@@ -34,6 +34,7 @@
   height: 100%;
   display: flex;
   align-items: center;
+  min-width: 0;
 }
 
 .grid {
@@ -123,6 +124,7 @@
   line-height: 0.95;
   color: rgba(12, 12, 12, 0.12);
   transition: color 0.35s var(--ease);
+  overflow-wrap: anywhere;
 }
 
 .statValue[data-active="true"] {
@@ -192,13 +194,22 @@
 }
 
 @media (max-width: 720px) {
+  .sticky {
+    min-height: 100svh;
+    height: 100svh;
+  }
+
   .inner {
-    padding-top: clamp(88px, 12vh, 108px);
-    padding-bottom: clamp(48px, 8vh, 72px);
+    padding: clamp(88px, 12vh, 108px) 16px clamp(48px, 8vh, 72px);
   }
 
   .wordWindow {
     --word-item-height: clamp(100px, 16vh, 140px);
+    width: 100%;
+  }
+
+  .headline {
+    font-size: clamp(1.5rem, 8vw, 2rem);
   }
 }
 

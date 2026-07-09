@@ -63,18 +63,37 @@
 
 html {
   scroll-behavior: auto;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overflow-x: clip;
+  touch-action: manipulation;
 }
 
 html,
 body {
   margin: 0;
   padding: 0;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+body {
+  min-height: 100%;
+}
+
+.site-main {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
 }
 
 a {
@@ -96,7 +115,8 @@ img {
   width: 100%;
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 0 clamp(20px, 4vw, 40px);
+  padding: 0 clamp(16px, 4vw, 40px);
+  min-width: 0;
 }
 
 .eyebrow {
@@ -220,4 +240,16 @@ h3 {
 
 .ant-btn-primary {
   box-shadow: none !important;
+}
+
+@media (max-width: 768px) {
+  input,
+  select,
+  textarea,
+  .ant-input,
+  .ant-input-number-input,
+  .ant-select-selection-search-input,
+  .ant-picker-input > input {
+    font-size: 16px !important;
+  }
 }

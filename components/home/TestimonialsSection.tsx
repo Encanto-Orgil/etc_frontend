@@ -16,8 +16,10 @@ export default function TestimonialsSection() {
           <p className={shared.eyebrowLight}>{explore.eyebrow}</p>
           <h2 className={shared.titleLight}>{explore.title}</h2>
         </div>
+      </div>
 
-        <div className={styles.panel} data-home-reveal>
+      <div className={styles.panelWrap} data-home-reveal>
+        <div className={styles.panel}>
           {towers.map((tower) => {
             const localized = explore.towers[tower.slug];
             const label = explore.destinationLabels[tower.slug] ?? tower.name;
@@ -55,6 +57,15 @@ export default function TestimonialsSection() {
             );
           })}
         </div>
+
+        <p className={styles.scrollHint} aria-hidden>
+          <span>{explore.scrollHint}</span>
+          <span className={styles.scrollHintDots}>
+            {towers.map((tower) => (
+              <i key={tower.slug} />
+            ))}
+          </span>
+        </p>
       </div>
     </section>
   );

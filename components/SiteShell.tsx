@@ -18,7 +18,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     <LocaleProvider>
       <Navbar />
-      <main>{children}</main>
+      <main className="site-main">{children}</main>
       <Footer />
     </LocaleProvider>
   );

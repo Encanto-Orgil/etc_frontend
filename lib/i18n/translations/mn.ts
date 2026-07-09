@@ -32,8 +32,8 @@ export const mn: Translations = {
     rightsReserved: "Бүх эрх хуулиар хамгаалагдсан.",
     towerOffice: "Оффис",
     towerMall: "Молл",
-    towerBallroom: "Encanto Grand Ballroom",
-    towerResidence: "Encanto Trade Center - Residence",
+    towerBallroom: "Ballroom",
+    towerResidence: "Орон сууц",
   },
   project: {
     tagline: "Тансаг. Амьдрал. Бизнес. Нэгдсэн.",
@@ -79,6 +79,7 @@ export const mn: Translations = {
       eyebrow: "Encanto Trade Center",
       title: "Дөрвөн үндсэн хэсэг, нэг нэгдсэн цогцолбор.",
       viewDetails: "Дэлгэрэнгүй",
+      scrollHint: "Сүүлж үзэх",
       destinationLabels: {
         office: "Оффис",
         mall: "Молл",
