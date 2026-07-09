@@ -13,11 +13,11 @@ import {
   groupSlotsByDate,
 } from "@/lib/ballroomAvailability";
 import {
-  getBallroomBookingEventTypes,
   translateBallroomCheckTimeMessage,
   useLocale,
   useTranslations,
 } from "@/lib/i18n";
+import { useBallroomEventTypeOptions } from "@/lib/useBallroomEventTypeOptions";
 import styles from "./BallroomAvailability.module.css";
 
 function toDateKey(year: number, month: number, day: number) {
@@ -50,7 +50,7 @@ export default function BallroomAvailability({
 }) {
   const { locale } = useLocale();
   const copy = useTranslations().ballroom.availability;
-  const eventTypes = getBallroomBookingEventTypes(locale);
+  const { options: eventTypes, loading: eventTypesLoading } = useBallroomEventTypeOptions(locale);
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
@@ -77,6 +77,13 @@ export default function BallroomAvailability({
   useEffect(() => {
     loadAvailability();
   }, [loadAvailability]);
+
+  useEffect(() => {
+    if (!eventTypes.length) return;
+    if (!form.getFieldValue("event_type")) {
+      form.setFieldValue("event_type", eventTypes[0].value);
+    }
+  }, [eventTypes, form]);
 
   const slotsByDate = useMemo(() => groupSlotsByDate(slots), [slots]);
   const monthCells = useMemo(() => getMonthMatrix(year, month), [year, month]);
@@ -135,7 +142,7 @@ export default function BallroomAvailability({
     phone: string;
     email?: string;
     guest_count: number;
-    event_type: "wedding" | "corporate" | "gala" | "conference" | "other";
+    event_type: string;
     message?: string;
   }) => {
     if (!selectedDate) return;
@@ -309,7 +316,7 @@ export default function BallroomAvailability({
                   form={form}
                   layout="vertical"
                   className={styles.form}
-                  initialValues={{ guest_count: 200, event_type: "wedding" }}
+                  initialValues={{ guest_count: 200 }}
                   onFinish={onSubmit}
                 >
                   <Form.Item
@@ -342,7 +349,7 @@ export default function BallroomAvailability({
                       <InputNumber min={20} max={1200} size="large" style={{ width: "100%" }} />
                     </Form.Item>
                     <Form.Item name="event_type" label={copy.eventType}>
-                      <Select size="large" options={eventTypes} />
+                      <Select size="large" options={eventTypes} loading={eventTypesLoading} />
                     </Form.Item>
                   </div>
 

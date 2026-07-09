@@ -22,11 +22,11 @@ import SalesContacts from "@/components/SalesContacts";
 import { submitInquiry } from "@/lib/api";
 import { ballroomExperience, ballroomSignature } from "@/lib/ballroomContent";
 import {
-  getBallroomBookingEventTypes,
   getBallroomHighlights,
   useLocale,
   useTranslations,
 } from "@/lib/i18n";
+import { useBallroomEventTypeOptions } from "@/lib/useBallroomEventTypeOptions";
 import type { BallroomHighlightIcon } from "@/lib/i18n/types";
 import BallroomAvailability from "./BallroomAvailability";
 import styles from "./ballroom.landing.module.css";
@@ -152,7 +152,7 @@ export function BallroomFaqSection() {
 export function BallroomReservationForm({ onCheckAvailability }: { onCheckAvailability?: () => void }) {
   const { locale } = useLocale();
   const copy = useTranslations().ballroom.reservationForm;
-  const eventTypeOptions = getBallroomBookingEventTypes(locale);
+  const { options: eventTypeOptions, loading: eventTypesLoading } = useBallroomEventTypeOptions(locale);
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
@@ -169,8 +169,9 @@ export function BallroomReservationForm({ onCheckAvailability }: { onCheckAvaila
     setLoading(true);
     try {
       const eventDate = values.eventDate?.format?.("YYYY-MM-DD") ?? "Not specified";
+      const eventTypeLabel = eventTypeOptions.find((option) => option.value === values.eventType)?.label;
       const details = [
-        values.eventType ? `Event Type: ${values.eventType}` : null,
+        eventTypeLabel ? `Event Type: ${eventTypeLabel}` : null,
         `Event Date: ${eventDate}`,
         values.guestCount ? `Estimated Guests: ${values.guestCount}` : null,
         values.message?.trim() ? values.message.trim() : null,
@@ -223,10 +224,8 @@ export function BallroomReservationForm({ onCheckAvailability }: { onCheckAvaila
           <Select
             size="large"
             placeholder={copy.eventTypePlaceholder}
-            options={eventTypeOptions.map((option) => ({
-              value: option.label,
-              label: option.label,
-            }))}
+            loading={eventTypesLoading}
+            options={eventTypeOptions}
           />
         </Form.Item>
         <Form.Item name="eventDate" label={copy.eventDate}>
