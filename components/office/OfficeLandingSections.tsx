@@ -48,7 +48,7 @@ export function OfficeTypesSection() {
   const copy = useTranslations().office;
 
   return (
-    <section className={styles.sectionCream} id="office-types">
+    <section className={styles.sectionDark} id="office-types">
       <div className={styles.inner}>
         <p className={styles.eyebrow}>{copy.typesSection.eyebrow}</p>
         <h2 className={styles.title}>{copy.typesSection.title}</h2>

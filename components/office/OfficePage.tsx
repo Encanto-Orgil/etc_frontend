@@ -8,14 +8,12 @@ import OfficeContactSection from "./OfficeContactSection";
 import OfficeHero from "./OfficeHero";
 import OfficePresentationVideo from "./OfficePresentationVideo";
 import OfficeHighlightsSection from "./OfficeHighlightsSection";
-import OfficeCtaSection from "./OfficeCtaSection";
 import OfficePortalSection from "./OfficePortalSection";
 import OfficeWhySection from "./OfficeWhySection";
 import {
   OfficeAmenitiesSection,
   OfficeBusinessSection,
   OfficeFaqSection,
-  OfficeLocationSection,
   OfficeTypesSection,
 } from "./OfficeLandingSections";
 import OfficeGallerySection from "./OfficeGallerySection";
@@ -45,10 +43,8 @@ export default function OfficePage({ others }: Props) {
         <OfficeAmenitiesSection />
         <OfficeWhySection />
         <OfficePortalSection />
-        <OfficeLocationSection />
         <OfficeGallerySection />
         <OfficeFaqSection />
-        <OfficeCtaSection />
 
         <OfficeContactSection />
 

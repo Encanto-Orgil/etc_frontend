@@ -89,12 +89,22 @@
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.04);
 }
 
+.sectionDark .typeCard {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
 .typeCard h3 {
   margin: 0;
   font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 400;
   letter-spacing: 0.04em;
+}
+
+.sectionDark .typeCard h3 {
+  color: #fff;
 }
 
 .typeLevel {
@@ -105,6 +115,10 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(0, 0, 0, 0.48);
+}
+
+.sectionDark .typeLevel {
+  color: rgba(255, 255, 255, 0.48);
 }
 
 .typeSizeLabel {
@@ -130,6 +144,10 @@
   font-weight: 600;
   line-height: 1.45;
   color: rgba(0, 0, 0, 0.78);
+}
+
+.sectionDark .typeSizes li {
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .typeSize {

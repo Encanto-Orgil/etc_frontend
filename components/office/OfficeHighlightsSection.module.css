@@ -2,9 +2,9 @@
   position: relative;
   overflow: hidden;
   padding: clamp(72px, 10vw, 120px) 0;
-  background: #000;
-  color: #fff;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--luxury-cream);
+  color: var(--luxury-black);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .inner {
@@ -53,7 +53,7 @@
   font-family: var(--font-body);
   font-size: clamp(0.98rem, 1.35vw, 1.08rem);
   line-height: 1.75;
-  color: rgba(255, 255, 255, 0.64);
+  color: rgba(0, 0, 0, 0.62);
 }
 
 .metricsRail {
@@ -63,8 +63,8 @@
   margin-bottom: clamp(28px, 4vw, 40px);
   border-radius: 16px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .metric {
@@ -72,7 +72,7 @@
   flex-direction: column;
   gap: 8px;
   padding: clamp(18px, 2.5vw, 24px) clamp(14px, 2vw, 20px);
-  background: #0a0a0a;
+  background: #fff;
 }
 
 .metricValue {
@@ -85,13 +85,13 @@
   font-weight: 300;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: #fff;
+  color: var(--luxury-black);
 }
 
 .metricUnit {
   font-size: 0.72em;
   font-weight: 400;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(0, 0, 0, 0.62);
 }
 
 .metricNote {
@@ -112,7 +112,7 @@
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(0, 0, 0, 0.45);
   line-height: 1.35;
 }
 
@@ -129,18 +129,19 @@
   min-height: 220px;
   padding: clamp(22px, 2.5vw, 28px);
   border-radius: 18px;
-  background: #0a0a0a;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.04);
   transition:
     transform 0.3s var(--ease),
     border-color 0.3s var(--ease),
-    background 0.3s var(--ease);
+    box-shadow 0.3s var(--ease);
 }
 
 .card:hover {
   transform: translateY(-3px);
-  background: #111;
-  border-color: rgba(255, 255, 255, 0.16);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.08);
 }
 
 .index {
@@ -152,13 +153,13 @@
   font-weight: 300;
   line-height: 1;
   letter-spacing: -0.04em;
-  color: rgba(255, 255, 255, 0.08);
+  color: rgba(0, 0, 0, 0.06);
   pointer-events: none;
   transition: color 0.3s var(--ease);
 }
 
 .card:hover .index {
-  color: rgba(255, 255, 255, 0.14);
+  color: rgba(0, 0, 0, 0.1);
 }
 
 .cardTop {
@@ -172,9 +173,9 @@
   width: 48px;
   height: 48px;
   border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: #111;
-  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--luxury-cream);
+  color: var(--luxury-black);
   transition:
     background 0.3s var(--ease),
     border-color 0.3s var(--ease),
@@ -182,9 +183,8 @@
 }
 
 .card:hover .iconWrap {
-  background: #161616;
-  border-color: rgba(255, 255, 255, 0.18);
-  color: #fff;
+  background: #fff;
+  border-color: rgba(0, 0, 0, 0.14);
 }
 
 .icon {
@@ -208,7 +208,7 @@
 
 .cardBody p {
   margin: 0;
-  color: rgba(255, 255, 255, 0.58);
+  color: rgba(0, 0, 0, 0.58);
   line-height: 1.65;
   font-size: 0.94rem;
 }

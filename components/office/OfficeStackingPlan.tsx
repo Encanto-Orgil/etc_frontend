@@ -11,7 +11,6 @@ import {
 import { availableCount } from "@/lib/officeZones";
 import OfficeFacadeStack from "./OfficeFacadeStack";
 import OfficeUnitModal from "./OfficeUnitModal";
-import { officeLegend } from "@/lib/officeContent";
 import { useTranslations } from "@/lib/i18n";
 import styles from "./OfficeStackingPlan.module.css";
 
@@ -25,7 +24,6 @@ function sortUnits(units: OfficeUnit[]) {
 
 export default function OfficeStackingPlan() {
   const stackingCopy = useTranslations().office.stackingIntro;
-  const legendCopy = useTranslations().office.legend;
   const [data, setData] = useState<Awaited<ReturnType<typeof fetchOfficeStackingPlan>>>(null);
   const [loading, setLoading] = useState(true);
   const [selectedFloor, setSelectedFloor] = useState<number | null>(null);
@@ -73,22 +71,11 @@ export default function OfficeStackingPlan() {
 
   return (
     <section className={styles.section} id="stacking-plan">
-      <div className={styles.bg} style={{ backgroundImage: "url(/images/renders/render-3.jpg)" }} />
-      <div className={styles.overlay} />
-
       <div className={styles.inner}>
         <div className={styles.heroCopy}>
           <span className={styles.eyebrow}>{stackingCopy.eyebrow}</span>
           <h2 className={styles.title}>{stackingCopy.title}</h2>
           <p className={styles.sub}>{stackingCopy.subtitle}</p>
-          <ul className={styles.legend}>
-            {officeLegend.map((item, index) => (
-              <li key={item.label}>
-                <span className={styles.legendDot} style={{ background: item.color }} />
-                {legendCopy[index]?.label ?? item.label}
-              </li>
-            ))}
-          </ul>
         </div>
 
         {loading ? (

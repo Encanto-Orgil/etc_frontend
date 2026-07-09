@@ -75,7 +75,7 @@ export const officeHighlights = [
   { label: "Floor-to-ceiling height", value: "4.5", unit: "m" },
   { label: "Elevators", value: "7" },
   { label: "Parking spaces", value: "1500" },
-  { label: "Parking", value: "Helicopter" },
+  { label: "Helicopter pad", value: "1" },
   { label: "Office floors", value: "24" },
   { label: "Handover", value: "2026", note: "Q4" },
 ];
