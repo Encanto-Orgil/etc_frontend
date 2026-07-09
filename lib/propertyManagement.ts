@@ -5,6 +5,7 @@ export type PropertyUnitStatus = "available" | "rented" | "reserved" | "unavaila
 export type LeaseContractStatus = "draft" | "active" | "ended" | "terminated";
 export type LeaseBillingCycle = "monthly" | "quarterly" | "yearly";
 export type LeaseRentScheduleStatus = "pending" | "invoiced" | "paid" | "cancelled";
+export type LeaseRentPaymentMethod = "bank_transfer" | "cash" | "card" | "other";
 export type LeaseContractAttachmentType = "pdf" | "document" | "image";
 
 export type PropertyBuilding = {
@@ -130,6 +131,9 @@ export type LeaseRentScheduleLine = {
   status: LeaseRentScheduleStatus;
   status_label: string;
   invoice_reference: string;
+  paid_at: string | null;
+  payment_method: LeaseRentPaymentMethod | "";
+  payment_method_label: string;
   notes: string;
   created_at: string;
   updated_at: string;
@@ -423,6 +427,18 @@ export function createInvoiceFromRentScheduleLine(id: number) {
     "POST",
     {},
     "Failed to create invoice.",
+  );
+}
+
+export function markRentScheduleLinePaid(
+  id: number,
+  payload: { payment_method: LeaseRentPaymentMethod; paid_at?: string },
+) {
+  return send<LeaseRentScheduleLine>(
+    `/dashboard/property/rent-schedule/${id}/mark-paid/`,
+    "POST",
+    payload,
+    "Failed to mark invoice as paid.",
   );
 }
 

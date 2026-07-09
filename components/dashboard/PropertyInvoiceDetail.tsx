@@ -1,14 +1,16 @@
 "use client";
 
-import { ArrowLeftOutlined, DownloadOutlined, PrinterOutlined } from "@ant-design/icons";
-import { Button, Descriptions, message, Space, Spin, Table, Tag } from "antd";
+import { ArrowLeftOutlined, CheckOutlined, DownloadOutlined, PrinterOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Descriptions, Form, message, Modal, Select, Space, Spin, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import dayjs from "dayjs";
+import dayjs, { type Dayjs } from "dayjs";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import {
   createInvoiceFromRentScheduleLine,
   fetchLeaseRentScheduleLine,
+  markRentScheduleLinePaid,
+  type LeaseRentPaymentMethod,
   type LeaseRentScheduleLine,
   type LeaseRentScheduleStatus,
 } from "@/lib/propertyManagement";
@@ -20,6 +22,13 @@ const INVOICE_STATUS_LABELS: Record<LeaseRentScheduleStatus, string> = {
   paid: "Paid",
   cancelled: "Cancelled",
 };
+
+const PAYMENT_METHOD_OPTIONS: Array<{ value: LeaseRentPaymentMethod; label: string }> = [
+  { value: "bank_transfer", label: "Дансаар шилжүүлэг" },
+  { value: "cash", label: "Бэлэн мөнгө" },
+  { value: "card", label: "Карт" },
+  { value: "other", label: "Бусад" },
+];
 
 const INVOICE_STATUS_COLORS: Record<LeaseRentScheduleStatus, string> = {
   pending: "default",
@@ -51,8 +60,11 @@ export default function PropertyInvoiceDetail({ lineId }: { lineId: number }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+  const [markingPaid, setMarkingPaid] = useState(false);
+  const [paidModalOpen, setPaidModalOpen] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [line, setLine] = useState<LeaseRentScheduleLine | null>(null);
+  const [paidForm] = Form.useForm<{ paid_at: Dayjs; payment_method: LeaseRentPaymentMethod }>();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -81,6 +93,34 @@ export default function PropertyInvoiceDetail({ lineId }: { lineId: number }) {
       setCreating(false);
     }
   };
+
+  const openPaidModal = () => {
+    paidForm.setFieldsValue({
+      paid_at: line?.paid_at ? dayjs(line.paid_at) : dayjs(),
+      payment_method: line?.payment_method || "bank_transfer",
+    });
+    setPaidModalOpen(true);
+  };
+
+  const handleMarkPaid = async () => {
+    const values = await paidForm.validateFields();
+    setMarkingPaid(true);
+    try {
+      const nextLine = await markRentScheduleLinePaid(lineId, {
+        payment_method: values.payment_method,
+        paid_at: values.paid_at.toISOString(),
+      });
+      setLine(nextLine);
+      setPaidModalOpen(false);
+      message.success("Marked as paid.");
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Failed to mark as paid.");
+    } finally {
+      setMarkingPaid(false);
+    }
+  };
+
+  const canMarkPaid = line?.status === "invoiced" || line?.status === "paid";
 
   const invoiceRows = line
     ? [
@@ -315,6 +355,11 @@ export default function PropertyInvoiceDetail({ lineId }: { lineId: number }) {
                 <Button type="primary" loading={creating} onClick={createInvoice}>
                   {line.invoice_reference ? "Refresh Invoice" : "Create Invoice"}
                 </Button>
+                {canMarkPaid ? (
+                  <Button type="primary" icon={<CheckOutlined />} onClick={openPaidModal}>
+                    {line.status === "paid" ? "Update Payment" : "Mark as Paid"}
+                  </Button>
+                ) : null}
                 <Button icon={<PrinterOutlined />} onClick={printInvoice}>
                   Print
                 </Button>
@@ -364,6 +409,18 @@ export default function PropertyInvoiceDetail({ lineId }: { lineId: number }) {
                     <span>Currency</span>
                     <strong>MNT</strong>
                   </div>
+                  {line.status === "paid" ? (
+                    <>
+                      <div className={styles.formField}>
+                        <span>Paid At</span>
+                        <strong>{formatDate(line.paid_at)}</strong>
+                      </div>
+                      <div className={styles.formField}>
+                        <span>Payment Method</span>
+                        <strong>{line.payment_method_label || "-"}</strong>
+                      </div>
+                    </>
+                  ) : null}
                 </div>
               </div>
 
@@ -386,6 +443,33 @@ export default function PropertyInvoiceDetail({ lineId }: { lineId: number }) {
             </div>
           </div>
         ) : null}
+
+        <Modal
+          title={line?.status === "paid" ? "Update payment details" : "Mark invoice as paid"}
+          open={paidModalOpen}
+          onCancel={() => setPaidModalOpen(false)}
+          onOk={handleMarkPaid}
+          okText={line?.status === "paid" ? "Save" : "Mark as Paid"}
+          confirmLoading={markingPaid}
+          destroyOnHidden
+        >
+          <Form form={paidForm} layout="vertical">
+            <Form.Item
+              name="paid_at"
+              label="Paid date"
+              rules={[{ required: true, message: "Select payment date." }]}
+            >
+              <DatePicker style={{ width: "100%" }} format="YYYY-MM-DD" />
+            </Form.Item>
+            <Form.Item
+              name="payment_method"
+              label="Payment method"
+              rules={[{ required: true, message: "Select payment method." }]}
+            >
+              <Select options={PAYMENT_METHOD_OPTIONS} />
+            </Form.Item>
+          </Form>
+        </Modal>
       </section>
     </Spin>
   );
