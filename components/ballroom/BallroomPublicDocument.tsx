@@ -1,8 +1,10 @@
 "use client";
 
-import { Button, Card, Descriptions, Space, Table, Tag } from "antd";
+import { PrinterOutlined } from "@ant-design/icons";
+import { Button, Card, Descriptions, Space, Table, Tag, message } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import type { PublicBallroomDocument } from "@/lib/ballroomManagement";
+import { printBallroomPublicDocument } from "@/lib/ballroomPublicDocumentPrint";
 import styles from "./BallroomPublicDocument.module.css";
 
 function formatMoney(value: string | number) {
@@ -47,6 +49,14 @@ export default function BallroomPublicDocument({
     },
   ];
 
+  const handlePrint = () => {
+    try {
+      printBallroomPublicDocument(document);
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Хэвлэхэд алдаа гарлаа.");
+    }
+  };
+
   return (
     <div className={styles.page}>
       <Card className={styles.card}>
@@ -56,7 +66,12 @@ export default function BallroomPublicDocument({
             <h1>{isInvoice ? "Нэхэмжлэх" : "Үнийн санал"}</h1>
             <p className={styles.number}>{number}</p>
           </div>
-          <Tag>{document.status_label}</Tag>
+          <Space className={styles.headerActions}>
+            <Button icon={<PrinterOutlined />} onClick={handlePrint}>
+              Хэвлэх
+            </Button>
+            <Tag>{document.status_label}</Tag>
+          </Space>
         </div>
 
         <Descriptions bordered size="small" column={{ xs: 1, sm: 2 }} className={styles.meta}>

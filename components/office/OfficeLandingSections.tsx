@@ -166,7 +166,7 @@ export function OfficeFaqSection() {
   const copy = useTranslations().office;
 
   return (
-    <section className={styles.sectionCream} id="faq">
+    <section className={styles.sectionDark} id="faq">
       <div className={styles.inner}>
         <p className={styles.eyebrow}>{copy.faqSection.eyebrow}</p>
         <h2 className={styles.title}>{copy.faqSection.title}</h2>
