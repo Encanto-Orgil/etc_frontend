@@ -22,7 +22,7 @@ export type BallroomPresetBookingPayload = {
   phone: string;
   email?: string;
   guest_count: number;
-  event_type: "wedding" | "corporate" | "gala" | "conference" | "other";
+  event_type: string;
   message?: string;
 };
 
@@ -34,7 +34,7 @@ export type BallroomCustomBookingPayload = {
   phone: string;
   email?: string;
   guest_count: number;
-  event_type: "wedding" | "corporate" | "gala" | "conference" | "other";
+  event_type: string;
   message?: string;
 };
 

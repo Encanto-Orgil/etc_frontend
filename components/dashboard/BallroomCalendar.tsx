@@ -14,13 +14,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   createDashboardBallroomBooking,
   fetchDashboardBallroomBookings,
+  fetchDashboardBallroomEventTypes,
   type DashboardBallroomBooking,
 } from "@/lib/ballroomManagement";
-import {
-  ballroomBookingEventTypes,
-  formatSlotTime,
-  type BallroomSlotStatus,
-} from "@/lib/ballroomAvailability";
+import { formatSlotTime, type BallroomSlotStatus } from "@/lib/ballroomAvailability";
 import styles from "./BallroomCalendar.module.css";
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -30,7 +27,6 @@ const CALENDAR_END_MINUTES = 23 * 60;
 const TIME_STEP_MINUTES = 15;
 
 type CalendarView = "day" | "week" | "month";
-type BallroomEventType = (typeof ballroomBookingEventTypes)[number]["value"];
 type BookingFormValues = {
   start_time: string;
   end_time: string;
@@ -38,7 +34,7 @@ type BookingFormValues = {
   phone: string;
   email?: string;
   guest_count: number;
-  event_type: BallroomEventType;
+  event_type: string;
   message?: string;
 };
 type DraftSelection = {
@@ -135,6 +131,19 @@ export default function BallroomCalendar() {
   const [draftSelection, setDraftSelection] = useState<DraftSelection | null>(null);
   const [dragStart, setDragStart] = useState<DragStart | null>(null);
   const [bookingForm] = Form.useForm<BookingFormValues>();
+  const [eventTypeOptions, setEventTypeOptions] = useState<Array<{ value: string; label: string }>>([]);
+
+  useEffect(() => {
+    fetchDashboardBallroomEventTypes({ active_only: true })
+      .then((types) => {
+        const options = types.map((item) => ({ value: item.slug, label: item.label }));
+        setEventTypeOptions(options);
+        if (options.length && !bookingForm.getFieldValue("event_type")) {
+          bookingForm.setFieldValue("event_type", options[0].value);
+        }
+      })
+      .catch(() => {});
+  }, [bookingForm]);
 
   const selectedDay = useMemo(() => dayjs(selectedDate), [selectedDate]);
 
@@ -519,7 +528,6 @@ export default function BallroomCalendar() {
                     start_time: "10:00",
                     end_time: "14:00",
                     guest_count: 200,
-                    event_type: "wedding",
                   }}
                   onValuesChange={(_, values) => {
                     if (values.start_time && values.end_time) {
@@ -555,8 +563,8 @@ export default function BallroomCalendar() {
                     <Form.Item name="guest_count" label="Guests" rules={[{ required: true }]}>
                       <InputNumber min={1} max={2000} style={{ width: "100%" }} />
                     </Form.Item>
-                    <Form.Item name="event_type" label="Event type">
-                      <Select options={[...ballroomBookingEventTypes]} />
+                    <Form.Item name="event_type" label="Event type" rules={[{ required: true }]}>
+                      <Select options={eventTypeOptions} placeholder="Select event type" />
                     </Form.Item>
                   </div>
 
