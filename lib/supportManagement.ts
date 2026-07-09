@@ -90,6 +90,13 @@ export function fetchSupportTickets(query?: Query) {
   });
 }
 
+export function fetchSupportTicket(id: number) {
+  return authFetch(`/dashboard/support-tickets/${id}/`).then(async (res) => {
+    if (!res.ok) throw new Error(await parseError(res, "Failed to load ticket."));
+    return res.json() as Promise<SupportTicket>;
+  });
+}
+
 export function updateSupportTicket(
   id: number,
   payload: Partial<{

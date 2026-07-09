@@ -1509,3 +1509,71 @@
     min-width: 0;
   }
 }
+
+.ticketDetailLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 16px;
+  padding-top: 12px;
+}
+
+.ticketThreadList {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.ticketMessage {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #ececf1;
+  background: #fafafa;
+}
+
+.ticketMessageStaff {
+  border-color: #d9e8ff;
+  background: #f3f8ff;
+}
+
+.ticketMessageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.ticketMessageAuthor {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.ticketMessageTime {
+  font-size: 11px;
+  color: #666666;
+}
+
+.ticketMessageBody {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  font-size: 13px;
+  color: #222222;
+}
+
+.ticketReplyBox {
+  border-top: 1px solid #ececf1;
+  padding-top: 14px;
+}
+
+.ticketSidePanel {
+  display: grid;
+  gap: 12px;
+}
+
+@media (max-width: 960px) {
+  .ticketDetailLayout {
+    grid-template-columns: 1fr;
+  }
+}

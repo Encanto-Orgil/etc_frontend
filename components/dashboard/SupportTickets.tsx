@@ -1,9 +1,10 @@
 "use client";
 
 import { ReloadOutlined } from "@ant-design/icons";
-import { Button, Card, Input, message, Select, Space, Spin, Table, Tag } from "antd";
+import { Button, Card, Input, message, Select, Spin, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import {
   fetchSupportTickets,
@@ -16,6 +17,7 @@ import {
 import styles from "./PropertyManagement.module.css";
 
 export default function SupportTickets() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [search, setSearch] = useState("");
@@ -41,7 +43,8 @@ export default function SupportTickets() {
     load();
   }, [load]);
 
-  const updateStatus = async (id: number, status: SupportTicketStatus) => {
+  const updateStatus = async (id: number, status: SupportTicketStatus, event?: React.MouseEvent) => {
+    event?.stopPropagation();
     try {
       await updateSupportTicket(id, { status });
       message.success("Ticket updated.");
@@ -71,6 +74,11 @@ export default function SupportTickets() {
         <Tag color={TICKET_STATUS_COLORS[status]}>{TICKET_STATUS_LABELS[status]}</Tag>
       ),
     },
+    {
+      title: "Replies",
+      key: "replies",
+      render: (_, record) => record.messages?.length ?? 0,
+    },
     { title: "Created", dataIndex: "created_at", render: (v) => dayjs(v).format("YYYY-MM-DD HH:mm") },
     {
       title: "Actions",
@@ -80,6 +88,7 @@ export default function SupportTickets() {
           size="small"
           value={record.status}
           style={{ width: 150 }}
+          onClick={(event) => event.stopPropagation()}
           onChange={(value) => updateStatus(record.id, value)}
           options={Object.entries(TICKET_STATUS_LABELS).map(([value, label]) => ({ value, label }))}
         />
@@ -122,7 +131,16 @@ export default function SupportTickets() {
 
         <Spin spinning={loading}>
           <Card className={styles.statCard}>
-            <Table rowKey="id" columns={columns} dataSource={tickets} pagination={{ pageSize: 20 }} />
+            <Table
+              rowKey="id"
+              columns={columns}
+              dataSource={tickets}
+              pagination={{ pageSize: 20 }}
+              onRow={(record) => ({
+                onClick: () => router.push(`/dashboard/support/${record.id}`),
+                style: { cursor: "pointer" },
+              })}
+            />
           </Card>
         </Spin>
       </div>
