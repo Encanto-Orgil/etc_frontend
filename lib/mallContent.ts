@@ -4,7 +4,7 @@ export const mallHero = {
   title: "Encanto Trade Center Mall",
   description:
     "Strategically located in one of the city's most valuable districts — integrating retail, dining, sports, and daily services into a unified urban destination.",
-  image: "/images/mall/mall-4.jpg",
+  image: "/images/mall/mall-hero.png",
   primaryCta: { label: "Explore Mall", href: "#intro" },
   secondaryCta: { label: "Floor Plan", href: "#floor-plan" },
   tertiaryCta: { label: "Contact", href: "#contact" },
