@@ -218,47 +218,43 @@
   }
 
   .bottom {
-    padding: 0 16px clamp(88px, 12vh, 120px);
+    padding: 0 16px clamp(32px, 6vh, 48px);
+    align-items: flex-end;
   }
 
   .glassPanel {
-    padding: 24px 18px;
+    padding: 22px 18px;
     border-radius: 20px;
+  }
+
+  .tag {
+    margin-bottom: 14px;
+    padding: 8px 12px;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    line-height: 1.5;
+    max-width: 100%;
+    white-space: normal;
   }
 
   .title {
     max-width: 100%;
-    font-size: clamp(2rem, 10vw, 2.75rem);
+    font-size: clamp(2.25rem, 11vw, 3rem);
   }
 
-  .sub {
-    font-size: 15px;
-  }
-
+  .sub,
   .actions {
-    width: 100%;
+    display: none;
   }
 
-  .ctaPrimary,
-  .ctaSecondary {
-    flex: 1 1 calc(50% - 6px);
-    min-width: 0;
-    padding: 13px 14px;
+  .scrollDown {
+    display: none;
   }
 }
 
 @media (max-width: 480px) {
-  .actions {
-    flex-direction: column;
-  }
-
-  .ctaPrimary,
-  .ctaSecondary {
-    width: 100%;
-    flex: 1 1 auto;
-  }
-
-  .scrollDown {
-    bottom: clamp(14px, 2vh, 22px);
+  .tag {
+    font-size: 8px;
+    letter-spacing: 0.06em;
   }
 }
