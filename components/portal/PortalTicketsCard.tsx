@@ -4,27 +4,31 @@ import { MessageOutlined } from "@ant-design/icons";
 import { Button, Card, List, Tag } from "antd";
 import dayjs from "dayjs";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   TICKET_STATUS_COLORS,
   TICKET_STATUS_LABELS,
   type SupportTicket,
 } from "@/lib/supportManagement";
+import portalStyles from "./Portal.module.css";
 import styles from "../dashboard/DashboardOverview.module.css";
 
 export default function PortalTicketsCard({ tickets }: { tickets: SupportTicket[] }) {
+  const router = useRouter();
+
   return (
     <Card
       bordered
       className={styles.sideCard}
       title={
         <span>
-          <MessageOutlined /> Support requests
+          <MessageOutlined /> Дэмжлэгийн хүсэлтүүд
         </span>
       }
       extra={
         <Link href="/portal/tickets">
           <Button size="small" type="link">
-            View all
+            Бүгдийг харах
           </Button>
         </Link>
       }
@@ -35,7 +39,11 @@ export default function PortalTicketsCard({ tickets }: { tickets: SupportTicket[
           size="small"
           dataSource={tickets.slice(0, 5)}
           renderItem={(item) => (
-            <List.Item>
+            <List.Item
+              className={portalStyles.clickableRow}
+              style={{ cursor: "pointer" }}
+              onClick={() => router.push(`/portal/tickets/${item.id}`)}
+            >
               <List.Item.Meta
                 title={item.subject}
                 description={dayjs(item.created_at).format("MMM D, YYYY")}
@@ -45,7 +53,7 @@ export default function PortalTicketsCard({ tickets }: { tickets: SupportTicket[
           )}
         />
       ) : (
-        <p className={styles.mutedText}>No support requests yet.</p>
+        <p className={styles.mutedText}>Одоогоор хүсэлт байхгүй.</p>
       )}
     </Card>
   );

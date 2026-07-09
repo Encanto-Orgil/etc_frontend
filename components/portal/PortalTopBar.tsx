@@ -2,6 +2,7 @@
 
 import { BellOutlined, DownOutlined, MessageOutlined } from "@ant-design/icons";
 import { Avatar, Badge, Dropdown, Layout } from "antd";
+import { useRouter } from "next/navigation";
 import type { AuthUser } from "@/lib/auth";
 import styles from "../dashboard/DashboardShell.module.css";
 
@@ -16,6 +17,7 @@ export default function PortalTopBar({
   title: string;
   user: AuthUser;
 }) {
+  const router = useRouter();
   const breadcrumb = eyebrow ? `${eyebrow} / ${title}` : title || "Overview";
   const displayName = [user.first_name, user.last_name].filter(Boolean).join(" ") || user.username;
   const tenantName = user.tenant?.company || user.tenant?.name || displayName;
@@ -25,10 +27,10 @@ export default function PortalTopBar({
       <Dropdown
         menu={{
           items: [
-            { key: "current", label: breadcrumb },
-            { key: "overview", label: "Overview" },
-            { key: "invoices", label: "Invoices" },
-            { key: "support", label: "Support" },
+            { key: "overview", label: "Overview", onClick: () => router.push("/portal") },
+            { key: "invoices", label: "Invoices", onClick: () => router.push("/portal/invoices") },
+            { key: "support", label: "Support", onClick: () => router.push("/portal/tickets") },
+            { key: "elevator", label: "Elevator", onClick: () => router.push("/portal/elevator") },
           ],
         }}
         trigger={["click"]}

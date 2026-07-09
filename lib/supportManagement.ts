@@ -5,6 +5,15 @@ export type SupportTicketCategory = "maintenance" | "repair" | "facilities" | "b
 export type SupportTicketStatus = "open" | "in_progress" | "resolved" | "closed";
 export type SupportTicketPriority = "low" | "normal" | "high" | "urgent";
 
+export type SupportTicketMessage = {
+  id: number;
+  body: string;
+  is_staff_reply: boolean;
+  author: number | null;
+  author_name: string;
+  created_at: string;
+};
+
 export type SupportTicket = {
   id: number;
   tenant: number;
@@ -27,6 +36,7 @@ export type SupportTicket = {
   assigned_to: number | null;
   assigned_to_name: string;
   staff_notes: string;
+  messages?: SupportTicketMessage[];
   created_at: string;
   updated_at: string;
 };
@@ -95,6 +105,16 @@ export function updateSupportTicket(
   }).then(async (res) => {
     if (!res.ok) throw new Error(await parseError(res, "Failed to update ticket."));
     return res.json() as Promise<SupportTicket>;
+  });
+}
+
+export function createSupportTicketMessage(ticketId: number, body: string) {
+  return authFetch(`/dashboard/support-tickets/${ticketId}/messages/`, {
+    method: "POST",
+    body: JSON.stringify({ body }),
+  }).then(async (res) => {
+    if (!res.ok) throw new Error(await parseError(res, "Failed to send message."));
+    return res.json() as Promise<SupportTicketMessage>;
   });
 }
 

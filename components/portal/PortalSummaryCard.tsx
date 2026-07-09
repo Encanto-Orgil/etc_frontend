@@ -45,24 +45,31 @@ export function buildPortalMetrics(summary: {
   unpaid_invoices: number;
   outstanding_amount: string | number;
   open_tickets: number;
+  elevator_cards?: number;
+  active_elevator_cards?: number;
 }): Metric[] {
   return [
-    { label: "Active contracts", value: summary.active_contracts, tone: "blue" },
+    { label: "Идэвхтэй гэрээ", value: summary.active_contracts, tone: "blue" },
     {
-      label: "Unpaid invoices",
+      label: "Төлөгдөөгүй нэхэмжлэх",
       value: summary.unpaid_invoices,
       tone: summary.unpaid_invoices > 0 ? "orange" : "blue",
       hasInfo: summary.unpaid_invoices > 0,
     },
     {
-      label: "Outstanding",
+      label: "Төлөх дүн",
       value: formatMoneyDisplay(summary.outstanding_amount),
       tone: Number(summary.outstanding_amount) > 0 ? "red" : "blue",
     },
     {
-      label: "Open support tickets",
+      label: "Нээлттэй хүсэлт",
       value: summary.open_tickets,
       tone: summary.open_tickets > 0 ? "orange" : "blue",
+    },
+    {
+      label: "Лифтийн карт",
+      value: summary.active_elevator_cards ?? summary.elevator_cards ?? 0,
+      tone: "blue",
     },
   ];
 }

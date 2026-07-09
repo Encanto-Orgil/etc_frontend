@@ -3,6 +3,7 @@
 import {
   BarChartOutlined,
   BellOutlined,
+  CreditCardOutlined,
   DownOutlined,
   FileTextOutlined,
   HomeOutlined,
@@ -49,6 +50,7 @@ export default function PortalSidebar({ user }: { user: AuthUser }) {
     { key: "/portal", icon: <HomeOutlined />, label: "Overview" },
     { key: "/portal/invoices", icon: <FileTextOutlined />, label: "Invoices" },
     { key: "/portal/tickets", icon: <MessageOutlined />, label: "Support" },
+    { key: "/portal/elevator", icon: <CreditCardOutlined />, label: "Elevator" },
   ];
 
   const userMenu: MenuProps = {
