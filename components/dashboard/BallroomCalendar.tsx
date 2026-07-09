@@ -2,10 +2,13 @@
 
 import {
   CalendarOutlined,
+  CheckCircleOutlined,
+  ClockCircleOutlined,
   LeftOutlined,
   PhoneOutlined,
   ReloadOutlined,
   RightOutlined,
+  TeamOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Button, Card, Empty, Form, Input, InputNumber, Segmented, Select, Spin, Tag, message } from "antd";
@@ -17,7 +20,7 @@ import {
   fetchDashboardBallroomEventTypes,
   type DashboardBallroomBooking,
 } from "@/lib/ballroomManagement";
-import { formatSlotTime, type BallroomSlotStatus } from "@/lib/ballroomAvailability";
+import { formatSlotTime } from "@/lib/ballroomAvailability";
 import styles from "./BallroomCalendar.module.css";
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -192,7 +195,7 @@ export default function BallroomCalendar() {
 
   const bookingsByDate = useMemo(() => groupBookingsByDate(bookings), [bookings]);
 
-  const selectedBookings = bookingsByDate[selectedDate] ?? [];
+  const selectedBookings = sortBookingsByStart(bookingsByDate[selectedDate] ?? []);
   const visibleDateKeys = useMemo(() => new Set(visibleDays.map((day) => day.format("YYYY-MM-DD"))), [visibleDays]);
   const visibleBookings = bookings.filter((booking) => visibleDateKeys.has(booking.slot_date));
   const pendingCount = visibleBookings.filter((booking) => booking.status === "pending").length;
@@ -275,28 +278,20 @@ export default function BallroomCalendar() {
   const renderTimedEvents = (day: Dayjs) => {
     const dateKey = day.format("YYYY-MM-DD");
     const dayBookings = bookingsByDate[dateKey] ?? [];
-    const rows = dayBookings.map((booking) => ({
-      id: `booking-${booking.id}`,
-      start: booking.slot_start,
-      end: booking.slot_end,
-      title: booking.event_type_label,
-      status: booking.status === "confirmed" ? "booked" : ("reserved" as BallroomSlotStatus),
-      booking,
-    }));
 
-    return rows.map((row) => {
-      const position = eventPosition(row.start, row.end);
+    return dayBookings.map((booking) => {
+      const position = eventPosition(booking.slot_start, booking.slot_end);
       return (
         <button
-          key={row.id}
+          key={`booking-${booking.id}`}
           type="button"
-          className={`${styles.timeEvent} ${styles[`timeEvent_${row.status}`]}`}
+          className={`${styles.timeEvent} ${styles[`timeEvent_${booking.status}`]}`}
           style={position}
           onClick={() => selectDay(day)}
         >
-          <strong>{row.title}</strong>
-          <span>{formatTimeRange(row.start, row.end)}</span>
-          <small>{row.booking.name}</small>
+          <strong>{booking.event_type_label}</strong>
+          <span>{formatTimeRange(booking.slot_start, booking.slot_end)}</span>
+          <small>{booking.name}</small>
         </button>
       );
     });
@@ -397,54 +392,61 @@ export default function BallroomCalendar() {
 
   return (
     <section className={styles.shell} aria-label="Ballroom calendar">
-      <header className={styles.header}>
-        <div>
+      <header className={styles.pageHeader}>
+        <div className={styles.pageHeaderMain}>
           <span className={styles.eyebrow}>Ballroom Management</span>
           <h1>Reservation Calendar</h1>
-          <p>Synced with the public Ballroom Contact & Reservation form.</p>
-        </div>
-        <div className={styles.actions}>
-          <Button onClick={() => moveCalendar(-1)} icon={<LeftOutlined />}>
-            Prev
-          </Button>
-          <Button onClick={goToday}>
-            Today
-          </Button>
-          <Button onClick={() => moveCalendar(1)} icon={<RightOutlined />}>
-            Next
-          </Button>
-          <Segmented
-            value={calendarView}
-            onChange={(value) => setCalendarView(value as CalendarView)}
-            options={[
-              { label: "Day", value: "day" },
-              { label: "Week", value: "week" },
-              { label: "Month", value: "month" },
-            ]}
-          />
-          <Button onClick={() => void loadCalendar()} icon={<ReloadOutlined />}>
-            Refresh
-          </Button>
+          <p>Track inquiries, confirm events, and register bookings synced with the public reservation form.</p>
         </div>
       </header>
 
       <div className={styles.summaryGrid}>
-        <Card className={styles.summaryCard}>
-          <span>Reservations</span>
-          <strong>{totalCount}</strong>
+        <Card className={`${styles.summaryCard} ${styles.summaryCard_total}`}>
+          <div className={styles.summaryCopy}>
+            <span>Visible reservations</span>
+            <strong>{totalCount}</strong>
+          </div>
+          <span className={styles.summaryIcon} aria-hidden>
+            <CalendarOutlined />
+          </span>
         </Card>
-        <Card className={styles.summaryCard}>
-          <span>Selected day</span>
-          <strong>{selectedBookings.length}</strong>
+        <Card className={`${styles.summaryCard} ${styles.summaryCard_day}`}>
+          <div className={styles.summaryCopy}>
+            <span>Selected day</span>
+            <strong>{selectedBookings.length}</strong>
+          </div>
+          <span className={styles.summaryIcon} aria-hidden>
+            <TeamOutlined />
+          </span>
         </Card>
-        <Card className={styles.summaryCard}>
-          <span>Pending requests</span>
-          <strong>{pendingCount}</strong>
+        <Card className={`${styles.summaryCard} ${styles.summaryCard_pending}`}>
+          <div className={styles.summaryCopy}>
+            <span>Pending requests</span>
+            <strong>{pendingCount}</strong>
+          </div>
+          <span className={styles.summaryIcon} aria-hidden>
+            <ClockCircleOutlined />
+          </span>
         </Card>
-        <Card className={styles.summaryCard}>
-          <span>Confirmed events</span>
-          <strong>{confirmedCount}</strong>
+        <Card className={`${styles.summaryCard} ${styles.summaryCard_confirmed}`}>
+          <div className={styles.summaryCopy}>
+            <span>Confirmed events</span>
+            <strong>{confirmedCount}</strong>
+          </div>
+          <span className={styles.summaryIcon} aria-hidden>
+            <CheckCircleOutlined />
+          </span>
         </Card>
+      </div>
+
+      <div className={styles.legendBar} aria-label="Booking status legend">
+        <span className={styles.legendLabel}>Status</span>
+        {Object.entries(BOOKING_STATUS_META).map(([key, meta]) => (
+          <span key={key} className={styles.legendItem}>
+            <span className={`${styles.legendDot} ${styles[`legendDot_${key}`]}`} />
+            {meta.label}
+          </span>
+        ))}
       </div>
 
       {error ? (
@@ -452,15 +454,36 @@ export default function BallroomCalendar() {
       ) : (
         <Spin spinning={loading}>
           <div className={styles.workspace}>
-            <Card
-              className={styles.calendarCard}
-              title={
-                <span className={styles.monthTitle}>
+            <Card className={styles.calendarCard}>
+              <div className={styles.calendarHead}>
+                <span className={styles.calendarTitle}>
                   <CalendarOutlined />
                   {calendarTitle}
                 </span>
-              }
-            >
+                <div className={styles.calendarToolbar}>
+                  <div className={styles.toolbarGroup}>
+                    <Button size="small" onClick={() => moveCalendar(-1)} icon={<LeftOutlined />} />
+                    <Button size="small" onClick={goToday}>
+                      Today
+                    </Button>
+                    <Button size="small" onClick={() => moveCalendar(1)} icon={<RightOutlined />} />
+                  </div>
+                  <Segmented
+                    size="small"
+                    value={calendarView}
+                    onChange={(value) => setCalendarView(value as CalendarView)}
+                    options={[
+                      { label: "Day", value: "day" },
+                      { label: "Week", value: "week" },
+                      { label: "Month", value: "month" },
+                    ]}
+                  />
+                  <Button size="small" onClick={() => void loadCalendar()} icon={<ReloadOutlined />}>
+                    Refresh
+                  </Button>
+                </div>
+              </div>
+
               {calendarView === "month" ? (
                 <>
                   <div className={styles.weekdays}>
@@ -496,7 +519,10 @@ export default function BallroomCalendar() {
                           </span>
                           <span className={styles.monthEventList}>
                             {visibleEvents.map((booking) => (
-                              <span key={booking.id} className={styles.monthEvent}>
+                              <span
+                                key={booking.id}
+                                className={`${styles.monthEvent} ${styles[`monthEvent_${booking.status}`]}`}
+                              >
                                 <span className={styles.monthEventTime}>{formatSlotTime(booking.slot_start)}</span>
                                 <span className={styles.monthEventTitle}>
                                   {booking.event_type_label}
@@ -519,7 +545,17 @@ export default function BallroomCalendar() {
             </Card>
 
             <aside className={styles.detailPanel}>
-              <Card className={styles.detailCard} title={`Mark booking · ${dayjs(selectedDate).format("MMM D")}`}>
+              <div className={styles.selectedDateBanner}>
+                <div>
+                  <strong>{selectedDay.format("MMMM D, YYYY")}</strong>
+                  <span>{selectedDay.format("dddd")}</span>
+                </div>
+                <span className={styles.selectedDateCount}>
+                  {selectedBookings.length} booking{selectedBookings.length === 1 ? "" : "s"}
+                </span>
+              </div>
+
+              <Card className={styles.detailCard} title="Mark booking">
                 <Form<BookingFormValues>
                   form={bookingForm}
                   layout="vertical"
@@ -541,7 +577,7 @@ export default function BallroomCalendar() {
                   onFinish={createBooking}
                 >
                   <p className={styles.formHint}>
-                    Day view дээр эхлэх цагаас дуусах цаг хүртэл чирж сонгоод захиалга бүртгэнэ.
+                    In day or week view, drag on the timeline to pick a time range, then complete the form below.
                   </p>
                   <div className={styles.timeFormGrid}>
                     <Form.Item name="start_time" label="Start" rules={[{ required: true }]}>
@@ -581,13 +617,16 @@ export default function BallroomCalendar() {
                 </Form>
               </Card>
 
-              <Card className={styles.detailCard} title="Contact & Reservation requests">
+              <Card className={styles.detailCard} title="Requests for selected day">
                 {selectedBookings.length ? (
                   <div className={styles.bookingList}>
                     {selectedBookings.map((booking) => {
                       const status = BOOKING_STATUS_META[booking.status];
                       return (
-                        <article key={booking.id} className={styles.bookingCard}>
+                        <article
+                          key={booking.id}
+                          className={`${styles.bookingCard} ${styles[`bookingCard_${booking.status}`]}`}
+                        >
                           <div className={styles.bookingHead}>
                             <strong>{booking.event_type_label}</strong>
                             <Tag color={status.color}>{status.label}</Tag>
