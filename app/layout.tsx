@@ -4,6 +4,7 @@ import "@fontsource-variable/inter/wght.css";
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
 import SiteShell from "@/components/SiteShell";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import SiteSchema from "@/components/SiteSchema";
 import { fontDisplay } from "@/lib/fonts";
 import { rootMetadata } from "@/lib/seo";
@@ -16,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={fontDisplay.variable}>
       <body>
+        <GoogleAnalytics />
         <SiteSchema />
         <AntdRegistry>
           <ThemeProvider>
