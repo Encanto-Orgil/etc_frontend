@@ -31,6 +31,8 @@ export default function PortalTopBar({
             { key: "invoices", label: "Invoices", onClick: () => router.push("/portal/invoices") },
             { key: "support", label: "Support", onClick: () => router.push("/portal/tickets") },
             { key: "elevator", label: "Elevator", onClick: () => router.push("/portal/elevator") },
+            { key: "usage", label: "Lease summary", onClick: () => router.push("/portal/usage") },
+            { key: "shop", label: "Shop (Demo)", onClick: () => router.push("/portal/shop") },
           ],
         }}
         trigger={["click"]}

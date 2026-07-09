@@ -18,7 +18,7 @@ export default function PortalSummaryCard({ metrics }: { metrics: Metric[] }) {
       <div className={styles.usageHeader}>
         <div className={styles.usageTitle}>
           <WarningOutlined />
-          <span>Lease overview</span>
+          <span>Lease summary</span>
         </div>
       </div>
 

@@ -3,6 +3,10 @@ export const PORTAL_PAGES: Record<string, { eyebrow: string; title: string }> = 
   "/portal/invoices": { eyebrow: "Tenant Portal", title: "Invoices" },
   "/portal/tickets": { eyebrow: "Tenant Portal", title: "Support" },
   "/portal/elevator": { eyebrow: "Tenant Portal", title: "Elevator Access" },
+  "/portal/usage": { eyebrow: "Tenant Portal", title: "Lease summary" },
+  "/portal/shop": { eyebrow: "Tenant Portal", title: "Office Shop" },
+  "/portal/shop/cart": { eyebrow: "Tenant Portal", title: "Cart" },
+  "/portal/shop/checkout": { eyebrow: "Tenant Portal", title: "Checkout" },
 };
 
 export function getPortalPageMeta(pathname: string) {
@@ -20,5 +24,7 @@ export function getPortalSelectedKey(pathname: string) {
   if (pathname.startsWith("/portal/invoices")) return "/portal/invoices";
   if (pathname.startsWith("/portal/tickets")) return "/portal/tickets";
   if (pathname.startsWith("/portal/elevator")) return "/portal/elevator";
+  if (pathname.startsWith("/portal/usage")) return "/portal/usage";
+  if (pathname.startsWith("/portal/shop")) return "/portal/shop";
   return "/portal";
 }

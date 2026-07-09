@@ -12,6 +12,7 @@ import {
   MoreOutlined,
   SearchOutlined,
   SettingOutlined,
+  ShoppingOutlined,
 } from "@ant-design/icons";
 import { Avatar, Dropdown, Layout, Menu, Tag } from "antd";
 import type { MenuProps } from "antd";
@@ -26,7 +27,7 @@ const { Sider } = Layout;
 type MenuItem = Required<MenuProps>["items"][number];
 
 const accountItems: MenuItem[] = [
-  { key: "usage", icon: <BarChartOutlined />, label: "Lease summary" },
+  { key: "/portal/usage", icon: <BarChartOutlined />, label: "Lease summary" },
   {
     key: "settings",
     icon: <SettingOutlined />,
@@ -51,6 +52,16 @@ export default function PortalSidebar({ user }: { user: AuthUser }) {
     { key: "/portal/invoices", icon: <FileTextOutlined />, label: "Invoices" },
     { key: "/portal/tickets", icon: <MessageOutlined />, label: "Support" },
     { key: "/portal/elevator", icon: <CreditCardOutlined />, label: "Elevator" },
+    {
+      key: "/portal/shop",
+      icon: <ShoppingOutlined />,
+      label: (
+        <span className={styles.menuLabelInner}>
+          <span>Shop</span>
+          <Tag className={styles.betaTag}>Demo</Tag>
+        </span>
+      ),
+    },
   ];
 
   const userMenu: MenuProps = {
@@ -107,7 +118,13 @@ export default function PortalSidebar({ user }: { user: AuthUser }) {
             onClick={onMenuClick}
           />
           <div className={styles.menuDivider} />
-          <Menu className={styles.menu} mode="inline" items={accountItems} selectedKeys={selectedKeys} />
+          <Menu
+            className={styles.menu}
+            mode="inline"
+            items={accountItems}
+            selectedKeys={selectedKeys}
+            onClick={onMenuClick}
+          />
         </nav>
 
         <div className={styles.userRow}>

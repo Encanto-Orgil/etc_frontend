@@ -42,6 +42,7 @@ export const project = {
   ] as Stat[],
   contactPhone: "+976 9919-1522",
   contactEmail: "info@encanto.mn",
+  messengerUrl: "https://www.messenger.com/t/1030148240192521",
   contactAddress:
     "Улаанбаатар хот, Баянзүрх дүүрэг, 26-р хороо, Их Монгол Улсын гудамж, Энканто оффис 4 давхар",
 };

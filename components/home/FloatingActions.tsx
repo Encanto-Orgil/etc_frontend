@@ -20,7 +20,7 @@ export default function FloatingActions() {
 
   const actions: Action[] = [
     {
-      href: "https://m.me/",
+      href: project.messengerUrl,
       label: copy.messenger,
       icon: FaFacebookMessenger,
       external: true,
