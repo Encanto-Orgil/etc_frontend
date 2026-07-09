@@ -9,7 +9,6 @@ import OfficeHero from "./OfficeHero";
 import OfficePresentationVideo from "./OfficePresentationVideo";
 import OfficeHighlightsSection from "./OfficeHighlightsSection";
 import OfficePortalSection from "./OfficePortalSection";
-import OfficeWhySection from "./OfficeWhySection";
 import {
   OfficeAmenitiesSection,
   OfficeBusinessSection,
@@ -41,7 +40,6 @@ export default function OfficePage({ others }: Props) {
         <OfficeTypesSection />
         <OfficeStackingPlan />
         <OfficeAmenitiesSection />
-        <OfficeWhySection />
         <OfficePortalSection />
         <OfficeGallerySection />
         <OfficeFaqSection />

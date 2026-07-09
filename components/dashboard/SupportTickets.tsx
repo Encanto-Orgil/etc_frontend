@@ -1,9 +1,10 @@
 "use client";
 
-import { ReloadOutlined } from "@ant-design/icons";
-import { Button, Card, Input, message, Select, Spin, Table, Tag } from "antd";
+import { EyeOutlined, ReloadOutlined } from "@ant-design/icons";
+import { Button, Card, Input, message, Select, Space, Spin, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -60,7 +61,9 @@ export default function SupportTickets() {
       dataIndex: "subject",
       render: (value, record) => (
         <div>
-          <strong>{value}</strong>
+          <Link href={`/dashboard/support/${record.id}`} className={styles.tableLink}>
+            <strong>{value}</strong>
+          </Link>
           <div className={styles.muted}>{record.tenant_company || record.tenant_name}</div>
         </div>
       ),
@@ -84,14 +87,22 @@ export default function SupportTickets() {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
-        <Select
-          size="small"
-          value={record.status}
-          style={{ width: 150 }}
-          onClick={(event) => event.stopPropagation()}
-          onChange={(value) => updateStatus(record.id, value)}
-          options={Object.entries(TICKET_STATUS_LABELS).map(([value, label]) => ({ value, label }))}
-        />
+        <Space size="small" onClick={(event) => event.stopPropagation()}>
+          <Button
+            size="small"
+            icon={<EyeOutlined />}
+            onClick={() => router.push(`/dashboard/support/${record.id}`)}
+          >
+            View
+          </Button>
+          <Select
+            size="small"
+            value={record.status}
+            style={{ width: 150 }}
+            onChange={(value) => updateStatus(record.id, value)}
+            options={Object.entries(TICKET_STATUS_LABELS).map(([value, label]) => ({ value, label }))}
+          />
+        </Space>
       ),
     },
   ];
