@@ -12,6 +12,7 @@ import {
 } from "@/lib/portalShop";
 import { formatMoneyDisplay } from "@/lib/moneyFormat";
 import { usePortalShop } from "./PortalShopContext";
+import PortalShopProductImage, { PortalShopPartnerLogo } from "./PortalShopProductImage";
 import shopStyles from "./PortalShop.module.css";
 import portalStyles from "../Portal.module.css";
 import styles from "../../dashboard/DashboardOverview.module.css";
@@ -47,8 +48,10 @@ export default function PortalShopCatalog() {
         </div>
 
         <div className={shopStyles.partnerBanner}>
-          <div>
+          <PortalShopPartnerLogo size={64} />
+          <div className={shopStyles.partnerCopy}>
             <strong>{SHOP_PARTNER.name}</strong>
+            <p className={shopStyles.discountHighlight}>{SHOP_PARTNER.discountMessage}</p>
             <p>{SHOP_PARTNER.deliveryNote}</p>
           </div>
           <span className={shopStyles.partnerBadge}>Demo</span>
@@ -86,9 +89,7 @@ export default function PortalShopCatalog() {
         <div className={shopStyles.productGrid}>
           {products.map((product) => (
             <article key={product.id} className={shopStyles.productCard}>
-              <div className={shopStyles.productEmoji} aria-hidden>
-                {product.emoji}
-              </div>
+              <PortalShopProductImage src={product.imageUrl} alt={product.nameMn} />
               <p className={shopStyles.productCategory}>{SHOP_CATEGORY_LABELS[product.category]}</p>
               <h2 className={shopStyles.productName}>{product.nameMn}</h2>
               <p className={shopStyles.productDescription}>{product.description}</p>

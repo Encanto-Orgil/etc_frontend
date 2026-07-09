@@ -16,12 +16,8 @@ export type TowerExploreSection = {
 export type OfficeTranslations = {
   explore: TowerExploreSection;
   hero: {
-    eyebrow: string;
-    headline: string;
     title: string;
     description: string;
-    primaryCta: string;
-    secondaryCta: string;
   };
   businessIntro: {
     eyebrow: string;
@@ -85,7 +81,6 @@ export type OfficeTranslations = {
   stackingIntro: {
     eyebrow: string;
     title: string;
-    subtitle: string;
     footerTitle: string;
     footerBody: string;
   };
@@ -214,6 +209,7 @@ export type ResidenceTranslations = {
     title: string;
     body: string;
   };
+  aboutStats: { value: string; label: string }[];
   highlightsSection: {
     eyebrow: string;
     title: string;
@@ -232,6 +228,14 @@ export type ResidenceTranslations = {
     eyebrow: string;
     title: string;
     lead: string;
+    metrics: { value: string; unit?: string; label: string }[];
+    categories: {
+      structure: string;
+      comfort: string;
+      systems: string;
+      security: string;
+      lifestyle: string;
+    };
   };
   specifications: { label: string; value: string }[];
   interiorsSection: {
@@ -270,6 +274,8 @@ export type ResidenceTranslations = {
   floorPlansSection: {
     eyebrow: string;
     title: string;
+    note: string;
+    completion: string;
   };
   floorPlanTabs: { label: string }[];
   gallerySection: {
@@ -295,9 +301,13 @@ export type ResidenceTranslations = {
     tertiary: string;
   };
   contact: {
+    eyebrow: string;
     title: string;
-    body: string;
+    lead: string;
     formTitle: string;
+    formLead: string;
+    primaryContact: string;
+    alsoAvailable: string;
     formSuccess: string;
     formError: string;
     submit: string;

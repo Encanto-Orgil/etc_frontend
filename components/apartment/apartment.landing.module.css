@@ -62,6 +62,49 @@
   margin-right: auto;
 }
 
+.aboutStats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.aboutStat {
+  padding: 28px 20px;
+  border-radius: 16px;
+  background: var(--luxury-cream);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.aboutStat strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 300;
+  line-height: 1;
+  color: var(--luxury-black);
+}
+
+.aboutStat span {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.58);
+}
+
+@media (max-width: 960px) {
+  .aboutStats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .aboutStats {
+    grid-template-columns: 1fr;
+  }
+}
+
 .highlightGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

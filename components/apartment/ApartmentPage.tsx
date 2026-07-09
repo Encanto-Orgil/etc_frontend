@@ -1,26 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import type { Tower } from "@/lib/data";
-import { useTranslations } from "@/lib/i18n";
 import ApartmentExperience from "./ApartmentExperience";
 import ApartmentFloorPlans from "./ApartmentFloorPlans";
 import ApartmentHero from "./ApartmentHero";
+import ApartmentContactSection from "./ApartmentContactSection";
 import {
-  ApartmentConceptSection,
-  ApartmentContactSection,
-  ApartmentCtaSection,
-  ApartmentEcosystemSection,
-  ApartmentGallerySection,
+  ApartmentAboutSection,
   ApartmentHighlightsSection,
-  ApartmentInteriorSection,
-  ApartmentInvestmentSection,
-  ApartmentLocationSection,
-  ApartmentPageFooter,
-  ApartmentServicesSection,
-  ApartmentSpecificationsSection,
-  ApartmentTypesSection,
-  ApartmentWhySection,
 } from "./ApartmentLandingSections";
 import styles from "./ApartmentPage.module.css";
 
@@ -29,46 +16,15 @@ type Props = {
   others: Tower[];
 };
 
-export default function ApartmentPage({ others }: Props) {
-  const explore = useTranslations().residence.explore;
-
+export default function ApartmentPage(_props: Props) {
   return (
     <ApartmentExperience>
       <div className={styles.page}>
         <ApartmentHero />
-
-        <ApartmentConceptSection />
-        <ApartmentHighlightsSection />
-        <ApartmentTypesSection />
-        <ApartmentInteriorSection />
-        <ApartmentSpecificationsSection />
-        <ApartmentServicesSection />
-        <ApartmentLocationSection />
-        <ApartmentInvestmentSection />
+        <ApartmentAboutSection />
         <ApartmentFloorPlans />
-        <ApartmentGallerySection />
-        <ApartmentWhySection />
-        <ApartmentEcosystemSection />
-        <ApartmentCtaSection />
+        <ApartmentHighlightsSection />
         <ApartmentContactSection />
-        <ApartmentPageFooter />
-
-        <section className={`${styles.section} ${styles.sectionSoft}`} id="explore">
-          <div className={styles.inner}>
-            <header className={styles.sectionHead}>
-              <span className={styles.eyebrow}>{explore.eyebrow}</span>
-              <h2 className={styles.title}>{explore.title}</h2>
-            </header>
-            <div className={styles.otherGrid}>
-              {others.map((item) => (
-                <Link key={item.slug} href={`/${item.slug}`} className={styles.otherCard}>
-                  <img src={item.heroImage} alt={item.nameMn} />
-                  <span>{item.name}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
       </div>
     </ApartmentExperience>
   );

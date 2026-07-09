@@ -2,14 +2,7 @@ export const apartmentHero = {
   eyebrow: "Encanto Trade Center",
   headline: "LIVE ABOVE THE CITY",
   title: "Encanto Trade Center - Residence",
-  description:
-    "Encanto Trade Center - Residence is a 34-story luxury residential tower offering breathtaking panoramic views of the city from every unit. Designed for modern urban living, it combines premium interiors, smart home systems, centralized services, and world-class security into one elevated lifestyle.",
-  imageDay: "/images/renders/render-20.jpg",
-  imageSunset: "/images/renders/render-35.jpg",
-  imageNight: "/images/renders/render-25.jpg",
-  primaryCta: { label: "Explore Residences", href: "#types" },
-  secondaryCta: { label: "View Floor Plans", href: "#floor-plans" },
-  tertiaryCta: { label: "Book a Private Tour", href: "#contact" },
+  image: "/images/drone/drone-6.jpg",
 };
 
 export const apartmentConcept = {
@@ -117,6 +110,60 @@ export const apartmentSpecifications: {
   { label: "Зогсоол", value: "Айл бүрт хүртээмжтэй авто зогсоолтой." },
 ];
 
+export type ResidenceSpecCategory = "structure" | "comfort" | "systems" | "security" | "lifestyle";
+
+export type ResidenceSpecIcon =
+  | "height"
+  | "door"
+  | "structure"
+  | "facade"
+  | "interior"
+  | "layout"
+  | "air"
+  | "elevator"
+  | "water"
+  | "heating"
+  | "floor"
+  | "entry"
+  | "intercom"
+  | "ac"
+  | "kitchen"
+  | "podium"
+  | "parking";
+
+export const residenceSpecCategoryOrder: ResidenceSpecCategory[] = [
+  "structure",
+  "comfort",
+  "systems",
+  "security",
+  "lifestyle",
+];
+
+/** Layout metadata aligned with `residence.*.specifications` translation order. */
+export const residenceSpecLayout: {
+  category: ResidenceSpecCategory;
+  icon: ResidenceSpecIcon;
+  featured?: boolean;
+}[] = [
+  { category: "structure", icon: "height" },
+  { category: "structure", icon: "door" },
+  { category: "structure", icon: "structure", featured: true },
+  { category: "structure", icon: "facade", featured: true },
+  { category: "comfort", icon: "interior" },
+  { category: "structure", icon: "layout" },
+  { category: "systems", icon: "air", featured: true },
+  { category: "systems", icon: "elevator" },
+  { category: "systems", icon: "water" },
+  { category: "systems", icon: "heating" },
+  { category: "comfort", icon: "floor" },
+  { category: "security", icon: "entry" },
+  { category: "security", icon: "intercom" },
+  { category: "systems", icon: "ac" },
+  { category: "comfort", icon: "kitchen" },
+  { category: "lifestyle", icon: "podium" },
+  { category: "lifestyle", icon: "parking" },
+];
+
 export const apartmentStackingIntro = {
   eyebrow: "Interactive Stacking Plan",
   title: "Explore Encanto Trade Center - Residence Floors",
@@ -172,11 +219,18 @@ export const apartmentInvestment = {
 };
 
 export const apartmentFloorPlanTabs = [
-  { id: "studio", label: "Studio", image: "/images/renders/render-20.jpg" },
-  { id: "1br", label: "1 Bedroom", image: "/images/renders/render-15.jpg" },
-  { id: "2br", label: "2 Bedroom", image: "/images/renders/render-25.jpg" },
-  { id: "3br", label: "3 Bedroom", image: "/images/renders/render-12.jpg" },
-  { id: "ph", label: "Penthouse", image: "/images/renders/render-35.jpg" },
+  {
+    id: "a",
+    label: "A загварын айл",
+    image: "/images/residence/floor-plan-a.png",
+    orientations: ["Урагшаа", "Хойшоо", "Зүүн харууцтай"],
+  },
+  {
+    id: "b",
+    label: "B загварын айл",
+    image: "/images/residence/floor-plan-b.png",
+    orientations: ["Урагшаа", "Хойшоо харууцтай"],
+  },
 ];
 
 export const apartmentGallery = [

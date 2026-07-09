@@ -75,7 +75,6 @@ export default function OfficeStackingPlan() {
         <div className={styles.heroCopy}>
           <span className={styles.eyebrow}>{stackingCopy.eyebrow}</span>
           <h2 className={styles.title}>{stackingCopy.title}</h2>
-          <p className={styles.sub}>{stackingCopy.subtitle}</p>
         </div>
 
         {loading ? (

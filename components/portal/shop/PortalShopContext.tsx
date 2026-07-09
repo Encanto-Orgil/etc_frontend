@@ -11,6 +11,8 @@ import {
 } from "react";
 import {
   calcDeliveryFee,
+  calcDiscountAmount,
+  calcOrderTotal,
   getProductById,
   SHOP_PARTNER,
   type ShopProduct,
@@ -29,6 +31,7 @@ type PortalShopContextValue = {
   lines: CartLine[];
   itemCount: number;
   subtotal: number;
+  discountAmount: number;
   deliveryFee: number;
   total: number;
   addItem: (productId: string, quantity?: number) => void;
@@ -127,13 +130,15 @@ export function PortalShopProvider({ children }: { children: ReactNode }) {
   );
 
   const deliveryFee = useMemo(() => calcDeliveryFee(subtotal), [subtotal]);
-  const total = subtotal + deliveryFee;
+  const discountAmount = useMemo(() => calcDiscountAmount(subtotal), [subtotal]);
+  const total = useMemo(() => calcOrderTotal(subtotal), [subtotal]);
 
   const value = useMemo(
     () => ({
       lines,
       itemCount,
       subtotal,
+      discountAmount,
       deliveryFee,
       total,
       addItem,
@@ -141,7 +146,7 @@ export function PortalShopProvider({ children }: { children: ReactNode }) {
       removeItem,
       clearCart,
     }),
-    [lines, itemCount, subtotal, deliveryFee, total, addItem, setQuantity, removeItem, clearCart],
+    [lines, itemCount, subtotal, discountAmount, deliveryFee, total, addItem, setQuantity, removeItem, clearCart],
   );
 
   return <PortalShopContext.Provider value={value}>{children}</PortalShopContext.Provider>;

@@ -6,13 +6,9 @@ export const officeEn: OfficeTranslations = {
     title: "Explore Other Destinations",
   },
   hero: {
-    eyebrow: "Grade-A Business Destination",
-    headline: "WHERE BUSINESS REACHES NEW HEIGHTS",
     title: "Premium Office Spaces",
     description:
       "Designed for forward-thinking businesses seeking prestige, efficiency, and an exceptional working environment in the heart of the city.",
-    primaryCta: "Explore Office",
-    secondaryCta: "Schedule a Tour",
   },
   businessIntro: {
     eyebrow: "Business Starts Here",
@@ -194,8 +190,6 @@ export const officeEn: OfficeTranslations = {
   stackingIntro: {
     eyebrow: "Interactive Stacking Plan",
     title: "Explore Every Floor",
-    subtitle:
-      "Navigate through the tower to discover office availability, floor layouts, unit sizes, and premium amenities.",
     footerTitle: "Can't Find the Right Office?",
     footerBody: "Our consultants will help you find the ideal workspace.",
   },

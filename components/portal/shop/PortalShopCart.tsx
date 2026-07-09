@@ -6,12 +6,13 @@ import Link from "next/link";
 import { SHOP_PARTNER } from "@/lib/portalShop";
 import { formatMoneyDisplay } from "@/lib/moneyFormat";
 import { usePortalShop } from "./PortalShopContext";
+import PortalShopProductImage from "./PortalShopProductImage";
 import shopStyles from "./PortalShop.module.css";
 import portalStyles from "../Portal.module.css";
 import styles from "../../dashboard/DashboardOverview.module.css";
 
 export default function PortalShopCart() {
-  const { lines, subtotal, deliveryFee, total, setQuantity, removeItem } = usePortalShop();
+  const { lines, subtotal, discountAmount, deliveryFee, total, setQuantity, removeItem } = usePortalShop();
 
   if (!lines.length) {
     return (
@@ -58,9 +59,11 @@ export default function PortalShopCart() {
           <div className={shopStyles.cartList}>
             {lines.map((line) => (
               <div key={line.product.id} className={shopStyles.cartRow}>
-                <div className={shopStyles.cartEmoji} aria-hidden>
-                  {line.product.emoji}
-                </div>
+                <PortalShopProductImage
+                  src={line.product.imageUrl}
+                  alt={line.product.nameMn}
+                  className={shopStyles.cartThumb}
+                />
                 <div className={shopStyles.cartInfo}>
                   <strong>{line.product.nameMn}</strong>
                   <span>
@@ -96,6 +99,10 @@ export default function PortalShopCart() {
               <strong>{formatMoneyDisplay(subtotal)}</strong>
             </div>
             <div className={shopStyles.summaryRow}>
+              <span>Хөнгөлөлт ({SHOP_PARTNER.discountPercent}%)</span>
+              <strong className={shopStyles.discountValue}>-{formatMoneyDisplay(discountAmount)}</strong>
+            </div>
+            <div className={shopStyles.summaryRow}>
               <span>Хүргэлт</span>
               <strong>{deliveryFee ? formatMoneyDisplay(deliveryFee) : "Үнэгүй"}</strong>
             </div>
@@ -103,6 +110,7 @@ export default function PortalShopCart() {
               <span>Нийт</span>
               <strong>{formatMoneyDisplay(total)}</strong>
             </div>
+            <p className={shopStyles.summaryNote}>{SHOP_PARTNER.discountMessage}</p>
             <p className={shopStyles.summaryNote}>
               {subtotal >= SHOP_PARTNER.freeDeliveryFrom
                 ? `${formatMoneyDisplay(SHOP_PARTNER.freeDeliveryFrom)}-аас дээш захиалгад хүргэлт үнэгүй.`

@@ -8,6 +8,7 @@ import { useState } from "react";
 import { SHOP_PARTNER } from "@/lib/portalShop";
 import { formatMoneyDisplay } from "@/lib/moneyFormat";
 import { usePortalShop } from "./PortalShopContext";
+import PortalShopProductImage from "./PortalShopProductImage";
 import shopStyles from "./PortalShop.module.css";
 import portalStyles from "../Portal.module.css";
 import styles from "../../dashboard/DashboardOverview.module.css";
@@ -23,7 +24,7 @@ type CheckoutForm = {
 
 export default function PortalShopCheckout() {
   const router = useRouter();
-  const { lines, subtotal, deliveryFee, total, clearCart } = usePortalShop();
+  const { lines, subtotal, discountAmount, deliveryFee, total, clearCart } = usePortalShop();
   const [submitting, setSubmitting] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [orderRef, setOrderRef] = useState("");
@@ -153,16 +154,27 @@ export default function PortalShopCheckout() {
           <aside className={shopStyles.summaryCard}>
             <h2>Захиалгын дүн</h2>
             {lines.map((line) => (
-              <div key={line.product.id} className={shopStyles.summaryRow}>
-                <span>
-                  {line.product.nameMn} × {line.quantity}
-                </span>
-                <strong>{formatMoneyDisplay(line.product.price * line.quantity)}</strong>
+              <div key={line.product.id} className={shopStyles.checkoutLine}>
+                <PortalShopProductImage
+                  src={line.product.imageUrl}
+                  alt={line.product.nameMn}
+                  className={shopStyles.checkoutThumb}
+                />
+                <div className={shopStyles.checkoutLineCopy}>
+                  <span>
+                    {line.product.nameMn} × {line.quantity}
+                  </span>
+                  <strong>{formatMoneyDisplay(line.product.price * line.quantity)}</strong>
+                </div>
               </div>
             ))}
             <div className={shopStyles.summaryRow}>
               <span>Барааны дүн</span>
               <strong>{formatMoneyDisplay(subtotal)}</strong>
+            </div>
+            <div className={shopStyles.summaryRow}>
+              <span>Хөнгөлөлт ({SHOP_PARTNER.discountPercent}%)</span>
+              <strong className={shopStyles.discountValue}>-{formatMoneyDisplay(discountAmount)}</strong>
             </div>
             <div className={shopStyles.summaryRow}>
               <span>Хүргэлт ({SHOP_PARTNER.name})</span>
@@ -172,6 +184,7 @@ export default function PortalShopCheckout() {
               <span>Нийт төлөх</span>
               <strong>{formatMoneyDisplay(total)}</strong>
             </div>
+            <p className={shopStyles.summaryNote}>{SHOP_PARTNER.discountMessage}</p>
             <p className={shopStyles.summaryNote}>{SHOP_PARTNER.deliveryNote}</p>
             <Button type="primary" block size="large" loading={submitting} onClick={submitOrder} style={{ marginTop: 16 }}>
               Захиалга илгээх

@@ -2,82 +2,44 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { IconType } from "react-icons";
-import {
-  LuBellRing,
-  LuCar,
-  LuHouse,
-  LuShieldCheck,
-  LuSparkles,
-  LuSunrise,
-} from "react-icons/lu";
-import { Button, Form, Input, Select, message } from "antd";
-import { useState } from "react";
-import SalesContacts from "@/components/SalesContacts";
-import { submitInquiry } from "@/lib/api";
 import {
   apartmentCta,
   apartmentEcosystem,
   apartmentGallery,
   apartmentInteriors,
-  type ApartmentHighlightIcon,
 } from "@/lib/apartmentContent";
 import { useTranslations } from "@/lib/i18n";
 import styles from "./apartment.landing.module.css";
-import formStyles from "./ApartmentContactForm.module.css";
 
-const { TextArea } = Input;
-
-const highlightIconMap: Record<ApartmentHighlightIcon, IconType> = {
-  views: LuSunrise,
-  interiors: LuSparkles,
-  smart: LuHouse,
-  security: LuShieldCheck,
-  services: LuBellRing,
-  parking: LuCar,
-};
-
-export function ApartmentConceptSection() {
+export function ApartmentAboutSection() {
   const copy = useTranslations().residence.concept;
+  const stats = useTranslations().residence.aboutStats;
 
   return (
-    <section className={styles.sectionMinimal} id="concept">
+    <section className={styles.sectionMinimal} id="about">
       <div className={styles.inner} data-apartment-reveal>
         <p className={styles.eyebrow}>{copy.eyebrow}</p>
         <h2 className={styles.title}>{copy.title}</h2>
         <p className={styles.lead}>{copy.body}</p>
-      </div>
-    </section>
-  );
-}
-
-export function ApartmentHighlightsSection() {
-  const copy = useTranslations().residence;
-
-  return (
-    <section className={styles.sectionCream} id="highlights">
-      <div className={styles.inner}>
-        <p className={styles.eyebrow}>{copy.highlightsSection.eyebrow}</p>
-        <h2 className={styles.title}>{copy.highlightsSection.title}</h2>
-        <div className={styles.highlightGrid}>
-          {copy.highlights.map((card) => {
-            const Icon = highlightIconMap[card.icon];
-
-            return (
-              <article key={card.title} className={styles.highlightCard} data-apartment-reveal>
-                <span className={styles.iconWrap} aria-hidden>
-                  <Icon className={styles.icon} />
-                </span>
-                <h3>{card.title}</h3>
-                <p>{card.description}</p>
-              </article>
-            );
-          })}
+        <div className={styles.aboutStats}>
+          {stats.map((stat) => (
+            <div key={stat.label} className={styles.aboutStat}>
+              <strong>{stat.value}</strong>
+              <span>{stat.label}</span>
+            </div>
+          ))}
         </div>
       </div>
     </section>
   );
 }
+
+/** @deprecated Use ApartmentAboutSection */
+export function ApartmentConceptSection() {
+  return <ApartmentAboutSection />;
+}
+
+export { default as ApartmentHighlightsSection } from "./ApartmentHighlightsSection";
 
 export function ApartmentTypesSection() {
   const copy = useTranslations().residence;
@@ -339,92 +301,6 @@ export function ApartmentCtaSection() {
           <Link href={apartmentCta.tertiary.href} className={styles.ctaGhost}>
             {copy.tertiary}
           </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ApartmentContactForm() {
-  const copy = useTranslations().residence.contact;
-  const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
-  const [done, setDone] = useState(false);
-
-  const onFinish = async (values: {
-    name: string;
-    phone: string;
-    email?: string;
-    interest?: string;
-    message?: string;
-  }) => {
-    setLoading(true);
-    try {
-      await submitInquiry({
-        name: values.name,
-        phone: values.phone,
-        email: values.email,
-        interest: "apartment",
-        message: [values.interest ? `Interest: ${values.interest}` : null, values.message]
-          .filter(Boolean)
-          .join("\n"),
-      });
-      setDone(true);
-      form.resetFields();
-      message.success(copy.formSuccess);
-    } catch {
-      message.error(copy.formError);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (done) {
-    return (
-      <div className={formStyles.done}>
-        <h3>{copy.formSuccess}</h3>
-        <Button onClick={() => setDone(false)}>{copy.submit}</Button>
-      </div>
-    );
-  }
-
-  return (
-    <Form form={form} layout="vertical" className={formStyles.form} onFinish={onFinish} requiredMark={false}>
-      <div className={formStyles.row}>
-        <Form.Item name="name" label="Name" rules={[{ required: true }]}>
-          <Input placeholder="Your name" size="large" />
-        </Form.Item>
-        <Form.Item name="phone" label="Phone" rules={[{ required: true }]}>
-          <Input placeholder="99xxxxxx" size="large" />
-        </Form.Item>
-      </div>
-      <Form.Item name="email" label="Email" rules={[{ type: "email" }]}>
-        <Input placeholder="name@example.com" size="large" />
-      </Form.Item>
-      <Form.Item name="message" label="Message">
-        <TextArea rows={4} placeholder="Tell us about your requirements..." />
-      </Form.Item>
-      <Button type="primary" htmlType="submit" size="large" loading={loading} className={formStyles.submit}>
-        {copy.submit}
-      </Button>
-    </Form>
-  );
-}
-
-export function ApartmentContactSection() {
-  const copy = useTranslations().residence.contact;
-
-  return (
-    <section className={styles.contactSection} id="contact">
-      <div className={styles.inner}>
-        <p className={styles.eyebrow}>Contact</p>
-        <h2 className={styles.title}>{copy.title}</h2>
-        <p className={styles.lead}>{copy.body}</p>
-        <div className={styles.contactPanel} data-apartment-reveal>
-          <ApartmentContactForm />
-        </div>
-        <div data-apartment-reveal>
-          <SalesContacts scope="apartment" variant="strip" onDark />
         </div>
       </div>
     </section>
