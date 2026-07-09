@@ -8,7 +8,6 @@ import OfficeContactSection from "./OfficeContactSection";
 import OfficeHero from "./OfficeHero";
 import OfficePresentationVideo from "./OfficePresentationVideo";
 import OfficeHighlightsSection from "./OfficeHighlightsSection";
-import OfficePortalSection from "./OfficePortalSection";
 import {
   OfficeAmenitiesSection,
   OfficeBusinessSection,
@@ -40,7 +39,6 @@ export default function OfficePage({ others }: Props) {
         <OfficeTypesSection />
         <OfficeStackingPlan />
         <OfficeAmenitiesSection />
-        <OfficePortalSection />
         <OfficeGallerySection />
         <OfficeFaqSection />
 

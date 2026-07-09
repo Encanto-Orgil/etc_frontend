@@ -5,11 +5,25 @@ import { FaWhatsapp } from "react-icons/fa6";
 import { LuDownload, LuPhone } from "react-icons/lu";
 import { HiCalendarDays } from "react-icons/hi2";
 import { project } from "@/lib/data";
+import { officeDownloads } from "@/lib/officeContent";
 import styles from "./OfficeStickySidebar.module.css";
 
-const items = [
+type SidebarItem = {
+  href: string;
+  label: string;
+  icon: typeof HiCalendarDays;
+  external?: boolean;
+  download?: string;
+};
+
+const items: SidebarItem[] = [
   { href: "#stacking-plan", label: "Available Units", icon: HiCalendarDays },
-  { href: "#", label: "Download Brochure", icon: LuDownload },
+  {
+    href: officeDownloads.brochure,
+    label: "Download Brochure",
+    icon: LuDownload,
+    download: "Encanto-Office-Brochure.pdf",
+  },
   { href: "#contact", label: "Book Meeting", icon: HiCalendarDays },
   {
     href: "https://wa.me/97699191522",
@@ -30,6 +44,21 @@ export default function OfficeStickySidebar() {
       {items.map((item) => {
         const Icon = item.icon;
         const className = styles.btn;
+
+        if (item.download) {
+          return (
+            <a
+              key={item.label}
+              href={item.href}
+              className={className}
+              download={item.download}
+              title={item.label}
+            >
+              <Icon className={styles.icon} aria-hidden />
+              <span>{item.label}</span>
+            </a>
+          );
+        }
 
         if (item.external) {
           return (

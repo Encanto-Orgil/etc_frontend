@@ -9,6 +9,11 @@ export const officeHero = {
   secondaryCta: { label: "Schedule a Tour", href: "#contact" },
 };
 
+export const officeDownloads = {
+  brochure: "/downloads/etc-office-brochure.pdf",
+  floorplan: "/downloads/etc-office-floorplan.pdf",
+};
+
 export const officeBusinessIntro = {
   image: "/images/renders/render-3.jpg",
   title: "Built for Modern Business",
