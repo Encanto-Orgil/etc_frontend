@@ -1,7 +1,7 @@
 "use client";
 
-import { ArrowLeftOutlined, CheckOutlined, DownloadOutlined, PrinterOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Descriptions, Form, message, Modal, Select, Space, Spin, Table, Tag } from "antd";
+import { ArrowLeftOutlined, CheckOutlined, DownloadOutlined, MailOutlined, PrinterOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Descriptions, Form, Input, message, Modal, Select, Space, Spin, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import dayjs, { type Dayjs } from "dayjs";
 import { useRouter } from "next/navigation";
@@ -10,6 +10,7 @@ import {
   createInvoiceFromRentScheduleLine,
   fetchLeaseRentScheduleLine,
   markRentScheduleLinePaid,
+  sendRentScheduleInvoiceEmail,
   type LeaseRentPaymentMethod,
   type LeaseRentScheduleLine,
   type LeaseRentScheduleStatus,
@@ -38,6 +39,8 @@ const INVOICE_STATUS_COLORS: Record<LeaseRentScheduleStatus, string> = {
 };
 
 const INVOICE_STEPS: LeaseRentScheduleStatus[] = ["pending", "invoiced", "paid", "cancelled"];
+const INVOICE_LOGO_SRC = "/images/encanto-logo.png";
+const INVOICE_BRAND_NAME = "Encanto Trade Center";
 
 function formatMoney(value: string | number) {
   return `${Number(value || 0).toLocaleString()} ₮`;
@@ -56,15 +59,104 @@ function escapeHtml(value: string | number) {
     .replace(/'/g, "&#039;");
 }
 
+async function loadImageDataUrl(src: string) {
+  const response = await fetch(src);
+  if (!response.ok) throw new Error("Failed to load invoice logo.");
+  const blob = await response.blob();
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+function buildPrintableHtml(
+  line: LeaseRentScheduleLine,
+  invoiceRows: Array<{ product: string; description: string; quantity: string; price: string | number; amount: string | number }>,
+  logoUrl: string,
+) {
+  const invoiceNumber = line.invoice_reference || "Draft Invoice";
+  return `<!doctype html>
+<html>
+<head>
+  <title>${escapeHtml(invoiceNumber)}</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #111; margin: 32px; }
+    .header { display: flex; justify-content: space-between; gap: 24px; border-bottom: 1px solid #ddd; padding-bottom: 18px; }
+    .logo { height: 48px; width: auto; max-width: 180px; object-fit: contain; }
+    h1 { margin: 6px 0 0; font-size: 28px; }
+    .muted { color: #666; font-size: 12px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin: 24px 0; }
+    .field { display: grid; grid-template-columns: 130px 1fr; gap: 12px; margin: 9px 0; font-size: 13px; }
+    .label { color: #555; font-weight: 600; }
+    table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 13px; }
+    th { text-align: left; border-bottom: 1px solid #ddd; padding: 9px 8px; background: #f8f8fc; }
+    td { border-bottom: 1px solid #eee; padding: 9px 8px; vertical-align: top; }
+    .right { text-align: right; }
+    .totals { width: 360px; margin-left: auto; margin-top: 20px; }
+    .total-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; }
+    .grand { font-weight: 800; border-top: 1px solid #ddd; margin-top: 6px; padding-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <img class="logo" src="${escapeHtml(logoUrl)}" alt="${escapeHtml(INVOICE_BRAND_NAME)}" />
+      <div class="muted" style="margin-top:12px;">${escapeHtml(INVOICE_BRAND_NAME)}</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="muted">Customer Invoice</div>
+      <h1>${escapeHtml(invoiceNumber)}</h1>
+      <div class="muted">${escapeHtml(line.contract_number)} · ${escapeHtml(line.period_start)} to ${escapeHtml(line.period_end)}</div>
+      <div class="muted">Status: ${escapeHtml(INVOICE_STATUS_LABELS[line.status])}</div>
+    </div>
+  </div>
+  <div class="grid">
+    <div>
+      <div class="field"><span class="label">Customer</span><span>${escapeHtml(line.tenant_company || line.tenant_name)}</span></div>
+      <div class="field"><span class="label">Contract</span><span>${escapeHtml(line.contract_number)}</span></div>
+      <div class="field"><span class="label">Unit</span><span>${escapeHtml(`${line.building_name} · ${line.floor_number}F · ${line.unit_code}`)}</span></div>
+    </div>
+    <div>
+      <div class="field"><span class="label">Invoice Date</span><span>${escapeHtml(formatDate(line.created_at))}</span></div>
+      <div class="field"><span class="label">Due Date</span><span>${escapeHtml(formatDate(line.due_date))}</span></div>
+      <div class="field"><span class="label">Currency</span><span>MNT</span></div>
+    </div>
+  </div>
+  <table>
+    <thead><tr><th>Product</th><th class="right">Quantity</th><th class="right">Price</th><th class="right">Amount</th></tr></thead>
+    <tbody>
+      ${invoiceRows
+        .map(
+          (row) =>
+            `<tr><td><strong>${escapeHtml(row.product)}</strong><br/><span class="muted">${escapeHtml(row.description)}</span></td><td class="right">${escapeHtml(row.quantity)}</td><td class="right">${escapeHtml(formatMoney(row.price))}</td><td class="right">${escapeHtml(formatMoney(row.amount))}</td></tr>`,
+        )
+        .join("")}
+    </tbody>
+  </table>
+  <div class="totals">
+    <div class="total-row"><span>Untaxed Amount</span><strong>${escapeHtml(formatMoney(line.total_amount))}</strong></div>
+    <div class="total-row"><span>Taxes</span><strong>0 ₮</strong></div>
+    <div class="total-row grand"><span>Total</span><strong>${escapeHtml(formatMoney(line.total_amount))}</strong></div>
+    <div class="total-row grand"><span>Amount Due</span><strong>${escapeHtml(formatMoney(line.total_amount))}</strong></div>
+  </div>
+</body>
+</html>`;
+}
+
 export default function PropertyInvoiceDetail({ lineId }: { lineId: number }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [markingPaid, setMarkingPaid] = useState(false);
   const [paidModalOpen, setPaidModalOpen] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [line, setLine] = useState<LeaseRentScheduleLine | null>(null);
   const [paidForm] = Form.useForm<{ paid_at: Dayjs; payment_method: LeaseRentPaymentMethod }>();
+  const [emailForm] = Form.useForm<{ email: string }>();
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -120,7 +212,28 @@ export default function PropertyInvoiceDetail({ lineId }: { lineId: number }) {
     }
   };
 
+  const openEmailModal = () => {
+    emailForm.setFieldsValue({ email: line?.tenant_email || line?.sent_to_email || "" });
+    setEmailModalOpen(true);
+  };
+
+  const handleSendEmail = async () => {
+    const values = await emailForm.validateFields();
+    setSendingEmail(true);
+    try {
+      const nextLine = await sendRentScheduleInvoiceEmail(lineId, values.email.trim());
+      setLine(nextLine);
+      setEmailModalOpen(false);
+      message.success("Invoice email sent.");
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Failed to send email.");
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
   const canMarkPaid = line?.status === "invoiced" || line?.status === "paid";
+  const canSendEmail = Boolean(line?.invoice_reference) && line?.status !== "cancelled";
 
   const invoiceRows = line
     ? [
@@ -149,72 +262,10 @@ export default function PropertyInvoiceDetail({ lineId }: { lineId: number }) {
 
   const invoiceNumber = line?.invoice_reference || "Draft Invoice";
 
-  const printableHtml = line
-    ? `<!doctype html>
-<html>
-<head>
-  <title>${escapeHtml(invoiceNumber)}</title>
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #111; margin: 32px; }
-    .header { display: flex; justify-content: space-between; gap: 24px; border-bottom: 1px solid #ddd; padding-bottom: 18px; }
-    h1 { margin: 6px 0 0; font-size: 28px; }
-    .muted { color: #666; font-size: 12px; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin: 24px 0; }
-    .field { display: grid; grid-template-columns: 130px 1fr; gap: 12px; margin: 9px 0; font-size: 13px; }
-    .label { color: #555; font-weight: 600; }
-    table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 13px; }
-    th { text-align: left; border-bottom: 1px solid #ddd; padding: 9px 8px; background: #f8f8fc; }
-    td { border-bottom: 1px solid #eee; padding: 9px 8px; vertical-align: top; }
-    .right { text-align: right; }
-    .totals { width: 360px; margin-left: auto; margin-top: 20px; }
-    .total-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; }
-    .grand { font-weight: 800; border-top: 1px solid #ddd; margin-top: 6px; padding-top: 10px; }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <div>
-      <div class="muted">Customer Invoice</div>
-      <h1>${escapeHtml(invoiceNumber)}</h1>
-      <div class="muted">${escapeHtml(line.contract_number)} · ${escapeHtml(line.period_start)} to ${escapeHtml(line.period_end)}</div>
-    </div>
-    <div class="muted">Status: ${escapeHtml(INVOICE_STATUS_LABELS[line.status])}</div>
-  </div>
-  <div class="grid">
-    <div>
-      <div class="field"><span class="label">Customer</span><span>${escapeHtml(line.tenant_company || line.tenant_name)}</span></div>
-      <div class="field"><span class="label">Contract</span><span>${escapeHtml(line.contract_number)}</span></div>
-      <div class="field"><span class="label">Unit</span><span>${escapeHtml(`${line.building_name} · ${line.floor_number}F · ${line.unit_code}`)}</span></div>
-    </div>
-    <div>
-      <div class="field"><span class="label">Invoice Date</span><span>${escapeHtml(formatDate(line.created_at))}</span></div>
-      <div class="field"><span class="label">Due Date</span><span>${escapeHtml(formatDate(line.due_date))}</span></div>
-      <div class="field"><span class="label">Currency</span><span>MNT</span></div>
-    </div>
-  </div>
-  <table>
-    <thead><tr><th>Product</th><th class="right">Quantity</th><th class="right">Price</th><th class="right">Amount</th></tr></thead>
-    <tbody>
-      ${invoiceRows
-        .map(
-          (row) =>
-            `<tr><td><strong>${escapeHtml(row.product)}</strong><br/><span class="muted">${escapeHtml(row.description)}</span></td><td class="right">${escapeHtml(row.quantity)}</td><td class="right">${escapeHtml(formatMoney(row.price))}</td><td class="right">${escapeHtml(formatMoney(row.amount))}</td></tr>`,
-        )
-        .join("")}
-    </tbody>
-  </table>
-  <div class="totals">
-    <div class="total-row"><span>Untaxed Amount</span><strong>${escapeHtml(formatMoney(line.total_amount))}</strong></div>
-    <div class="total-row"><span>Taxes</span><strong>0 ₮</strong></div>
-    <div class="total-row grand"><span>Total</span><strong>${escapeHtml(formatMoney(line.total_amount))}</strong></div>
-    <div class="total-row grand"><span>Amount Due</span><strong>${escapeHtml(formatMoney(line.total_amount))}</strong></div>
-  </div>
-</body>
-</html>`
-    : "";
-
   const printInvoice = () => {
     if (!line) return;
+    const logoUrl = `${window.location.origin}${INVOICE_LOGO_SRC}`;
+    const printableHtml = buildPrintableHtml(line, invoiceRows, logoUrl);
     const printWindow = window.open("", "_blank", "width=960,height=720");
     if (!printWindow) {
       message.error("Popup blocked. Please allow popups to print the invoice.");
@@ -236,18 +287,27 @@ export default function PropertyInvoiceDetail({ lineId }: { lineId: number }) {
       const margin = 42;
       let y = 52;
 
+      try {
+        const logoData = await loadImageDataUrl(INVOICE_LOGO_SRC);
+        doc.addImage(logoData, "PNG", margin, y - 18, 120, 36);
+      } catch {
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text(INVOICE_BRAND_NAME, margin, y);
+      }
+
       doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
-      doc.text("Customer Invoice", margin, y);
+      doc.text("Customer Invoice", pageWidth - margin, y, { align: "right" });
       doc.setFont("helvetica", "bold");
       doc.setFontSize(22);
       y += 28;
-      doc.text(invoiceNumber, margin, y);
+      doc.text(invoiceNumber, pageWidth - margin, y, { align: "right" });
       doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
       y += 18;
-      doc.text(`${line.contract_number} · ${line.period_start} to ${line.period_end}`, margin, y);
-      doc.text(`Status: ${INVOICE_STATUS_LABELS[line.status]}`, pageWidth - margin, 52, { align: "right" });
+      doc.text(`${line.contract_number} · ${line.period_start} to ${line.period_end}`, pageWidth - margin, y, { align: "right" });
+      doc.text(`Status: ${INVOICE_STATUS_LABELS[line.status]}`, pageWidth - margin, y + 18, { align: "right" });
 
       y += 38;
       const leftX = margin;
@@ -360,6 +420,11 @@ export default function PropertyInvoiceDetail({ lineId }: { lineId: number }) {
                     {line.status === "paid" ? "Update Payment" : "Mark as Paid"}
                   </Button>
                 ) : null}
+                {canSendEmail ? (
+                  <Button icon={<MailOutlined />} onClick={openEmailModal}>
+                    Send Email
+                  </Button>
+                ) : null}
                 <Button icon={<PrinterOutlined />} onClick={printInvoice}>
                   Print
                 </Button>
@@ -378,8 +443,13 @@ export default function PropertyInvoiceDetail({ lineId }: { lineId: number }) {
             </div>
 
             <div className={styles.odooSheet}>
-              <span className={styles.formLabel}>Customer Invoice</span>
-              <h2>{line.invoice_reference || "Draft Invoice"}</h2>
+              <div className={styles.invoiceBrandHeader}>
+                <img src={INVOICE_LOGO_SRC} alt={INVOICE_BRAND_NAME} className={styles.invoiceBrandLogo} />
+                <div className={styles.invoiceBrandMeta}>
+                  <span className={styles.formLabel}>Customer Invoice</span>
+                  <h2>{line.invoice_reference || "Draft Invoice"}</h2>
+                </div>
+              </div>
 
               <div className={styles.formColumns}>
                 <div className={styles.formColumn}>
@@ -420,6 +490,15 @@ export default function PropertyInvoiceDetail({ lineId }: { lineId: number }) {
                         <strong>{line.payment_method_label || "-"}</strong>
                       </div>
                     </>
+                  ) : null}
+                  {line.sent_at ? (
+                    <div className={styles.formField}>
+                      <span>Last Sent</span>
+                      <strong>
+                        {dayjs(line.sent_at).format("YYYY-MM-DD HH:mm")}
+                        {line.sent_to_email ? ` → ${line.sent_to_email}` : ""}
+                      </strong>
+                    </div>
                   ) : null}
                 </div>
               </div>
@@ -467,6 +546,29 @@ export default function PropertyInvoiceDetail({ lineId }: { lineId: number }) {
               rules={[{ required: true, message: "Select payment method." }]}
             >
               <Select options={PAYMENT_METHOD_OPTIONS} />
+            </Form.Item>
+          </Form>
+        </Modal>
+
+        <Modal
+          title="Send invoice by email"
+          open={emailModalOpen}
+          onCancel={() => setEmailModalOpen(false)}
+          onOk={handleSendEmail}
+          okText="Send Email"
+          confirmLoading={sendingEmail}
+          destroyOnHidden
+        >
+          <Form form={emailForm} layout="vertical">
+            <Form.Item
+              name="email"
+              label="Recipient email"
+              rules={[
+                { required: true, message: "Enter recipient email." },
+                { type: "email", message: "Enter a valid email address." },
+              ]}
+            >
+              <Input placeholder="tenant@example.com" />
             </Form.Item>
           </Form>
         </Modal>

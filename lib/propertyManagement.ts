@@ -117,6 +117,7 @@ export type LeaseRentScheduleLine = {
   tenant: number;
   tenant_name: string;
   tenant_company: string;
+  tenant_email: string;
   unit: number;
   unit_code: string;
   building: number;
@@ -134,6 +135,8 @@ export type LeaseRentScheduleLine = {
   paid_at: string | null;
   payment_method: LeaseRentPaymentMethod | "";
   payment_method_label: string;
+  sent_at: string | null;
+  sent_to_email: string;
   notes: string;
   created_at: string;
   updated_at: string;
@@ -439,6 +442,14 @@ export function markRentScheduleLinePaid(
     "POST",
     payload,
     "Failed to mark invoice as paid.",
+  );
+}
+
+export function sendRentScheduleInvoiceEmail(id: number, email?: string) {
+  return fetchOne<LeaseRentScheduleLine>(
+    `/dashboard/property/rent-schedule/${id}/send-email/`,
+    { method: "POST", body: JSON.stringify(email ? { email } : {}) },
+    "Failed to send invoice email.",
   );
 }
 
