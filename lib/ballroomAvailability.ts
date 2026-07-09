@@ -129,13 +129,7 @@ export function displaySlotStatus(status: string, statusLabel?: string) {
   return statusLabel || status;
 }
 
-export const ballroomBookingEventTypes = [
-  { value: "wedding", label: "Wedding" },
-  { value: "corporate", label: "Corporate Event" },
-  { value: "gala", label: "Gala Dinner" },
-  { value: "conference", label: "Conference" },
-  { value: "other", label: "Other" },
-] as const;
+export const ballroomBookingEventTypes: Array<{ value: string; label: string }> = [];
 
 export function translateCheckTimeMessage(message: string) {
   const exact: Record<string, string> = {

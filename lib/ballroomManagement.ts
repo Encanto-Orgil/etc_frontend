@@ -3,9 +3,19 @@ import { API_BASE } from "./api";
 import type { BallroomCustomBookingPayload } from "./ballroomAvailability";
 
 export type BallroomBookingStatus = "pending" | "confirmed" | "declined" | "cancelled";
-export type BallroomEventType = "wedding" | "corporate" | "gala" | "conference" | "other";
+export type BallroomEventType = string;
 export type BallroomInvoiceStatus = "draft" | "sent" | "paid" | "cancelled";
 export type BallroomQuoteStatus = "draft" | "sent" | "accepted" | "declined" | "cancelled";
+
+export type BallroomEventTypeRecord = {
+  id: number;
+  slug: string;
+  label: string;
+  sort_order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};
 
 export type DashboardBallroomBooking = {
   id: number;
@@ -236,7 +246,47 @@ async function remove(path: string, fallback: string) {
   if (!res.ok) throw new Error(await parseError(res, fallback));
 }
 
-export async function fetchBallroomSummary(): Promise<BallroomSummary> {
+export function fetchDashboardBallroomEventTypes(query?: Query) {
+  return fetchList<BallroomEventTypeRecord>("/dashboard/ballroom/event-types/", query);
+}
+
+export function createDashboardBallroomEventType(payload: {
+  slug: string;
+  label: string;
+  sort_order?: number;
+  is_active?: boolean;
+}) {
+  return send<BallroomEventTypeRecord>(
+    "/dashboard/ballroom/event-types/",
+    "POST",
+    payload,
+    "Failed to create event type.",
+  );
+}
+
+export function updateDashboardBallroomEventType(
+  id: number,
+  payload: Partial<Pick<BallroomEventTypeRecord, "slug" | "label" | "sort_order" | "is_active">>,
+) {
+  return send<BallroomEventTypeRecord>(
+    `/dashboard/ballroom/event-types/${id}/`,
+    "PATCH",
+    payload,
+    "Failed to update event type.",
+  );
+}
+
+export function deleteDashboardBallroomEventType(id: number) {
+  return remove(`/dashboard/ballroom/event-types/${id}/`, "Failed to delete event type.");
+}
+
+export async function fetchPublicBallroomEventTypes() {
+  const res = await fetch(`${API_BASE}/ballroom/event-types/`);
+  if (!res.ok) throw new Error("Failed to load event types.");
+  return res.json() as Promise<BallroomEventTypeRecord[]>;
+}
+
+export function fetchBallroomSummary(): Promise<BallroomSummary> {
   return fetchOne<BallroomSummary>("/dashboard/ballroom/summary/");
 }
 

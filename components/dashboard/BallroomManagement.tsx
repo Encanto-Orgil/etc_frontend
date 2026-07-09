@@ -31,6 +31,7 @@ import {
   Space,
   Spin,
   Statistic,
+  Switch,
   Table,
   Tag,
 } from "antd";
@@ -44,9 +45,11 @@ import {
   createBallroomContractFromBooking,
   createDashboardBallroomBooking,
   createDashboardBallroomContract,
+  createDashboardBallroomEventType,
   createDashboardBallroomInvoice,
   createDashboardBallroomQuote,
   deleteDashboardBallroomContract,
+  deleteDashboardBallroomEventType,
   declineDashboardBallroomBooking,
   deleteDashboardBallroomBooking,
   deleteDashboardBallroomInvoice,
@@ -55,15 +58,18 @@ import {
   fetchBallroomSummary,
   fetchDashboardBallroomBookings,
   fetchDashboardBallroomContracts,
+  fetchDashboardBallroomEventTypes,
   fetchDashboardBallroomInvoices,
   fetchDashboardBallroomQuotes,
   updateBallroomBillingProfile,
   updateDashboardBallroomBooking,
+  updateDashboardBallroomEventType,
   updateDashboardBallroomInvoice,
   updateDashboardBallroomQuote,
   type BallroomBillingProfile,
   type BallroomBookingStatus,
   type BallroomEventType,
+  type BallroomEventTypeRecord,
   type BallroomInvoiceStatus,
   type BallroomQuoteStatus,
   type BallroomContractStatus,
@@ -73,14 +79,14 @@ import {
   type DashboardBallroomInvoice,
   type DashboardBallroomQuote,
 } from "@/lib/ballroomManagement";
-import { ballroomBookingEventTypes, formatSlotTime } from "@/lib/ballroomAvailability";
+import { formatSlotTime } from "@/lib/ballroomAvailability";
 import BallroomInvoiceFormFields, {
   buildInvoicePayload,
   type InvoiceFormValues,
 } from "@/components/dashboard/BallroomInvoiceFormFields";
 import styles from "./PropertyManagement.module.css";
 
-export type BallroomManagementView = "dashboard" | "bookings" | "invoices" | "quotes" | "contracts" | "settings";
+export type BallroomManagementView = "dashboard" | "bookings" | "invoices" | "quotes" | "contracts" | "events" | "settings";
 
 const BOOKING_STATUS_LABELS: Record<BallroomBookingStatus, string> = {
   pending: "Pending",
@@ -146,6 +152,7 @@ const VIEW_TITLES: Record<BallroomManagementView, string> = {
   invoices: "Invoices",
   quotes: "Quotes",
   contracts: "Service Contracts",
+  events: "Event types",
   settings: "Invoice settings",
 };
 
@@ -195,6 +202,13 @@ type QuoteModalValues = InvoiceFormValues & {
 
 type BillingProfileFormValues = Omit<BallroomBillingProfile, "id" | "slug" | "updated_at">;
 
+type EventTypeFormValues = {
+  slug: string;
+  label: string;
+  sort_order: number;
+  is_active: boolean;
+};
+
 export default function BallroomManagement({ view }: { view: BallroomManagementView }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -216,7 +230,33 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
   const [quoteForm] = Form.useForm<QuoteModalValues>();
   const [billingForm] = Form.useForm<BillingProfileFormValues>();
   const [billingProfile, setBillingProfile] = useState<BallroomBillingProfile | null>(null);
+  const [eventTypes, setEventTypes] = useState<BallroomEventTypeRecord[]>([]);
+  const [eventTypeModalOpen, setEventTypeModalOpen] = useState(false);
+  const [editingEventType, setEditingEventType] = useState<BallroomEventTypeRecord | null>(null);
+  const [eventTypeForm] = Form.useForm<EventTypeFormValues>();
   const [saving, setSaving] = useState(false);
+
+  const eventTypeOptions = useMemo(
+    () =>
+      eventTypes
+        .filter((item) => item.is_active)
+        .map((item) => ({ value: item.slug, label: item.label })),
+    [eventTypes],
+  );
+
+  const defaultEventTypeSlug = eventTypeOptions[0]?.value ?? "other";
+
+  const loadEventTypes = useCallback(async () => {
+    try {
+      setEventTypes(await fetchDashboardBallroomEventTypes());
+    } catch {
+      // Dropdowns fall back to empty until refresh succeeds.
+    }
+  }, []);
+
+  useEffect(() => {
+    loadEventTypes();
+  }, [loadEventTypes]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -254,6 +294,8 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
             status: statusFilter === "all" ? undefined : statusFilter,
           }),
         );
+      } else if (view === "events") {
+        setEventTypes(await fetchDashboardBallroomEventTypes({ search: search || undefined }));
       } else if (view === "settings") {
         const profile = await fetchBallroomBillingProfile();
         setBillingProfile(profile);
@@ -280,6 +322,64 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
     }
   };
 
+  const openCreateEventType = () => {
+    setEditingEventType(null);
+    eventTypeForm.setFieldsValue({
+      slug: "",
+      label: "",
+      sort_order: (eventTypes[eventTypes.length - 1]?.sort_order ?? 0) + 10,
+      is_active: true,
+    });
+    setEventTypeModalOpen(true);
+  };
+
+  const openEditEventType = (record: BallroomEventTypeRecord) => {
+    setEditingEventType(record);
+    eventTypeForm.setFieldsValue({
+      slug: record.slug,
+      label: record.label,
+      sort_order: record.sort_order,
+      is_active: record.is_active,
+    });
+    setEventTypeModalOpen(true);
+  };
+
+  const saveEventType = async () => {
+    const values = await eventTypeForm.validateFields();
+    setSaving(true);
+    try {
+      if (editingEventType) {
+        await updateDashboardBallroomEventType(editingEventType.id, values);
+        message.success("Event type updated.");
+      } else {
+        await createDashboardBallroomEventType(values);
+        message.success("Event type created.");
+      }
+      setEventTypeModalOpen(false);
+      await loadEventTypes();
+      if (view === "events") {
+        load();
+      }
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Failed to save event type.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const removeEventType = async (id: number) => {
+    try {
+      await deleteDashboardBallroomEventType(id);
+      message.success("Event type deleted.");
+      await loadEventTypes();
+      if (view === "events") {
+        load();
+      }
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Failed to delete event type.");
+    }
+  };
+
   useEffect(() => {
     load();
   }, [load]);
@@ -291,7 +391,7 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
       start_time: dayjs().hour(10).minute(0).second(0),
       end_time: dayjs().hour(14).minute(0).second(0),
       guest_count: 100,
-      event_type: "corporate",
+      event_type: defaultEventTypeSlug,
       status: "pending",
     });
     setBookingModalOpen(true);
@@ -440,7 +540,7 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
       vat_mode: "included",
       status: "draft",
       guest_count: 100,
-      event_type: "corporate",
+      event_type: defaultEventTypeSlug,
     });
     setQuoteModalOpen(true);
   };
@@ -514,6 +614,45 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
         })),
     [bookings],
   );
+
+  const eventTypeColumns: ColumnsType<BallroomEventTypeRecord> = [
+    {
+      title: "Label",
+      dataIndex: "label",
+      render: (label: string, record) => (
+        <div>
+          <strong>{label}</strong>
+          <div className={styles.muted}>{record.slug}</div>
+        </div>
+      ),
+    },
+    {
+      title: "Order",
+      dataIndex: "sort_order",
+      width: 90,
+    },
+    {
+      title: "Status",
+      dataIndex: "is_active",
+      width: 110,
+      render: (active: boolean) => (
+        <Tag color={active ? "green" : "default"}>{active ? "Active" : "Inactive"}</Tag>
+      ),
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      width: 120,
+      render: (_, record) => (
+        <Space>
+          <Button type="text" icon={<EditOutlined />} onClick={() => openEditEventType(record)} />
+          <Popconfirm title="Delete this event type?" onConfirm={() => removeEventType(record.id)}>
+            <Button type="text" danger icon={<DeleteOutlined />} />
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
 
   const bookingColumns: ColumnsType<DashboardBallroomBooking> = [
     {
@@ -832,6 +971,11 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
                 New contract
               </Button>
             )}
+            {view === "events" && (
+              <Button type="primary" icon={<PlusOutlined />} onClick={openCreateEventType}>
+                New event type
+              </Button>
+            )}
             {view === "settings" && (
               <Button type="primary" loading={saving} onClick={saveBillingProfile}>
                 Save settings
@@ -848,7 +992,7 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
           </Space>
         </div>
 
-        {view !== "dashboard" && view !== "settings" && (
+        {view !== "dashboard" && view !== "settings" && view !== "events" && (
           <div className={styles.searchArea}>
             <Input
               allowClear
@@ -885,6 +1029,23 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
                         label: QUOTE_STATUS_LABELS[s],
                       }))),
               ]}
+            />
+            <Button icon={<FilterOutlined />} onClick={load}>
+              Apply
+            </Button>
+          </div>
+        )}
+
+        {view === "events" && (
+          <div className={styles.searchArea}>
+            <Input
+              allowClear
+              prefix={<SearchOutlined />}
+              placeholder="Search event types..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onPressEnter={load}
+              style={{ maxWidth: 280 }}
             />
             <Button icon={<FilterOutlined />} onClick={load}>
               Apply
@@ -974,6 +1135,10 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
 
           {view === "contracts" && (
             <Table rowKey="id" columns={contractColumns} dataSource={contracts} pagination={{ pageSize: 20 }} />
+          )}
+
+          {view === "events" && (
+            <Table rowKey="id" columns={eventTypeColumns} dataSource={eventTypes} pagination={{ pageSize: 20 }} />
           )}
 
           {view === "settings" && billingProfile && (
@@ -1095,7 +1260,7 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
           <Row gutter={12}>
             <Col span={12}>
               <Form.Item name="event_type" label="Event type" rules={[{ required: true }]}>
-                <Select options={[...ballroomBookingEventTypes]} />
+                <Select options={eventTypeOptions} placeholder="Select event type" />
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -1190,7 +1355,7 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
             </Col>
             <Col span={12}>
               <Form.Item name="event_type" label="Event type">
-                <Select allowClear options={[...ballroomBookingEventTypes]} />
+                <Select allowClear options={eventTypeOptions} placeholder="Select event type" />
               </Form.Item>
             </Col>
           </Row>
@@ -1230,6 +1395,47 @@ export default function BallroomManagement({ view }: { view: BallroomManagementV
           <Form.Item name="notes" label="Notes">
             <Input.TextArea rows={3} />
           </Form.Item>
+        </Form>
+      </Modal>
+
+      <Modal
+        title={editingEventType ? "Edit event type" : "New event type"}
+        open={eventTypeModalOpen}
+        onCancel={() => setEventTypeModalOpen(false)}
+        onOk={saveEventType}
+        confirmLoading={saving}
+        destroyOnClose
+      >
+        <Form form={eventTypeForm} layout="vertical">
+          <Form.Item
+            name="label"
+            label="Label (Mongolian)"
+            rules={[{ required: true, message: "Label is required." }]}
+          >
+            <Input placeholder="Жишээ нь: Хурим" />
+          </Form.Item>
+          <Form.Item
+            name="slug"
+            label="Slug"
+            rules={[
+              { required: true, message: "Slug is required." },
+              { pattern: /^[a-z0-9_-]+$/, message: "Use lowercase letters, numbers, underscores, or hyphens." },
+            ]}
+          >
+            <Input placeholder="wedding" disabled={Boolean(editingEventType)} />
+          </Form.Item>
+          <Row gutter={12}>
+            <Col span={12}>
+              <Form.Item name="sort_order" label="Sort order" rules={[{ required: true }]}>
+                <InputNumber min={0} style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="is_active" label="Active" valuePropName="checked">
+                <Switch />
+              </Form.Item>
+            </Col>
+          </Row>
         </Form>
       </Modal>
     </div>

@@ -1064,6 +1064,278 @@
   margin-bottom: 0;
 }
 
+.tenantDetailLayout {
+  display: grid;
+  gap: 0;
+  padding-top: 0;
+}
+
+.tenantHero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 14px;
+  border-bottom: 1px solid #e6e6e6;
+  background: linear-gradient(180deg, #faf9fc 0%, #ffffff 100%);
+}
+
+.tenantHeroMeta {
+  display: grid;
+  justify-items: end;
+  gap: 6px;
+  text-align: right;
+}
+
+.tenantContactChips {
+  margin-top: 6px;
+  color: #666666;
+  font-size: 12px;
+}
+
+.tenantContactChips span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tenantKpiRow {
+  padding: 12px 14px 0;
+}
+
+.tenantKpiCard {
+  border-color: #eaeaea !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.tenantKpiCard :global(.ant-statistic-title) {
+  color: #666666;
+  font-size: 12px;
+}
+
+.tenantKpiCard :global(.ant-statistic-content) {
+  color: #111111;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.tenantKpiSuffix {
+  margin-left: 6px;
+  color: #888888;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.tenantKpiAlert {
+  border-color: #ffccc7 !important;
+  background: #fff2f0;
+}
+
+.tenantOverviewRow {
+  padding: 12px 14px 0;
+}
+
+.tenantSectionCard {
+  height: 100%;
+  border-color: #eaeaea !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+
+.tenantSectionCard :global(.ant-card-head) {
+  min-height: 42px;
+  border-bottom-color: #eeeeee;
+}
+
+.tenantSectionCard :global(.ant-card-head-title) {
+  color: #111111;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.tenantContractPicker {
+  margin-bottom: 12px;
+}
+
+.tenantContractPanel {
+  display: grid;
+  gap: 14px;
+}
+
+.tenantContractHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tenantContractHead strong {
+  color: #111111;
+  font-size: 15px;
+}
+
+.tenantContractHead p {
+  margin: 4px 0 0;
+}
+
+.tenantContractGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.tenantContractGrid div {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid #f0f0f0;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.tenantContractGrid span {
+  color: #777777;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.tenantContractGrid strong {
+  color: #222222;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.tenantMoneyHighlight {
+  color: #4f3d86 !important;
+}
+
+.tenantPaymentSummary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.tenantPaymentSummary div {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid #f0f0f0;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+.tenantPaymentSummary span {
+  color: #777777;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.tenantPaymentSummary strong {
+  color: #111111;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.tenantUpcomingList {
+  display: grid;
+  gap: 8px;
+}
+
+.tenantUpcomingItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #eeeeee;
+  border-radius: 6px;
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tenantUpcomingItem:hover {
+  border-color: #6f5aa8;
+  background: #faf9fc;
+}
+
+.tenantUpcomingItem > div {
+  display: grid;
+  gap: 2px;
+}
+
+.tenantUpcomingItem strong {
+  color: #111111;
+  font-size: 13px;
+}
+
+.tenantUpcomingItem span {
+  color: #777777;
+  font-size: 11px;
+}
+
+.tenantUpcomingOverdue {
+  border-color: #ffccc7;
+  background: #fff2f0;
+}
+
+.tenantEmptyPanel {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 28px 12px;
+  color: #888888;
+  text-align: center;
+}
+
+.tenantEmptyPanel :global(.anticon) {
+  font-size: 24px;
+}
+
+.tenantEmptyPanel p {
+  max-width: 280px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.tenantOverdueBanner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 14px 0;
+  padding: 10px 12px;
+  border: 1px solid #ffccc7;
+  border-radius: 8px;
+  background: #fff2f0;
+  color: #a8071a;
+  font-size: 12px;
+}
+
+.tenantOverdueBanner :global(.anticon) {
+  font-size: 14px;
+}
+
+.tenantOverdueBanner span {
+  flex: 1;
+}
+
+.tenantPaymentsTab {
+  display: grid;
+  gap: 12px;
+  padding: 12px 14px 0;
+}
+
+.tenantContactPanel {
+  padding: 12px 14px 0;
+}
+
 .fullWidth {
   width: 100%;
 }
@@ -1189,6 +1461,25 @@
   .formField,
   .summaryGrid div {
     grid-template-columns: 112px minmax(0, 1fr);
+  }
+
+  .tenantHero {
+    flex-direction: column;
+  }
+
+  .tenantHeroMeta {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .tenantContractGrid,
+  .tenantPaymentSummary {
+    grid-template-columns: 1fr;
+  }
+
+  .tenantUpcomingItem {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .searchBox,

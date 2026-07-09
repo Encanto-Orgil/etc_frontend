@@ -20,14 +20,15 @@ import {
 import MoneyInput from "@/components/dashboard/MoneyInput";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import { ballroomBookingEventTypes } from "@/lib/ballroomAvailability";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   downloadBallroomContractDocx,
   fetchDashboardBallroomContract,
+  fetchDashboardBallroomEventTypes,
   updateDashboardBallroomContract,
   type BallroomContractStatus,
   type BallroomEventType,
+  type BallroomEventTypeRecord,
   type DashboardBallroomContract,
 } from "@/lib/ballroomManagement";
 import styles from "./PropertyManagement.module.css";
@@ -87,7 +88,22 @@ export default function BallroomContractDetail({ contractId }: { contractId: num
   const [saving, setSaving] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [contract, setContract] = useState<DashboardBallroomContract | null>(null);
+  const [eventTypes, setEventTypes] = useState<BallroomEventTypeRecord[]>([]);
   const [editForm] = Form.useForm<ContractFormValues>();
+
+  const eventTypeOptions = useMemo(
+    () =>
+      eventTypes
+        .filter((item) => item.is_active)
+        .map((item) => ({ value: item.slug, label: item.label })),
+    [eventTypes],
+  );
+
+  useEffect(() => {
+    fetchDashboardBallroomEventTypes()
+      .then(setEventTypes)
+      .catch(() => {});
+  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -329,7 +345,7 @@ export default function BallroomContractDetail({ contractId }: { contractId: num
             </Col>
             <Col xs={24} md={12}>
               <Form.Item name="event_type" label="Event type">
-                <Select allowClear options={[...ballroomBookingEventTypes]} />
+                <Select allowClear options={eventTypeOptions} placeholder="Select event type" />
               </Form.Item>
             </Col>
             <Col xs={24} md={12}>
