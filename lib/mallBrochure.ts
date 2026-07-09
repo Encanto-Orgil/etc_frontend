@@ -2,7 +2,7 @@ export const mallIntro = {
   eyebrow: "Integrated Retail & Lifestyle",
   title: "A Unified Urban Destination",
   body: "Encanto Trade Center Mall is strategically located in one of the city's most valuable districts, directly connected via bridge to Encanto Mall, Orgil Chain Supermarket, and Encanto Sport Complex. The project integrates retail, dining, sports, and daily services into a unified environment designed to support continuous urban activity.",
-  image: "/images/mall/mall-3.jpg",
+  image: "/images/mall/integrated-retail-lifestyle.png",
 };
 
 export const mallScale = {

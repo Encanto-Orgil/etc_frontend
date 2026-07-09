@@ -19,7 +19,7 @@ export const mallMn: MallTranslations = {
     eyebrow: "Нэгдсэн retail & lifestyle",
     title: "Нэгдсэн хотын төв",
     body: "Encanto Trade Center Mall нь хотын хамгийн үнэ цэнтэй бүсэд байрлаж, Encanto Mall, Оргил супермаркет, Encanto Sport Complex-тэй гүүрээр шууд холбогдсон. Худалдаа, ресторан, спорт, өдөр тутмын үйлчилгээг тасралтгүй urban идэвхжилд дэмжих орчинд нэгтгэсэн.",
-    imageAlt: "Encanto Trade Center Mall дотоод орчин",
+    imageAlt: "Encanto Trade Center-ийн гадна талын зураглал — гэрэлтүүлсэн retail podium болон цамхгууд",
     stats: [
       { value: "23,707", unit: "м²", label: "Моллын нийт талбай" },
       { value: "55,682", unit: "м²", label: "Холбогдсон retail талбай" },
