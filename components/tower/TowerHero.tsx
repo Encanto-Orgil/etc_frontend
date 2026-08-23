@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { heroBackgroundUrl } from "@/lib/image";
 import styles from "./TowerHero.module.css";
 
 export default function TowerHero({
@@ -45,7 +46,10 @@ export default function TowerHero({
           aria-hidden
         />
       ) : (
-        <div className={styles.bg} style={{ backgroundImage: `url(${image})` }} />
+        <div
+          className={styles.bg}
+          style={{ backgroundImage: `url(${heroBackgroundUrl(image)})` }}
+        />
       )}
       <div className={styles.overlay} />
       {showContent ? (

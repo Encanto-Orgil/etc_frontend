@@ -38,6 +38,7 @@ import {
 } from "@/lib/dashboardProjects";
 import { useDashboardProject } from "@/components/dashboard/DashboardProjectProvider";
 import { fetchInquirySummary } from "@/lib/inquiryManagement";
+import { fetchBallroomSummary } from "@/lib/ballroomManagement";
 import { fetchSupportTicketSummary } from "@/lib/supportManagement";
 import styles from "./DashboardShell.module.css";
 
@@ -81,7 +82,7 @@ export default function Sidebar({ user }: { user: AuthUser }) {
 
   const selectedKeys = [getDashboardSelectedKey(pathname, activeProjectId)];
   const [openKeys, setOpenKeys] = useState<string[]>(getDashboardOpenKeys(pathname));
-  const [navCounts, setNavCounts] = useState({ inquiries: 0, support: 0 });
+  const [navCounts, setNavCounts] = useState({ inquiries: 0, support: 0, pendingBookings: 0 });
 
   useEffect(() => {
     if (isCentro) return;
@@ -90,14 +91,16 @@ export default function Sidebar({ user }: { user: AuthUser }) {
 
     async function loadNavCounts() {
       try {
-        const [inquirySummary, supportSummary] = await Promise.all([
+        const [inquirySummary, supportSummary, ballroomSummary] = await Promise.all([
           fetchInquirySummary(),
           fetchSupportTicketSummary(),
+          fetchBallroomSummary(),
         ]);
         if (cancelled) return;
         setNavCounts({
           inquiries: inquirySummary.summary.pending,
           support: supportSummary.summary.open + supportSummary.summary.in_progress,
+          pendingBookings: ballroomSummary.summary.pending_bookings,
         });
       } catch {
         // Keep sidebar usable if count endpoints fail.
@@ -131,11 +134,16 @@ export default function Sidebar({ user }: { user: AuthUser }) {
         label: group.label,
         children: group.items.map((item) => ({
           key: item.key,
-          label: item.label,
+          label:
+            group.key === "ballroom-management" && item.key === "/dashboard/ballroom/bookings" ? (
+              <MenuLabel text={item.label} count={navCounts.pendingBookings} />
+            ) : (
+              item.label
+            ),
         })),
       })),
     ],
-    [user.is_superuser, navCounts.inquiries, navCounts.support],
+    [user.is_superuser, navCounts.inquiries, navCounts.support, navCounts.pendingBookings],
   );
 
   const centroItems = useMemo<MenuItem[]>(

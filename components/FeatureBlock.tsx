@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import type { Feature } from "@/lib/data";
+import { galleryImageUrl } from "@/lib/image";
 import styles from "./FeatureBlock.module.css";
 
 export default function FeatureBlock({
@@ -30,7 +31,7 @@ export default function FeatureBlock({
           style={{
             scale: imgScale,
             y: imgY,
-            backgroundImage: `url(${feature.image})`,
+            backgroundImage: `url(${galleryImageUrl(feature.image)})`,
           }}
         />
       </div>

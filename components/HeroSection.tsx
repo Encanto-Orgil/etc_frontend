@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react";
 import { motion } from "framer-motion";
+import { heroBackgroundUrl } from "@/lib/image";
 import styles from "./HeroSection.module.css";
 
 type Props = {
@@ -34,7 +35,10 @@ export default function HeroSection({
       id={id}
       className={`${styles.section} ${size === "large" ? styles.large : ""} ${className || ""}`}
     >
-      <div className={styles.bg} style={{ backgroundImage: `url(${image})` }} />
+      <div
+        className={styles.bg}
+        style={{ backgroundImage: `url(${heroBackgroundUrl(image)})` }}
+      />
       <div className={styles.overlay} />
 
       <div
