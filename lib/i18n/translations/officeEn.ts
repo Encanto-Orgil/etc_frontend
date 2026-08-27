@@ -15,7 +15,7 @@ export const officeEn: OfficeTranslations = {
     eyebrow: "Business Starts Here",
     title: "Built for Modern Business",
     body: "Whether you're a growing startup or an established enterprise, Encanto Trade Center provides premium office environments designed to elevate productivity, collaboration, and corporate identity.",
-    imageAlt: "Encanto Trade Center office interior",
+    imageAlt: "Encanto Trade Center premium office interior",
   },
   videoSection: {
     eyebrow: "Project Film",

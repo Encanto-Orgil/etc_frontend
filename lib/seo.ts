@@ -34,8 +34,31 @@ type PageMetaInput = {
   absoluteTitle?: boolean;
 };
 
+export const OFFICE_PAGE_TITLE =
+  "Premium Office Spaces in Ulaanbaatar, Mongolia — Encanto Trade Center";
+
+export const OFFICE_PAGE_DESCRIPTION =
+  "Mongolia's tallest Grade-A office tower — luxury premium workspaces with 4.5 m ceilings, YUANDA glass facade, FUJITEC smart elevators, and 1,500 parking spaces in Ulaanbaatar.";
+
+const OFFICE_KEYWORDS = [
+  ...DEFAULT_KEYWORDS,
+  "office leasing Mongolia",
+  "office leasing Ulaanbaatar",
+  "office rent Mongolia",
+  "office rent Ulaanbaatar",
+  "luxury office Ulaanbaatar",
+  "luxury office Mongolia",
+  "Grade-A office",
+  "Grade-A office Mongolia",
+  "commercial office space Ulaanbaatar",
+  "office space for rent",
+  "Encanto office",
+  "оффис түрээс Улаанбаатар",
+  "оффис түрээс",
+] as const;
+
 const TOWER_PAGE_TITLES: Partial<Record<string, string>> = {
-  office: "Office — Define Your Business Value — Encanto Trade Center",
+  office: OFFICE_PAGE_TITLE,
   mall: "Mall — Шилдэг брэндүүд нэг дор — Encanto Trade Center",
   ballroom: "Encanto Grand Ballroom",
 };
@@ -185,13 +208,23 @@ export function homeMetadata(): Metadata {
 }
 
 export function towerMetadata(tower: Tower): Metadata {
+  if (tower.slug === "office") {
+    return buildPageMetadata({
+      title: OFFICE_PAGE_TITLE,
+      description: OFFICE_PAGE_DESCRIPTION,
+      path: "/office",
+      image: tower.heroImage,
+      keywords: [...OFFICE_KEYWORDS],
+      absoluteTitle: true,
+    });
+  }
+
   const customTitle = TOWER_PAGE_TITLES[tower.slug];
   const title = customTitle ?? `${tower.nameMn} — ${tower.tagline}`;
   const keywords = [
     ...DEFAULT_KEYWORDS,
     tower.name,
     tower.nameMn,
-    tower.kind === "office" ? "Grade-A office" : "",
     tower.kind === "mall" ? "luxury mall" : "",
     tower.kind === "ballroom" ? "хурим танхим" : "",
     tower.kind === "apartment" ? "premium орон сууц" : "",
@@ -334,10 +367,16 @@ export function siteWideJsonLd() {
 
 export function towerWebPageJsonLd(tower: Tower) {
   const pageUrl = absoluteUrl(`/${tower.slug}`);
-  const sectionLabel =
-    TOWER_PAGE_TITLES[tower.slug]?.split(" — ")[0] ??
-    SITE_SECTION_NAV.find((item) => item.slug === tower.slug)?.label ??
-    tower.nameMn;
+  const isOffice = tower.slug === "office";
+  const sectionLabel = isOffice
+    ? "Office"
+    : TOWER_PAGE_TITLES[tower.slug]?.split(" — ")[0] ??
+      SITE_SECTION_NAV.find((item) => item.slug === tower.slug)?.label ??
+      tower.nameMn;
+  const pageName = isOffice
+    ? OFFICE_PAGE_TITLE
+    : TOWER_PAGE_TITLES[tower.slug] ?? `${sectionLabel} — ${SITE_NAME}`;
+  const pageDescription = isOffice ? OFFICE_PAGE_DESCRIPTION : tower.summary;
 
   return {
     "@context": "https://schema.org",
@@ -346,9 +385,9 @@ export function towerWebPageJsonLd(tower: Tower) {
         "@type": "WebPage",
         "@id": `${pageUrl}#webpage`,
         url: pageUrl,
-        name: TOWER_PAGE_TITLES[tower.slug] ?? `${sectionLabel} — ${SITE_NAME}`,
-        description: tower.summary,
-        inLanguage: "mn",
+        name: pageName,
+        description: pageDescription,
+        inLanguage: ["en", "mn"],
         isPartOf: {
           "@id": `${SITE_URL}/#website`,
         },
@@ -359,8 +398,8 @@ export function towerWebPageJsonLd(tower: Tower) {
           image: absoluteUrl(tower.heroImage),
           address: {
             "@type": "PostalAddress",
-            addressLocality: "Улаанбаатар",
-            addressRegion: "Баянзүрх дүүрэг",
+            addressLocality: "Ulaanbaatar",
+            addressRegion: "Bayanzurkh District",
             addressCountry: "MN",
           },
         },
@@ -383,6 +422,75 @@ export function towerWebPageJsonLd(tower: Tower) {
         ],
       },
     ],
+  };
+}
+
+function postalAddressJsonLd() {
+  return {
+    "@type": "PostalAddress" as const,
+    addressLocality: "Ulaanbaatar",
+    addressRegion: "Bayanzurkh District",
+    addressCountry: "MN",
+    streetAddress: project.contactAddress,
+  };
+}
+
+export function officeTowerJsonLd(tower: Tower) {
+  const pageUrl = absoluteUrl("/office");
+  const baseGraph = towerWebPageJsonLd(tower)["@graph"] as Record<string, unknown>[];
+
+  const listing = {
+    "@type": "RealEstateListing",
+    "@id": `${pageUrl}#listing`,
+    name: "Premium Office Spaces — Encanto Trade Center",
+    description: OFFICE_PAGE_DESCRIPTION,
+    url: pageUrl,
+    image: absoluteUrl(tower.heroImage),
+    address: postalAddressJsonLd(),
+    offers: {
+      "@type": "Offer",
+      businessFunction: "http://purl.org/goodrelations/v1#LeaseOut",
+      category: "Office space for rent",
+      areaServed: [
+        {
+          "@type": "City",
+          name: "Ulaanbaatar",
+          containedInPlace: {
+            "@type": "Country",
+            name: "Mongolia",
+          },
+        },
+        {
+          "@type": "Country",
+          name: "Mongolia",
+        },
+      ],
+    },
+  };
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [...baseGraph, listing],
+  };
+}
+
+export function officeFaqJsonLd(
+  faq: readonly { q: string; a: string }[],
+) {
+  const pageUrl = absoluteUrl("/office");
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${pageUrl}#faq`,
+    mainEntity: faq.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: a,
+      },
+    })),
   };
 }
 
@@ -411,8 +519,10 @@ export function sitemapEntries() {
 
   const towerPages = towers.map((tower) => ({
     path: `/${tower.slug}`,
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
+    changeFrequency: (tower.slug === "office" ? "weekly" : "monthly") as
+      | "weekly"
+      | "monthly",
+    priority: tower.slug === "office" ? 0.95 : 0.8,
   }));
 
   return [...staticPages, ...towerPages];

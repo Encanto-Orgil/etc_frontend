@@ -11,7 +11,13 @@ import MallPage from "@/components/mall/MallPage";
 import ApartmentPage from "@/components/apartment/ApartmentPage";
 import JsonLd from "@/components/JsonLd";
 import { getTower, towers } from "@/lib/data";
-import { towerMetadata, towerWebPageJsonLd } from "@/lib/seo";
+import { officeEn } from "@/lib/i18n/translations/officeEn";
+import {
+  officeFaqJsonLd,
+  officeTowerJsonLd,
+  towerMetadata,
+  towerWebPageJsonLd,
+} from "@/lib/seo";
 import styles from "./tower.module.css";
 
 export function generateStaticParams() {
@@ -46,7 +52,8 @@ export default async function TowerPage({
   if (data.slug === "office") {
     return (
       <>
-        {jsonLd}
+        <JsonLd data={officeTowerJsonLd(data)} />
+        <JsonLd data={officeFaqJsonLd(officeEn.faq)} />
         <OfficePage tower={data} others={others} />
       </>
     );
