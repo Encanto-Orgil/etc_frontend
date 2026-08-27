@@ -509,14 +509,33 @@ function postalAddressJsonLd() {
   };
 }
 
-export function officeTowerJsonLd(tower: Tower) {
+export function officeTowerJsonLd(
+  tower: Tower,
+  faq: readonly { q: string; a: string }[] = [],
+) {
   const pageUrl = absoluteUrl("/office");
-  const baseGraph = towerWebPageJsonLd(tower)["@graph"] as Record<string, unknown>[];
+  const baseGraph = (towerWebPageJsonLd(tower)["@graph"] as Record<string, unknown>[]).map(
+    (node) => {
+      if (node["@type"] === "WebPage") {
+        return {
+          ...node,
+          about: { "@id": `${pageUrl}#listing` },
+          mainEntity: { "@id": `${pageUrl}#listing` },
+        };
+      }
+      return node;
+    },
+  );
 
   const listing = {
     "@type": "RealEstateListing",
     "@id": `${pageUrl}#listing`,
     name: "Premium Office Spaces — Encanto Trade Center",
+    alternateName: [
+      "Grade-A Office Ulaanbaatar",
+      "Luxury Office Mongolia",
+      "Encanto Office Tower",
+    ],
     description: OFFICE_PAGE_DESCRIPTION,
     url: pageUrl,
     image: absoluteUrl(tower.heroImage),
@@ -542,9 +561,26 @@ export function officeTowerJsonLd(tower: Tower) {
     },
   };
 
+  const faqNode =
+    faq.length > 0
+      ? {
+          "@type": "FAQPage",
+          "@id": `${pageUrl}#faq`,
+          isPartOf: { "@id": `${pageUrl}#webpage` },
+          mainEntity: faq.map(({ q, a }) => ({
+            "@type": "Question",
+            name: q,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: a,
+            },
+          })),
+        }
+      : null;
+
   return {
     "@context": "https://schema.org",
-    "@graph": [...baseGraph, listing],
+    "@graph": [...baseGraph, listing, ...(faqNode ? [faqNode] : [])],
   };
 }
 
@@ -579,19 +615,53 @@ export function ballroomFaqJsonLd(
   return pageFaqJsonLd("/ballroom", faq);
 }
 
-export function ballroomTowerJsonLd(tower: Tower) {
+export function ballroomTowerJsonLd(
+  tower: Tower,
+  faq: readonly { q: string; a: string }[] = [],
+) {
   const pageUrl = absoluteUrl("/ballroom");
-  const baseGraph = towerWebPageJsonLd(tower)["@graph"] as Record<string, unknown>[];
+  const baseGraph = (towerWebPageJsonLd(tower)["@graph"] as Record<string, unknown>[]).map(
+    (node) => {
+      if (node["@type"] === "WebPage") {
+        return {
+          ...node,
+          about: { "@id": `${pageUrl}#venue` },
+          mainEntity: { "@id": `${pageUrl}#venue` },
+        };
+      }
+      return node;
+    },
+  );
 
   const venue = {
     "@type": "EventVenue",
     "@id": `${pageUrl}#venue`,
     name: "Encanto Grand Ballroom",
+    alternateName: [
+      "Encanto Event Hall Ulaanbaatar",
+      "Encanto Event Room",
+      "Event Hall Ulaanbaatar",
+      "Event Room Ulaanbaatar",
+      "Luxury Ballroom Mongolia",
+      "Ballroom Ulaanbaatar",
+    ],
     description: BALLROOM_PAGE_DESCRIPTION,
     url: pageUrl,
     image: absoluteUrl(tower.heroImage),
     address: postalAddressJsonLd(),
+    telephone: project.contactPhone,
+    email: project.contactEmail,
     maximumAttendeeCapacity: 1600,
+    knowsAbout: [
+      "Wedding receptions",
+      "Corporate conferences",
+      "Gala dinners",
+      "New Year celebrations",
+      "Year-end corporate parties",
+      "Product launches",
+      "Award ceremonies",
+      "Banquet events",
+    ],
     amenityFeature: [
       { "@type": "LocationFeatureSpecification", name: "Skyfold partition halls", value: true },
       { "@type": "LocationFeatureSpecification", name: "Bridal suite", value: true },
@@ -599,19 +669,59 @@ export function ballroomTowerJsonLd(tower: Tower) {
       { "@type": "LocationFeatureSpecification", name: "Guest parking", value: true },
       { "@type": "LocationFeatureSpecification", name: "9th floor open terrace", value: true },
     ],
-    areaServed: {
-      "@type": "City",
-      name: "Ulaanbaatar",
-      containedInPlace: {
+    containedInPlace: {
+      "@type": "Place",
+      name: SITE_NAME,
+      url: SITE_URL,
+      address: postalAddressJsonLd(),
+    },
+    areaServed: [
+      {
+        "@type": "City",
+        name: "Ulaanbaatar",
+        containedInPlace: {
+          "@type": "Country",
+          name: "Mongolia",
+        },
+      },
+      {
         "@type": "Country",
         name: "Mongolia",
+      },
+    ],
+    makesOffer: {
+      "@type": "Offer",
+      name: "Event hall & ballroom venue hire",
+      description:
+        "Luxury ballroom and event hall rental for weddings, galas, New Year parties, and corporate events in Ulaanbaatar.",
+      url: `${pageUrl}#contact`,
+      areaServed: {
+        "@type": "City",
+        name: "Ulaanbaatar",
       },
     },
   };
 
+  const faqNode =
+    faq.length > 0
+      ? {
+          "@type": "FAQPage",
+          "@id": `${pageUrl}#faq`,
+          isPartOf: { "@id": `${pageUrl}#webpage` },
+          mainEntity: faq.map(({ q, a }) => ({
+            "@type": "Question",
+            name: q,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: a,
+            },
+          })),
+        }
+      : null;
+
   return {
     "@context": "https://schema.org",
-    "@graph": [...baseGraph, venue],
+    "@graph": [...baseGraph, venue, ...(faqNode ? [faqNode] : [])],
   };
 }
 

@@ -14,9 +14,7 @@ import { getTower, towers } from "@/lib/data";
 import { officeEn } from "@/lib/i18n/translations/officeEn";
 import { ballroomEn } from "@/lib/i18n/translations/ballroomEn";
 import {
-  ballroomFaqJsonLd,
   ballroomTowerJsonLd,
-  officeFaqJsonLd,
   officeTowerJsonLd,
   towerMetadata,
   towerWebPageJsonLd,
@@ -55,8 +53,12 @@ export default async function TowerPage({
   if (data.slug === "office") {
     return (
       <>
-        <JsonLd data={officeTowerJsonLd(data)} />
-        <JsonLd data={officeFaqJsonLd(officeEn.faq)} />
+        <JsonLd
+          data={officeTowerJsonLd(
+            data,
+            officeEn.faq.map(({ q, a }) => ({ q, a })),
+          )}
+        />
         <OfficePage tower={data} others={others} />
       </>
     );
@@ -65,9 +67,9 @@ export default async function TowerPage({
   if (data.slug === "ballroom") {
     return (
       <>
-        <JsonLd data={ballroomTowerJsonLd(data)} />
         <JsonLd
-          data={ballroomFaqJsonLd(
+          data={ballroomTowerJsonLd(
+            data,
             ballroomEn.faq.items.map(({ q, a }) => ({ q, a })),
           )}
         />
