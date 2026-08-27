@@ -53,12 +53,17 @@ export const IMAGE_WIDTHS = {
   full: 2560,
 } as const;
 
-export function heroBackgroundUrl(src: string, quality = DEFAULT_IMAGE_QUALITY): string {
-  return buildImageOptimizerUrl(src, { width: IMAGE_WIDTHS.hero, quality });
+/**
+ * Direct CDN URL for CSS `background-image`.
+ * Do not use `/_next/image` here — it fails as a CSS background on Vercel.
+ */
+export function heroBackgroundUrl(src: string): string {
+  return resolveAssetUrl(src);
 }
 
-export function galleryImageUrl(src: string, quality = DEFAULT_IMAGE_QUALITY): string {
-  return buildImageOptimizerUrl(src, { width: IMAGE_WIDTHS.gallery, quality });
+/** Direct CDN URL for gallery CSS backgrounds. */
+export function galleryImageUrl(src: string): string {
+  return resolveAssetUrl(src);
 }
 
 /** True when gallery assets are served from R2/CDN. */

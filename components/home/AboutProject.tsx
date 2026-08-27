@@ -1,6 +1,6 @@
 "use client";
 
-import { assetUrl, heroBackgroundUrl } from "@/lib/image";
+import { assetUrl } from "@/lib/image";
 import { useTranslations } from "@/lib/i18n";
 import shared from "./home.shared.module.css";
 import styles from "./AboutProject.module.css";
