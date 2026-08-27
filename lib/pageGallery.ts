@@ -1,3 +1,5 @@
+import { resolveAssetUrl } from "@/lib/image";
+
 export type GallerySlide = {
   image: string;
   title: string;
@@ -30,6 +32,9 @@ function shuffleWithSeed<T>(items: T[], seed: string): T[] {
 }
 
 export function getShuffledGallerySlides(images: string[], seed: string): GallerySlide[] {
-  const slides = images.map((image) => ({ image, title: "" }));
+  const slides = images.map((image) => ({
+    image: resolveAssetUrl(image),
+    title: "",
+  }));
   return shuffleWithSeed(slides, seed);
 }

@@ -54,6 +54,18 @@ const nextConfig: NextConfig = {
     remotePatterns,
   },
 
+  async redirects() {
+    const cdnBase = process.env.NEXT_PUBLIC_GALLERY_CDN_BASE?.replace(/\/$/, "");
+    if (!cdnBase) return [];
+    return [
+      {
+        source: "/images/:path*",
+        destination: `${cdnBase}/images/:path*`,
+        permanent: true,
+      },
+    ];
+  },
+
   async headers() {
     const imageHeaders = [
       { key: "Cache-Control", value: IMAGE_CACHE_CONTROL },
@@ -72,10 +84,6 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/images/:path*",
-        headers: imageHeaders,
-      },
-      {
-        source: "/api/images/:path*",
         headers: imageHeaders,
       },
     ];

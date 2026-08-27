@@ -4,13 +4,22 @@ export const DEFAULT_IMAGE_QUALITY = 80;
 
 const GALLERY_CDN_BASE = process.env.NEXT_PUBLIC_GALLERY_CDN_BASE?.replace(/\/$/, "") ?? "";
 
-/** Resolve a site-relative /images/... path to CDN when configured. */
+/**
+ * Resolve a site-relative `/images/...` path to the R2/CDN URL when configured.
+ * R2 object keys mirror public paths: `images/renders/render-8.jpg`
+ */
 export function resolveAssetUrl(src: string): string {
-  if (/^https?:\/\//i.test(src)) return src;
+  if (!src) return src;
+  if (/^https?:\/\//i.test(src) || src.startsWith("data:")) return src;
   if (GALLERY_CDN_BASE && src.startsWith("/images/")) {
-    return `${GALLERY_CDN_BASE}/${src.slice("/images/".length)}`;
+    return `${GALLERY_CDN_BASE}${src}`;
   }
   return src;
+}
+
+/** Alias used across components for CDN-aware asset URLs. */
+export function assetUrl(src: string): string {
+  return resolveAssetUrl(src);
 }
 
 export type OptimizeImageOptions = {
@@ -20,7 +29,7 @@ export type OptimizeImageOptions = {
 
 /**
  * Build a `/_next/image` URL (AVIF/WebP via Next.js optimizer).
- * Works for local `/images/...` paths and remote CDN/API URLs.
+ * When CDN is configured, the optimizer fetches from R2 (not local disk).
  */
 export function buildImageOptimizerUrl(
   src: string,
@@ -50,4 +59,9 @@ export function heroBackgroundUrl(src: string, quality = DEFAULT_IMAGE_QUALITY):
 
 export function galleryImageUrl(src: string, quality = DEFAULT_IMAGE_QUALITY): string {
   return buildImageOptimizerUrl(src, { width: IMAGE_WIDTHS.gallery, quality });
+}
+
+/** True when gallery assets are served from R2/CDN. */
+export function isGalleryCdnEnabled(): boolean {
+  return Boolean(GALLERY_CDN_BASE);
 }

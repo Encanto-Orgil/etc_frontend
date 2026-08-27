@@ -12,14 +12,5 @@ type OptimizedImageProps = Omit<ImageProps, "src"> & {
  * <OptimizedImage src="/images/renders/render-8.jpg" alt="ETC" width={1200} height={800} />
  */
 export default function OptimizedImage({ src, alt, ...props }: OptimizedImageProps) {
-  const resolved = resolveAssetUrl(src);
-  const isRemote = /^https?:\/\//i.test(resolved);
-
-  return (
-    <Image
-      src={isRemote ? resolved : src}
-      alt={alt}
-      {...props}
-    />
-  );
+  return <Image src={resolveAssetUrl(src)} alt={alt} {...props} />;
 }

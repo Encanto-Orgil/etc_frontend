@@ -1,0 +1,5 @@
+# Gallery images are on Cloudflare R2 — do not upload to Vercel (~560 MB).
+public/images/**
+
+# Hero videos are on R2 (NEXT_PUBLIC_*_VIDEO_URL).
+public/videos/**

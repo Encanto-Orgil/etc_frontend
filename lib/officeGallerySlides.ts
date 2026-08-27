@@ -1,3 +1,4 @@
+import { resolveAssetUrl } from "@/lib/image";
 import galleryManifest from "./homeGallery.manifest.json";
 import officeGalleryManifest from "./officeGallery.manifest.json";
 import { getShuffledGallerySlides, type GallerySlide } from "./pageGallery";
@@ -8,7 +9,7 @@ const OFFICE_GALLERY_SHUFFLE_SEED = "encanto-office-gallery";
 
 export function getOfficeGallerySlides(): GallerySlide[] {
   const lobbySlides: GallerySlide[] = officeGalleryManifest.lobby.map((image) => ({
-    image,
+    image: resolveAssetUrl(image),
     title: "",
   }));
   const renderSlides = getShuffledGallerySlides(

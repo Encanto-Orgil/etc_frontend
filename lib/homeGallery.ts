@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/i18n/types";
+import { resolveAssetUrl } from "@/lib/image";
 import galleryManifest from "./homeGallery.manifest.json";
 
 export const GALLERY_FOLDERS = ["renders", "drone", "mall", "ballroom"] as const;
@@ -20,27 +21,17 @@ const CATEGORY_LABELS: Record<HomeGalleryCategory, Record<Locale, string>> = {
 
 type GalleryManifest = Record<HomeGalleryCategory, string[]>;
 
-function withCdnBase(src: string) {
-  const base = process.env.NEXT_PUBLIC_GALLERY_CDN_BASE?.replace(/\/$/, "");
-  if (!base) return src;
-  if (/^https?:\/\//i.test(src)) return src;
-  return `${base}${src.startsWith("/") ? src : `/${src}`}`;
-}
-
 /**
  * Gallery paths come from a static JSON manifest (not fs.readdir).
- * Reading public/images at runtime makes Vercel bundle ~500MB into the
- * serverless function and exceeds the 250MB limit.
- *
- * Optional: set NEXT_PUBLIC_GALLERY_CDN_BASE to an R2 public URL so images
- * are served from CDN instead of the Next.js public folder.
+ * Set NEXT_PUBLIC_GALLERY_CDN_BASE so images are served from Cloudflare R2
+ * (object keys: images/renders/..., images/drone/..., etc.).
  */
 export function getHomeGalleryGroups(locale: Locale = "en"): HomeGalleryGroup[] {
   const manifest = galleryManifest as GalleryManifest;
   const groups: HomeGalleryGroup[] = [];
 
   for (const folder of GALLERY_FOLDERS) {
-    const images = (manifest[folder] ?? []).map(withCdnBase);
+    const images = (manifest[folder] ?? []).map(resolveAssetUrl);
     if (!images.length) continue;
 
     groups.push({
