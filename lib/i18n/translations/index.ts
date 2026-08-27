@@ -1,4 +1,5 @@
-import type { Locale, NearbyPlace, Translations } from "../types";
+import type { Locale, NearbyPlace, Translations, BallroomLayoutKey, BallroomSkyfoldModeId } from "../types";
+import { resolveImagePaths } from "../../image";
 import { en, amenityImages, galleryImages } from "./en";
 import { mn } from "./mn";
 import {
@@ -60,8 +61,8 @@ export function getBallroomLayouts(locale: Locale) {
   const copy = getTranslations(locale).ballroom.capacity;
   return ballroomLayoutAssets.map((layout) => ({
     ...layout,
-    label: copy.layouts[layout.layout].label,
-    note: copy.layouts[layout.layout].note,
+    label: copy.layouts[layout.layout as BallroomLayoutKey].label,
+    note: copy.layouts[layout.layout as BallroomLayoutKey].note,
   }));
 }
 
@@ -75,8 +76,8 @@ export function getBallroomSkyfold(locale: Locale) {
     imageAlt: copy.imageAlt,
     modes: ballroomSkyfoldAssets.modes.map((mode) => ({
       ...mode,
-      label: copy.modes[mode.id].label,
-      hint: copy.modes[mode.id].hint,
+      label: copy.modes[mode.id as BallroomSkyfoldModeId].label,
+      hint: copy.modes[mode.id as BallroomSkyfoldModeId].hint,
     })),
     points: copy.points,
   };
@@ -154,7 +155,7 @@ export function getNearbyPlaces(locale: Locale): NearbyPlace[] {
     ],
   };
 
-  const images = [
+  const images = resolveImagePaths([
     "/images/nearby/sukhbaatar-square.jpg",
     "/images/nearby/national-amusement-park.jpg",
     "/images/nearby/national-stadium.jpg",
@@ -165,7 +166,7 @@ export function getNearbyPlaces(locale: Locale): NearbyPlace[] {
     "/images/drone/drone-4.jpg",
     "/images/nearby/olonlog-academy-school.jpg",
     "/images/drone/drone-2.jpg",
-  ];
+  ]);
 
   const distances = ["900 m", "500 m", "800 m", "500 m", "100 m", "700 m", "300 m", "900 m", "700 m", "300 m"];
 

@@ -1,10 +1,11 @@
 import type { Translations } from "../types";
+import { resolveImagePaths } from "../../image";
 import { ballroomEn } from "./ballroomEn";
 import { mallEn } from "./mallEn";
 import { officeEn } from "./officeEn";
 import { residenceEn } from "./residenceEn";
 
-const amenityImages = [
+const amenityImages = resolveImagePaths([
   "/images/renders/render-18.jpg",
   "/images/renders/render-25.jpg",
   "/images/renders/render-15.jpg",
@@ -15,9 +16,9 @@ const amenityImages = [
   "/images/drone/drone-2.jpg",
   "/images/renders/render-31.jpg",
   "/images/renders/render-3.jpg",
-];
+]);
 
-const galleryImages = [
+const galleryImages = resolveImagePaths([
   { image: "/images/renders/render-8.jpg", tall: true },
   { image: "/images/renders/render-35.jpg" },
   { image: "/images/renders/render-18.jpg" },
@@ -26,7 +27,7 @@ const galleryImages = [
   { image: "/images/renders/render-25.jpg" },
   { image: "/images/drone/drone-3.jpg", tall: true },
   { image: "/images/drone/drone-1.jpg" },
-];
+]);
 
 export const en: Translations = {
   nav: {

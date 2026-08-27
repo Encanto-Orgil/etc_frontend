@@ -1,6 +1,8 @@
+import { assetUrl } from "./image";
+
 import type { PublicBallroomDocument } from "./ballroomManagement";
 
-const LOGO_SRC = "/images/encanto-logo.png";
+const LOGO_SRC = assetUrl("/images/encanto-logo.png");
 const BRAND_NAME = "Encanto Trade Center";
 
 function escapeHtml(value: string | number) {

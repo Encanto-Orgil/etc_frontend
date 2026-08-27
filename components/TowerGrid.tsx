@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRightOutlined } from "@ant-design/icons";
+import { heroBackgroundUrl } from "@/lib/image";
 import { towers } from "@/lib/data";
 import styles from "./TowerGrid.module.css";
 
@@ -20,7 +21,7 @@ export default function TowerGrid() {
           <Link href={`/${t.slug}`} className={styles.card}>
             <div
               className={styles.img}
-              style={{ backgroundImage: `url(${t.heroImage})` }}
+              style={{ backgroundImage: `url(${heroBackgroundUrl(t.heroImage)})` }}
             />
             <div className={styles.shade} />
             <div className={styles.body}>

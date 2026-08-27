@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { project, towers, type Tower } from "@/lib/data";
+import { assetUrl } from "@/lib/image";
 import { SITE_SECTION_NAV } from "@/lib/site-nav";
 
 export const SITE_NAME = project.name;
@@ -7,7 +8,7 @@ export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
   "https://encantotrade.mn";
 
-const DEFAULT_OG_IMAGE = "/images/renders/render-8.jpg";
+const DEFAULT_OG_IMAGE = assetUrl("/images/renders/render-8.jpg");
 
 const DEFAULT_KEYWORDS = [
   "Encanto Trade Center",
@@ -93,7 +94,13 @@ export function buildPageMetadata(input: PageMetaInput): Metadata {
     keywords,
     noIndex = false,
     absoluteTitle = false,
+    image,
   } = input;
+
+  const metaInput: PageMetaInput = {
+    ...input,
+    image: image ? assetUrl(image) : undefined,
+  };
 
   return {
     title: absoluteTitle ? { absolute: title } : title,
@@ -102,8 +109,8 @@ export function buildPageMetadata(input: PageMetaInput): Metadata {
     alternates: {
       canonical: canonicalUrl(path),
     },
-    openGraph: buildOpenGraph(input),
-    twitter: buildTwitter(input),
+    openGraph: buildOpenGraph(metaInput),
+    twitter: buildTwitter(metaInput),
     robots: noIndex
       ? { index: false, follow: false }
       : { index: true, follow: true },

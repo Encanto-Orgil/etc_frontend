@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import OptimizedImage from "@/components/OptimizedImage";
 import {
   mallIntro,
   mallLayout,
@@ -18,7 +18,7 @@ export function MallIntroSection() {
       <div className={styles.inner}>
         <div className={styles.split}>
           <div className={styles.splitImage} data-mall-reveal>
-            <Image src={mallIntro.image} alt={copy.imageAlt} width={900} height={700} />
+            <OptimizedImage src={mallIntro.image} alt={copy.imageAlt} width={900} height={700} />
           </div>
           <div data-mall-reveal>
             <p className={styles.eyebrow}>{copy.eyebrow}</p>
@@ -50,7 +50,7 @@ export function MallTenantSection() {
       <div className={styles.inner}>
         <div className={styles.split}>
           <div className={styles.splitImage} data-mall-reveal>
-            <Image src={mallTenantComposition.image} alt={copy.imageAlt} width={900} height={700} />
+            <OptimizedImage src={mallTenantComposition.image} alt={copy.imageAlt} width={900} height={700} />
           </div>
           <div data-mall-reveal>
             <p className={styles.eyebrow}>{copy.eyebrow}</p>
@@ -91,7 +91,7 @@ export function MallLayoutSection() {
         </ul>
         <div className={styles.diningGrid}>
           {mallLayout.images.map((src) => (
-            <Image key={src} src={src} alt={copy.imageAlt} width={400} height={300} data-mall-reveal />
+            <OptimizedImage key={src} src={src} alt={copy.imageAlt} width={400} height={300} data-mall-reveal />
           ))}
         </div>
       </div>
@@ -136,7 +136,7 @@ export function MallLocationSection() {
             </div>
           </div>
           <div className={styles.splitImage} data-mall-reveal>
-            <Image src={mallLocation.image} alt={copy.imageAlt} width={900} height={700} />
+            <OptimizedImage src={mallLocation.image} alt={copy.imageAlt} width={900} height={700} />
           </div>
         </div>
       </div>

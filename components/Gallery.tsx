@@ -2,6 +2,7 @@
 
 import { Image } from "antd";
 import { motion } from "framer-motion";
+import { assetUrl } from "@/lib/image";
 import type { GalleryItem } from "@/lib/data";
 import styles from "./Gallery.module.css";
 
@@ -19,7 +20,7 @@ export default function Gallery({ items }: { items: GalleryItem[] }) {
             transition={{ duration: 0.7, delay: (i % 3) * 0.08, ease: [0.22, 1, 0.36, 1] }}
           >
             <Image
-              src={g.image}
+              src={assetUrl(g.image)}
               alt={g.caption || "Encanto Trade Center"}
               className={styles.img}
               rootClassName={styles.imgRoot}

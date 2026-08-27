@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import Link from "next/link";
+import { heroBackgroundUrl } from "@/lib/image";
 import { project } from "@/lib/data";
 import styles from "./Hero.module.css";
 
@@ -26,7 +27,7 @@ export default function Hero() {
         style={{
           scale,
           y,
-          backgroundImage: `url(${project.heroImage})`,
+          backgroundImage: `url(${heroBackgroundUrl(project.heroImage)})`,
         }}
       />
       <motion.div className={styles.overlay} style={{ opacity: overlayOpacity }} />

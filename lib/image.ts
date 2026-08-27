@@ -65,3 +65,21 @@ export function galleryImageUrl(src: string, quality = DEFAULT_IMAGE_QUALITY): s
 export function isGalleryCdnEnabled(): boolean {
   return Boolean(GALLERY_CDN_BASE);
 }
+
+/** Recursively resolve `/images/...` strings in static content objects (lib data). */
+export function resolveImagePaths<T>(value: T): T {
+  if (typeof value === "string") {
+    return (value.startsWith("/images/") ? resolveAssetUrl(value) : value) as T;
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => resolveImagePaths(item)) as T;
+  }
+  if (value !== null && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [key, nested] of Object.entries(value)) {
+      out[key] = resolveImagePaths(nested);
+    }
+    return out as T;
+  }
+  return value;
+}

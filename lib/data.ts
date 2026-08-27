@@ -2,6 +2,8 @@ export type Stat = { label: string; value: string; unit?: string };
 export type Feature = { title: string; description: string; image: string };
 export type GalleryItem = { image: string; caption?: string };
 
+import { resolveImagePaths } from "./image";
+
 export type Tower = {
   kind: "office" | "mall" | "ballroom" | "apartment";
   slug: string;
@@ -18,7 +20,7 @@ export type Tower = {
   gallery: GalleryItem[];
 };
 
-export const project = {
+export const project = resolveImagePaths({
   name: "Encanto Trade Center",
   shortName: "ETC",
   tagline: "Монголын хамгийн өндөр шилэн фасадтай металл бүтээц",
@@ -45,9 +47,9 @@ export const project = {
   messengerUrl: "https://www.messenger.com/t/1030148240192521",
   contactAddress:
     "Улаанбаатар хот, Баянзүрх дүүрэг, 26-р хороо, Их Монгол Улсын гудамж, Энканто оффис 4 давхар",
-};
+});
 
-export const towers: Tower[] = [
+export const towers: Tower[] = resolveImagePaths([
   {
     kind: "office",
     slug: "office",
@@ -240,9 +242,9 @@ export const towers: Tower[] = [
       { image: "/images/renders/render-8.jpg" },
     ],
   },
-];
+]);
 
-export const projectGallery: GalleryItem[] = [
+export const projectGallery: GalleryItem[] = resolveImagePaths([
   { image: "/images/renders/render-8.jpg", caption: "Цогцолборын ерөнхий харагдац" },
   { image: "/images/renders/render-35.jpg", caption: "Бүрэнхий үеийн skyline" },
   { image: "/images/renders/render-40.jpg", caption: "Central Mall — гол орц" },
@@ -251,16 +253,16 @@ export const projectGallery: GalleryItem[] = [
   { image: "/images/renders/render-5.jpg", caption: "Барилгын фасад" },
   { image: "/images/renders/render-31.jpg", caption: "Гудамжны түвшний орчин" },
   { image: "/images/renders/render-18.jpg", caption: "Дотоод орчин" },
-];
+]);
 
-export const droneGallery: GalleryItem[] = [
+export const droneGallery: GalleryItem[] = resolveImagePaths([
   { image: "/images/drone/drone-3.jpg", caption: "Бодит барилгын явц" },
   { image: "/images/drone/drone-1.jpg", caption: "Агаараас харах төсөл" },
   { image: "/images/drone/drone-2.jpg", caption: "Хотын төвтэй холбоо" },
   { image: "/images/drone/drone-4.jpg", caption: "Барилгын талбай" },
   { image: "/images/drone/drone-5.jpg", caption: "Орчны байршил" },
   { image: "/images/drone/drone-6.jpg", caption: "Панорам агаарын зураг" },
-];
+]);
 
 export function getTower(slug: string): Tower | undefined {
   return towers.find((t) => t.slug === slug);

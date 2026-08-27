@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { OFFICE_VIDEO_SRC } from "@/lib/media";
+import { heroBackgroundUrl } from "@/lib/image";
 import { useTranslations } from "@/lib/i18n";
 import styles from "./OfficePresentationVideo.module.css";
 
@@ -61,7 +62,7 @@ export default function OfficePresentationVideo() {
 
   return (
     <section className={styles.section} id="video" aria-label="Encanto Trade Center project film">
-      <div className={styles.bg} style={{ backgroundImage: "url(/images/renders/render-8.jpg)" }} />
+      <div className={styles.bg} style={{ backgroundImage: `url(${heroBackgroundUrl("/images/renders/render-8.jpg")})` }} />
       <div className={styles.overlay} />
 
       <div className={styles.inner}>

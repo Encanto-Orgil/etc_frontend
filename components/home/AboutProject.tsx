@@ -1,10 +1,11 @@
 "use client";
 
+import { assetUrl, heroBackgroundUrl } from "@/lib/image";
 import { useTranslations } from "@/lib/i18n";
 import shared from "./home.shared.module.css";
 import styles from "./AboutProject.module.css";
 
-const aboutImage = "/images/renders/render-8.jpg";
+const aboutImage = assetUrl("/images/renders/render-8.jpg");
 
 export default function AboutProject() {
   const about = useTranslations().home.about;

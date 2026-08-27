@@ -66,6 +66,7 @@ import {
   updatePropertyTenantWithLogo,
   updatePropertyUnit,
 } from "@/lib/propertyManagement";
+import { assetUrl } from "@/lib/image";
 import type {
   LeaseBillingCycle,
   LeaseContract,
@@ -899,7 +900,7 @@ export default function PropertyManagement({ view }: { view: PropertyManagementV
               <img
                 alt={building.name}
                 className={styles.buildingImage}
-                src={building.image || "/images/renders/render-41.jpg"}
+                src={building.image || assetUrl("/images/renders/render-41.jpg")}
                 style={{ objectPosition: BUILDING_IMAGE_POSITIONS[building.kind] ?? "50% 50%" }}
               />
               <Tag className={styles.buildingTag}>{building.is_active ? "Active" : "Inactive"}</Tag>

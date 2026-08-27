@@ -1,7 +1,8 @@
 "use client";
 
-import Image from "next/image";
+import OptimizedImage from "@/components/OptimizedImage";
 import Link from "next/link";
+import { heroBackgroundUrl } from "@/lib/image";
 import {
   apartmentCta,
   apartmentEcosystem,
@@ -81,7 +82,7 @@ export function ApartmentInteriorSection() {
             const text = copy.interiors[index];
             return (
               <figure key={item.title} className={styles.interiorCard} data-apartment-reveal>
-                <Image src={item.image} alt={text?.title ?? item.title} width={640} height={480} />
+                <OptimizedImage src={item.image} alt={text?.title ?? item.title} width={640} height={480} />
                 <div>
                   <h3>{text?.title ?? item.title}</h3>
                   <span>{text?.note ?? item.note}</span>
@@ -223,7 +224,7 @@ export function ApartmentGallerySection() {
               className={`${styles.galleryItem} ${item.wide ? styles.galleryWide : ""} ${item.tall ? styles.galleryTall : ""}`}
               data-apartment-reveal
             >
-              <Image src={item.image} alt={copy.gallery[index]?.title ?? item.title} width={800} height={600} />
+              <OptimizedImage src={item.image} alt={copy.gallery[index]?.title ?? item.title} width={800} height={600} />
               <span>{copy.gallery[index]?.title ?? item.title}</span>
             </figure>
           ))}
@@ -284,7 +285,7 @@ export function ApartmentCtaSection() {
     <section className={styles.ctaSection} id="cta">
       <div
         className={styles.ctaBg}
-        style={{ backgroundImage: "url(/images/renders/render-35.jpg)" }}
+        style={{ backgroundImage: `url(${heroBackgroundUrl("/images/renders/render-35.jpg")})` }}
         data-apartment-parallax
       />
       <div className={styles.ctaOverlay} />

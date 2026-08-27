@@ -1,3 +1,5 @@
+import { resolveImagePaths } from "./image";
+
 export const brandStatement = {
   headline: "Not Just Another Building.",
   body: "A destination where business,\nlifestyle and investment come together.",
@@ -8,11 +10,11 @@ export const brandStatement = {
   ],
 };
 
-export const aboutProject = {
+export const aboutProject = resolveImagePaths({
   image: "/images/renders/render-8.jpg",
   title: "Encanto Trade Center is designed to redefine urban living and premium business.",
   body: "Featuring luxury residences, Grade-A offices, premium retail, restaurants, and lifestyle amenities.",
-};
+});
 
 export type WhyEncantoIcon = "landmark" | "office" | "residence" | "investment";
 
@@ -50,7 +52,7 @@ export const whyEncanto: {
   },
 ];
 
-export const amenities = [
+export const amenities = resolveImagePaths([
   { title: "Luxury Lobby", image: "/images/renders/render-18.jpg" },
   { title: "Sky Garden", image: "/images/renders/render-25.jpg" },
   { title: "Fitness", image: "/images/renders/render-15.jpg" },
@@ -61,9 +63,9 @@ export const amenities = [
   { title: "Parking", image: "/images/drone/drone-2.jpg" },
   { title: "24/7 Security", image: "/images/renders/render-31.jpg" },
   { title: "Smart Access", image: "/images/renders/render-3.jpg" },
-];
+]);
 
-export const floorPlanTabs = [
+export const floorPlanTabs = resolveImagePaths([
   {
     id: "residential",
     label: "Residential",
@@ -82,9 +84,9 @@ export const floorPlanTabs = [
     image: "/images/renders/render-40.jpg",
     pdf: "#",
   },
-];
+]);
 
-export const galleryItems = [
+export const galleryItems = resolveImagePaths([
   { title: "Render", image: "/images/renders/render-8.jpg", tall: true },
   { title: "Night View", image: "/images/renders/render-35.jpg" },
   { title: "Lobby", image: "/images/renders/render-18.jpg" },
@@ -93,7 +95,7 @@ export const galleryItems = [
   { title: "Sky Lounge", image: "/images/renders/render-25.jpg" },
   { title: "Drone", image: "/images/drone/drone-3.jpg", tall: true },
   { title: "360 View", image: "/images/drone/drone-1.jpg" },
-];
+]);
 
 export type NearbyPlace = {
   name: string;
@@ -102,7 +104,7 @@ export type NearbyPlace = {
   imageAlt: string;
 };
 
-export const nearbyPlaces: NearbyPlace[] = [
+export const nearbyPlaces: NearbyPlace[] = resolveImagePaths([
   {
     name: "Sukhbaatar Square",
     distance: "900 m",
@@ -163,7 +165,7 @@ export const nearbyPlaces: NearbyPlace[] = [
     image: "/images/drone/drone-2.jpg",
     imageAlt: "Aerial view near School No. 130",
   },
-];
+]);
 
 export type ConstructionMilestone = {
   period: string;
@@ -215,7 +217,7 @@ export type NewsItem = {
   excerpt?: string;
 };
 
-export const newsItems: NewsItem[] = [
+export const newsItems: NewsItem[] = resolveImagePaths([
   {
     category: "Construction Update",
     title: "Encanto Trade Center structural progress reaches new milestone",
@@ -242,4 +244,4 @@ export const newsItems: NewsItem[] = [
     date: "Dec 2025",
     image: "/images/ballroom/ballroom-1.jpg",
   },
-];
+]);

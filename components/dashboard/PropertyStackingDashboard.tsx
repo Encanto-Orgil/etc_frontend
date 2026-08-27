@@ -4,6 +4,7 @@ import { BankOutlined, HomeOutlined, ReloadOutlined, ShopOutlined } from "@ant-d
 import { Button, Card, Empty, Segmented, Tag } from "antd";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { assetUrl, resolveImagePaths } from "@/lib/image";
 import PropertyStackingDiagram from "@/components/dashboard/PropertyStackingDiagram";
 import type {
   PropertyBuilding,
@@ -25,11 +26,11 @@ const BUILDING_IMAGE_POSITIONS: Record<string, string> = {
   apartment: "62% 30%",
 };
 
-const BUILDING_IMAGE_FALLBACKS: Record<PropertyBuilding["kind"], string> = {
+const BUILDING_IMAGE_FALLBACKS = resolveImagePaths({
   office: "/images/hero/office.webp",
   mall: "/images/hero/mall-day.webp",
   apartment: "/images/hero/residence-day.webp",
-};
+}) as Record<PropertyBuilding["kind"], string>;
 
 type PropertyStackingDashboardProps = {
   buildings: PropertyBuilding[];
@@ -148,7 +149,7 @@ export default function PropertyStackingDashboard({
             >
               <div className={styles.buildingThumb}>
                 <img
-                  src={building.image || BUILDING_IMAGE_FALLBACKS[building.kind] || "/images/hero/home.webp"}
+                  src={building.image || BUILDING_IMAGE_FALLBACKS[building.kind] || assetUrl("/images/hero/home.webp")}
                   alt={building.name}
                   style={{ objectPosition: BUILDING_IMAGE_POSITIONS[building.kind] ?? "50% 50%" }}
                 />

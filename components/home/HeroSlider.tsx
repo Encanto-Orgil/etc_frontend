@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { heroBackgroundUrl } from "@/lib/image";
 import { useTranslations } from "@/lib/i18n";
 import styles from "./HeroSlider.module.css";
 
-const slideImage = "/images/renders/render-34.jpg";
+const slideImage = heroBackgroundUrl("/images/renders/render-34.jpg");
 
 export default function HeroSlider() {
   const t = useTranslations();

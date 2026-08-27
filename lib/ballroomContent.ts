@@ -1,6 +1,8 @@
+import { resolveImagePaths } from "./image";
+
 import { ballroomCapacitySetups, ballroomDimensions } from "./ballroomBrochure";
 
-export const ballroomHero = {
+export const ballroomHero = resolveImagePaths({
   eyebrow: "Encanto Grand Ballroom",
   headline: "WHERE UNFORGETTABLE MOMENTS BEGIN",
   title: "Encanto Grand Ballroom",
@@ -9,13 +11,13 @@ export const ballroomHero = {
   image: "/images/ballroom/ballroom-5.jpg",
   primaryCta: { label: "Explore Venue", href: "#experience" },
   secondaryCta: { label: "Book a Tour", href: "#contact" },
-};
+});
 
-export const ballroomExperience = {
+export const ballroomExperience = resolveImagePaths({
   image: "/images/ballroom/ballroom-5.jpg",
   title: "Crafted for Extraordinary Events",
   body: "Whether you are hosting an elegant wedding, an international conference, or a prestigious gala dinner, Encanto Grand Ballroom delivers an exceptional experience through timeless design, advanced technology, and impeccable service.",
-};
+});
 
 export type BallroomHighlightIcon =
   | "ballroom"
@@ -120,7 +122,7 @@ export const ballroomEventTypes: {
   title: string;
   layout: string;
   image: string;
-}[] = [
+}[] = resolveImagePaths([
   {
     icon: "wedding",
     title: "Wedding Reception",
@@ -169,10 +171,10 @@ export const ballroomEventTypes: {
     layout: "Cocktail",
     image: "/images/ballroom/ballroom-22.jpg",
   },
-];
+]);
 
 /** Real capacities from project brochure data. */
-export const ballroomLayouts = [
+export const ballroomLayouts = resolveImagePaths([
   {
     layout: "Banquet",
     capacity: ballroomCapacitySetups.find((r) => r.setup.startsWith("Banquet (10"))?.capacity ?? "800",
@@ -203,7 +205,7 @@ export const ballroomLayouts = [
     note: "Executive meetings",
     eventTypes: ["Board meetings", "Workshops"],
   },
-] as const;
+]);
 
 export type BallroomGalleryImage = {
   src: string;
@@ -227,7 +229,7 @@ export type BallroomGalleryCategory = {
   images: BallroomGalleryImage[];
 };
 
-export const ballroomGalleryCategories: BallroomGalleryCategory[] = [
+export const ballroomGalleryCategories: BallroomGalleryCategory[] = resolveImagePaths([
   {
     id: "lobby",
     label: "Lobby",
@@ -292,12 +294,12 @@ export const ballroomGalleryCategories: BallroomGalleryCategory[] = [
       { src: "/images/ballroom/ballroom-22.jpg", alt: "VIP lounge adjacent facilities", caption: "VIP Facilities" },
     ],
   },
-];
+]);
 
-export const ballroomBeforeAfter = {
+export const ballroomBeforeAfter = resolveImagePaths({
   before: { label: "Empty Hall", image: "/images/ballroom/ballroom-12.jpg" },
   after: { label: "Wedding Reception", image: "/images/ballroom/ballroom-1.jpg" },
-};
+});
 
 export const ballroomFlexibleUses = [
   "Weddings",
@@ -307,11 +309,11 @@ export const ballroomFlexibleUses = [
   "Product Launches",
 ];
 
-export const ballroomSignature = {
+export const ballroomSignature = resolveImagePaths({
   title: "Every Celebration Deserves a Grand Stage",
   body: "Elegant design, exceptional service, and unforgettable experiences come together at Encanto Grand Ballroom.",
   image: "/images/ballroom/ballroom-5.jpg",
-};
+});
 
 export const ballroomTestimonials = [
   {
@@ -354,7 +356,7 @@ export const ballroomContact = {
   footer: "Extraordinary Events Begin at Encanto Grand Ballroom",
 };
 
-export const ballroomThemes = {
+export const ballroomThemes = resolveImagePaths({
   wedding: {
     label: "Wedding",
     accent: "#D4AF37",
@@ -379,7 +381,7 @@ export const ballroomThemes = {
     image: "/images/ballroom/ballroom-8.jpg",
     glow: "rgba(107, 140, 174, 0.18)",
   },
-} as const;
+});
 
 export type BallroomThemeKey = keyof typeof ballroomThemes;
 

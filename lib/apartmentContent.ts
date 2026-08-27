@@ -1,9 +1,11 @@
-export const apartmentHero = {
+import { resolveImagePaths } from "./image";
+
+export const apartmentHero = resolveImagePaths({
   eyebrow: "Encanto Trade Center",
   headline: "LIVE ABOVE THE CITY",
   title: "Encanto Trade Center - Residence",
   image: "/images/drone/drone-6.jpg",
-};
+});
 
 export const apartmentConcept = {
   title: "A New Standard of Vertical Living",
@@ -171,13 +173,13 @@ export const apartmentStackingIntro = {
     "Navigate floors 5–34 to discover residence availability, unit sizes, and premium views.",
 };
 
-export const apartmentInteriors = [
+export const apartmentInteriors = resolveImagePaths([
   { title: "Living Room", image: "/images/renders/render-20.jpg", note: "City view" },
   { title: "Bedroom", image: "/images/renders/render-15.jpg", note: "Sunset light" },
   { title: "Kitchen", image: "/images/renders/render-25.jpg", note: "Modern luxury" },
   { title: "Bathroom", image: "/images/renders/render-12.jpg", note: "Spa style" },
   { title: "Balcony", image: "/images/renders/render-35.jpg", note: "Skyline view" },
-];
+]);
 
 export type ApartmentSmartIcon = "control" | "climate" | "audio" | "windows" | "power";
 
@@ -218,7 +220,7 @@ export const apartmentInvestment = {
   points: ["High rental demand", "Central integrated ecosystem", "Premium resale value", "Limited unit supply"],
 };
 
-export const apartmentFloorPlanTabs = [
+export const apartmentFloorPlanTabs = resolveImagePaths([
   {
     id: "a",
     label: "A загварын айл",
@@ -231,9 +233,9 @@ export const apartmentFloorPlanTabs = [
     image: "/images/residence/floor-plan-b.png",
     orientations: ["Урагшаа", "Хойшоо харууцтай"],
   },
-];
+]);
 
-export const apartmentGallery = [
+export const apartmentGallery = resolveImagePaths([
   { title: "Night Skyline Balcony", image: "/images/renders/render-35.jpg", wide: true },
   { title: "Living Room", image: "/images/renders/render-20.jpg" },
   { title: "Lobby", image: "/images/renders/render-18.jpg" },
@@ -241,7 +243,7 @@ export const apartmentGallery = [
   { title: "Rooftop Sky Lounge", image: "/images/renders/render-25.jpg" },
   { title: "Building Exterior", image: "/images/renders/render-8.jpg" },
   { title: "Sunrise View", image: "/images/drone/drone-1.jpg" },
-];
+]);
 
 export const apartmentWhy = [
   "Highest residential tower in the project",

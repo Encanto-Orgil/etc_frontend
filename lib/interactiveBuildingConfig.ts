@@ -1,3 +1,5 @@
+import { resolveImagePaths } from "./image";
+
 /**
  * Interactive Building — image + polygon zones.
  *
@@ -41,10 +43,10 @@ export type BuildingDestination = {
   };
 };
 
-export const interactiveBuilding = {
+export const interactiveBuilding = resolveImagePaths({
   image: "/images/renders/render-41.jpg",
   imageAlt: "Exterior render of Encanto Trade Center",
-};
+});
 
 export const buildingDestinations: BuildingDestination[] = [
   {

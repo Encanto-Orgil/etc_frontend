@@ -1,3 +1,5 @@
+import { resolveImagePaths } from "./image";
+
 import type { StackingSummary, TowerKind } from "./stacking";
 
 export type StackingTowerMeta = {
@@ -9,7 +11,7 @@ export type StackingTowerMeta = {
   accent: string;
 };
 
-export const STACKING_TOWER_META: Record<TowerKind, StackingTowerMeta> = {
+export const STACKING_TOWER_META: Record<TowerKind, StackingTowerMeta> = resolveImagePaths({
   office: {
     kind: "office",
     title: "Office Tower",
@@ -34,7 +36,7 @@ export const STACKING_TOWER_META: Record<TowerKind, StackingTowerMeta> = {
     image: "/images/renders/render-20.jpg",
     accent: "#1e3a5f",
   },
-};
+});
 
 export type StackingInsights = {
   occupancy: number;

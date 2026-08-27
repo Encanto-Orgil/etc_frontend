@@ -1,11 +1,13 @@
-export const mallIntro = {
+import { resolveImagePaths } from "./image";
+
+export const mallIntro = resolveImagePaths({
   eyebrow: "Integrated Retail & Lifestyle",
   title: "A Unified Urban Destination",
   body: "Encanto Trade Center Mall is strategically located in one of the city's most valuable districts, directly connected via bridge to Encanto Mall, Orgil Chain Supermarket, and Encanto Sport Complex. The project integrates retail, dining, sports, and daily services into a unified environment designed to support continuous urban activity.",
   image: "/images/mall/integrated-retail-lifestyle.png",
-};
+});
 
-export const mallScale = {
+export const mallScale = resolveImagePaths({
   eyebrow: "Project Scale & Connectivity",
   title: "Built for Sustained Footfall",
   body: "The scale and integration of the project create a strong foundation for sustained customer flow and continuous commercial activity.",
@@ -15,9 +17,9 @@ export const mallScale = {
     { value: "400", label: "Dedicated parking spaces" },
   ],
   image: "/images/mall/mall-8.jpg",
-};
+});
 
-export const mallTenantComposition = {
+export const mallTenantComposition = resolveImagePaths({
   eyebrow: "Tenant Composition",
   title: "Well-Structured Tenant Mix",
   body: "The mall is designed with a balanced mix of international and local brands, ensuring synergy across all business categories.",
@@ -33,9 +35,9 @@ export const mallTenantComposition = {
     "Improved sales performance",
   ],
   image: "/images/mall/mall-7.jpg",
-};
+});
 
-export const mallLayout = {
+export const mallLayout = resolveImagePaths({
   eyebrow: "Layout & Environment",
   title: "Efficient Layout & Modern Environment",
   body: "The layout is designed to optimize customer circulation and maximize usability.",
@@ -49,9 +51,9 @@ export const mallLayout = {
     "/images/mall/mall-9.jpg",
     "/images/mall/mall-15.jpg",
   ],
-};
+});
 
-export const mallLocation = {
+export const mallLocation = resolveImagePaths({
   eyebrow: "Location & Accessibility",
   title: "Prime District Connectivity",
   body: "The connectivity between retail, sports, and daily services creates a dynamic environment with consistent customer activity.",
@@ -67,7 +69,7 @@ export const mallLocation = {
   ],
   address: "Bayanzurkh District, 26th Khoroo, Encanto Town, Ulaanbaatar, Mongolia",
   image: "/images/mall/mall-6.jpg",
-};
+});
 
 export const mallAdvantages = {
   eyebrow: "Key Advantages",

@@ -1,4 +1,6 @@
-export const OFFICE_FACADE_IMAGE = "/images/office/office-facade.png";
+import { assetUrl } from "./image";
+
+export const OFFICE_FACADE_IMAGE = assetUrl("/images/office/office-facade.png");
 
 export const FACADE_VIEWBOX = { width: 712, height: 1024 } as const;
 

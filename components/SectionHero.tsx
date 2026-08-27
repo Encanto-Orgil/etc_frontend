@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { heroBackgroundUrl } from "@/lib/image";
 import styles from "./SectionHero.module.css";
 
 export default function SectionHero({
@@ -29,7 +30,7 @@ export default function SectionHero({
     <section ref={ref} className={styles.hero}>
       <motion.div
         className={styles.bg}
-        style={{ scale, y, backgroundImage: `url(${image})` }}
+        style={{ scale, y, backgroundImage: `url(${heroBackgroundUrl(image)})` }}
       />
       <div className={styles.overlay} />
       <motion.div

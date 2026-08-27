@@ -1,6 +1,7 @@
 "use client";
 
 import { Collapse } from "antd";
+import { heroBackgroundUrl } from "@/lib/image";
 import styles from "./HomeFaq.module.css";
 
 const items = [
@@ -30,7 +31,11 @@ const items = [
   },
 ];
 
-export default function HomeFaq({ image = "/images/renders/render-3.jpg" }: { image?: string }) {
+export default function HomeFaq({
+  image = heroBackgroundUrl("/images/renders/render-3.jpg"),
+}: {
+  image?: string;
+}) {
   return (
     <section className={styles.section} id="faq">
       <div className={styles.bg} style={{ backgroundImage: `url(${image})` }} />

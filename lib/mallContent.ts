@@ -1,4 +1,6 @@
-export const mallHero = {
+import { resolveImagePaths } from "./image";
+
+export const mallHero = resolveImagePaths({
   eyebrow: "An Integrated Retail & Service Complex",
   headline: "THE CITY'S NEW LIFESTYLE DESTINATION",
   title: "Encanto Trade Center Mall",
@@ -8,7 +10,7 @@ export const mallHero = {
   primaryCta: { label: "Explore Mall", href: "#intro" },
   secondaryCta: { label: "Floor Plan", href: "#floor-plan" },
   tertiaryCta: { label: "Contact", href: "#contact" },
-};
+});
 
 export type MallHighlightIcon =
   | "scale"
@@ -68,7 +70,7 @@ export const mallFloorPlanIntro = {
   lead: "Leasing floor plans for the mall's main retail levels — select a floor to view layout and zones.",
 };
 
-export const mallFloorPlanTabs = [
+export const mallFloorPlanTabs = resolveImagePaths([
   {
     id: "l1",
     label: "1F",
@@ -101,7 +103,7 @@ export const mallFloorPlanTabs = [
     zones: ["Cinema", "Events", "Family zones"],
     image: "/images/mall/floorplan/floorplan-04.png",
   },
-];
+]);
 
 export const mallFaq = {
   eyebrow: "FAQ",

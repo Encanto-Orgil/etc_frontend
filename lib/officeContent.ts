@@ -1,17 +1,19 @@
-export const officeHero = {
+import { resolveImagePaths } from "./image";
+
+export const officeHero = resolveImagePaths({
   image: "/images/drone/drone-6.jpg",
-};
+});
 
 export const officeDownloads = {
   brochure: "/downloads/etc-office-brochure.pdf",
   floorplan: "/downloads/etc-office-floorplan.pdf",
 };
 
-export const officeBusinessIntro = {
+export const officeBusinessIntro = resolveImagePaths({
   image: "/images/renders/render-3.jpg",
   title: "Built for Modern Business",
   body: "Whether you're a growing startup or an established enterprise, Encanto Trade Center provides premium office environments designed to elevate productivity, collaboration, and corporate identity.",
-};
+});
 
 export const officeVideoSection = {
   eyebrow: "Project Film",
@@ -109,7 +111,7 @@ export type OfficeAmenity = {
   image: string;
 };
 
-export const officeAmenities: OfficeAmenity[] = [
+export const officeAmenities: OfficeAmenity[] = resolveImagePaths([
   {
     title: "Luxury Lobby",
     description: "Double-height arrival with concierge service and refined finishes.",
@@ -150,16 +152,16 @@ export const officeAmenities: OfficeAmenity[] = [
     description: "1,500 spaces with dedicated office tenant allocation.",
     image: "/images/drone/drone-2.jpg",
   },
-];
+]);
 
-export const officeWhySection = {
+export const officeWhySection = resolveImagePaths({
   eyebrow: "Why Businesses Choose Encanto",
   title: "A Tower Built for Leaders",
   lead: "More than an address — Encanto Trade Center positions your organization at the center of Ulaanbaatar's most connected business district.",
   featuresTitle: "Engineered for Excellence",
   image: "/images/renders/render-8.jpg",
   imageAlt: "Encanto Trade Center exterior at dusk",
-};
+});
 
 export type OfficeWhyReasonIcon = "prestige" | "location" | "ecosystem" | "infrastructure";
 
@@ -261,7 +263,7 @@ export const officeNearby = [
   { name: "Business District", time: "5 min" },
 ];
 
-export const officeGallery = [
+export const officeGallery = resolveImagePaths([
   { title: "Office Interior", image: "/images/renders/render-3.jpg", wide: true },
   { title: "Lobby", image: "/images/renders/render-18.jpg" },
   { title: "Meeting Room", image: "/images/renders/render-12.jpg" },
@@ -269,7 +271,7 @@ export const officeGallery = [
   { title: "Business Lounge", image: "/images/renders/render-15.jpg" },
   { title: "Building Exterior", image: "/images/renders/render-8.jpg", tall: true },
   { title: "Night View", image: "/images/renders/render-35.jpg" },
-];
+]);
 
 export const officeFaq = [
   {
@@ -298,7 +300,7 @@ export const officeFaq = [
   },
 ];
 
-export const officeCta = {
+export const officeCta = resolveImagePaths({
   eyebrow: "Get Started",
   title: "Ready to Elevate Your Business?",
   body: "Schedule a private presentation with our sales consultants and explore Grade-A office spaces tailored to your organization.",
@@ -311,7 +313,7 @@ export const officeCta = {
   primary: { label: "Book a Tour", href: "#contact" },
   secondary: { label: "Contact Sales", href: "#contact" },
   tertiary: { label: "Explore Floor Plans", href: "#stacking-plan" },
-};
+});
 
 export const officeStackingIntro = {
   eyebrow: "Interactive Stacking Plan",

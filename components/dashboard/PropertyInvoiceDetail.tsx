@@ -15,14 +15,13 @@ import {
   type LeaseRentScheduleLine,
   type LeaseRentScheduleStatus,
 } from "@/lib/propertyManagement";
+import {
+  INVOICE_BRAND_NAME,
+  INVOICE_LOGO_SRC,
+  INVOICE_STATUS_COLORS,
+  INVOICE_STATUS_LABELS,
+} from "@/lib/rentInvoiceDocument";
 import styles from "./PropertyManagement.module.css";
-
-const INVOICE_STATUS_LABELS: Record<LeaseRentScheduleStatus, string> = {
-  pending: "Draft",
-  invoiced: "Posted",
-  paid: "Paid",
-  cancelled: "Cancelled",
-};
 
 const PAYMENT_METHOD_OPTIONS: Array<{ value: LeaseRentPaymentMethod; label: string }> = [
   { value: "bank_transfer", label: "Дансаар шилжүүлэг" },
@@ -31,16 +30,7 @@ const PAYMENT_METHOD_OPTIONS: Array<{ value: LeaseRentPaymentMethod; label: stri
   { value: "other", label: "Бусад" },
 ];
 
-const INVOICE_STATUS_COLORS: Record<LeaseRentScheduleStatus, string> = {
-  pending: "default",
-  invoiced: "blue",
-  paid: "green",
-  cancelled: "red",
-};
-
 const INVOICE_STEPS: LeaseRentScheduleStatus[] = ["pending", "invoiced", "paid", "cancelled"];
-const INVOICE_LOGO_SRC = "/images/encanto-logo.png";
-const INVOICE_BRAND_NAME = "Encanto Trade Center";
 
 function formatMoney(value: string | number) {
   return `${Number(value || 0).toLocaleString()} ₮`;
@@ -264,7 +254,9 @@ export default function PropertyInvoiceDetail({ lineId }: { lineId: number }) {
 
   const printInvoice = () => {
     if (!line) return;
-    const logoUrl = `${window.location.origin}${INVOICE_LOGO_SRC}`;
+    const logoUrl = INVOICE_LOGO_SRC.startsWith("http")
+      ? INVOICE_LOGO_SRC
+      : `${window.location.origin}${INVOICE_LOGO_SRC}`;
     const printableHtml = buildPrintableHtml(line, invoiceRows, logoUrl);
     const printWindow = window.open("", "_blank", "width=960,height=720");
     if (!printWindow) {

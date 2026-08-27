@@ -42,7 +42,7 @@ export default function BallroomSkyfold() {
                   role="tab"
                   aria-selected={active === mode.id}
                   className={active === mode.id ? styles.modeActive : styles.mode}
-                  onClick={() => setActive(mode.id)}
+                  onClick={() => setActive(mode.id as BallroomSkyfoldModeId)}
                 >
                   <span className={styles.modeBars} data-halls={mode.halls}>
                     <i />

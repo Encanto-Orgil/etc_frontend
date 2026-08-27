@@ -1,3 +1,5 @@
+import { assetUrl } from "./image";
+
 import dayjs from "dayjs";
 import type { LeaseRentScheduleLine, LeaseRentScheduleStatus } from "./propertyManagement";
 
@@ -15,7 +17,7 @@ export const INVOICE_STATUS_COLORS: Record<LeaseRentScheduleStatus, string> = {
   cancelled: "red",
 };
 
-export const INVOICE_LOGO_SRC = "/images/encanto-logo.png";
+export const INVOICE_LOGO_SRC = assetUrl("/images/encanto-logo.png");
 export const INVOICE_BRAND_NAME = "Encanto Trade Center";
 
 export type InvoiceLineRow = {

@@ -1,10 +1,12 @@
+import { resolveImagePaths } from "./image";
+
 export type HomeFloorPlanCard = {
   id: "office" | "mall" | "residence";
   image: string;
   pdf: string;
 };
 
-export const homeFloorPlanCards: HomeFloorPlanCard[] = [
+export const homeFloorPlanCards: HomeFloorPlanCard[] = resolveImagePaths([
   {
     id: "office",
     image: "/images/renders/render-34.jpg",
@@ -20,4 +22,4 @@ export const homeFloorPlanCards: HomeFloorPlanCard[] = [
     image: "/images/renders/render-20.jpg",
     pdf: "/#contact",
   },
-];
+]);

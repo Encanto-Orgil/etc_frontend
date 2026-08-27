@@ -1,3 +1,5 @@
+import { resolveImagePaths } from "./image";
+
 export const ballroomIntro = {
   name: "Encanto Grand Ballroom",
   location: "Худалдаа, үйлчилгээний төвийн 7, 8 давхар",
@@ -7,7 +9,7 @@ export const ballroomIntro = {
     "Энэхүү төслийн хүрээнд худалдаа, үйлчилгээний төвийн 7 болон 8 давхарт байрлах, 1600 м² талбай бүхий Encanto Grand Ballroom нь хурим найр, хүндэтгэлийн зоог, байгууллагын арга хэмжээ, хурал семинар, үзэсгэлэн зэрэг олон төрлийн ёслолыг нэг дор багтаах премиум орчин юм.",
 };
 
-export const ballroomDimensions = {
+export const ballroomDimensions = resolveImagePaths({
   totalAreaSqm: 1600,
   mainHallSqm: 1600,
   preFunctionSqm: 0,
@@ -17,7 +19,7 @@ export const ballroomDimensions = {
   floors: "7, 8 давхар",
   floorPlanImage: "/images/ballroom/ballroom-12.jpg",
   floorPlanCaption: "Encanto Grand Ballroom — 7, 8 давхрын төлөвлөлт",
-};
+});
 
 export const ballroomSizeStats = [
   { label: "Нийт талбай", value: "1,600", unit: "м²" },
@@ -26,15 +28,15 @@ export const ballroomSizeStats = [
   { label: "Reception", value: "1,600", unit: "зочин" },
 ];
 
-export const ballroomCapacitySetups = [
+export const ballroomCapacitySetups = resolveImagePaths([
   { setup: "Theatre", setupMn: "Театр", capacity: "1,200", note: "Суудлын театр зохион байгуулалт" },
   { setup: "Classroom", setupMn: "Анги", capacity: "700–800", note: "Хурал, семинар, сургалт" },
   { setup: "Banquet (10/table)", setupMn: "Банкет (10 хүн)", capacity: "800", note: "10 хүний ширээ" },
   { setup: "Banquet (12/table)", setupMn: "Банкет (12 хүн)", capacity: "960", note: "12 хүний ширээ" },
   { setup: "Reception", setupMn: "Reception", capacity: "1,600", note: "Коктейль, хүлээн авалт" },
-] as const;
+]);
 
-export const ballroomSkyfold = {
+export const ballroomSkyfold = resolveImagePaths({
   title: "1 → 3 Halls",
   subtitle: "Skyfold Automatic Partition System",
   tagline:
@@ -66,9 +68,9 @@ export const ballroomSkyfold = {
     "Full acoustic and lighting isolation",
     "Host 2–3 simultaneous events",
   ],
-} as const;
+});
 
-export const ballroomKeyAdvantages = [
+export const ballroomKeyAdvantages = resolveImagePaths([
   {
     id: "vip",
     title: "VIP өрөө",
@@ -119,14 +121,14 @@ export const ballroomKeyAdvantages = [
     image: "/images/renders/render-40.jpg",
     size: "standard" as const,
   },
-];
+]);
 
 export const ballroomAdvantages = ballroomKeyAdvantages.map(({ title, detail }) => ({
   title,
   detail,
 }));
 
-export const ballroomRenderGalleries = [
+export const ballroomRenderGalleries = resolveImagePaths([
   {
     floor: "6 давхар",
     caption: "Ballroom render — 6 давхар",
@@ -152,7 +154,7 @@ export const ballroomRenderGalleries = [
       { src: "/images/ballroom/ballroom-8.jpg", alt: "Encanto Grand Ballroom — 9 давхар terrace render 2" },
     ],
   },
-] as const;
+]);
 
 export const ballroomAmenities = ballroomAdvantages;
 

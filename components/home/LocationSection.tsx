@@ -7,6 +7,7 @@ import { LuArrowUpRight } from "react-icons/lu";
 import { getNearbyPlaces, useLocale, useTranslations } from "@/lib/i18n";
 import type { NearbyPlace } from "@/lib/i18n/types";
 import { project } from "@/lib/data";
+import { assetUrl } from "@/lib/image";
 import shared from "./home.shared.module.css";
 import styles from "./LocationSection.module.css";
 
@@ -18,7 +19,7 @@ export default function LocationSection() {
   const [activePlace, setActivePlace] = useState<NearbyPlace | null>(null);
 
   const defaultPreview = {
-    image: "/images/drone/drone-1.jpg",
+    image: assetUrl("/images/drone/drone-1.jpg"),
     imageAlt: location.defaultPreviewAlt,
     name: "Encanto Trade Center",
     distance: null as string | null,

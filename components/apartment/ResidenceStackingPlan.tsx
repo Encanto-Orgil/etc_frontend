@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { heroBackgroundUrl } from "@/lib/image";
 import { fetchApartmentStackingPlan } from "@/lib/api";
 import { apartmentStackingIntro } from "@/lib/apartmentContent";
 import { STATUS_META } from "@/lib/officeStacking";
@@ -90,7 +91,7 @@ export default function ResidenceStackingPlan() {
 
   return (
     <section className={officeStyles.section} id="stacking-plan">
-      <div className={officeStyles.bg} style={{ backgroundImage: "url(/images/renders/render-25.jpg)" }} />
+      <div className={officeStyles.bg} style={{ backgroundImage: `url(${heroBackgroundUrl("/images/renders/render-25.jpg")})` }} />
       <div className={officeStyles.overlay} />
 
       <div className={officeStyles.inner}>

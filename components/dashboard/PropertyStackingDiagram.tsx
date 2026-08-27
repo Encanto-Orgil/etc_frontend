@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { resolveImagePaths } from "@/lib/image";
 import type {
   PropertyBuilding,
   PropertyFloor,
@@ -10,11 +11,11 @@ import type {
 } from "@/lib/propertyManagement";
 import styles from "./PropertyStackingDiagram.module.css";
 
-const FACADE_IMAGES: Record<PropertyBuilding["kind"], string> = {
+const FACADE_IMAGES = resolveImagePaths({
   office: "/images/hero/office.webp",
   mall: "/images/hero/mall-day.webp",
   apartment: "/images/hero/residence-day.webp",
-};
+}) as Record<PropertyBuilding["kind"], string>;
 
 const FACADE_POSITION: Record<PropertyBuilding["kind"], string> = {
   office: "42% 28%",
