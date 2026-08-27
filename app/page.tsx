@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { assetUrl } from "@/lib/image";
 import HeroSlider from "@/components/home/HeroSlider";
 import HomeExperience from "@/components/home/HomeExperience";
 import BrandStatement from "@/components/home/BrandStatement";
@@ -21,8 +22,11 @@ import { homeListingJsonLd, homeMetadata } from "@/lib/seo";
 export const metadata: Metadata = homeMetadata();
 
 export default function Home() {
+  const heroPreload = assetUrl("/images/renders/render-34.jpg");
+
   return (
     <>
+      <link rel="preload" as="image" href={heroPreload} fetchPriority="high" />
       <JsonLd data={homeListingJsonLd()} />
       <HomeExperience>
         {/* Conversion funnel: Hero → Trust → Benefits → Location → Planning → Contact */}

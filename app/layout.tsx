@@ -5,6 +5,7 @@ import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
 import SiteShell from "@/components/SiteShell";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import CdnResourceHints from "@/components/CdnResourceHints";
 import SiteSchema from "@/components/SiteSchema";
 import { fontDisplay } from "@/lib/fonts";
 import { rootMetadata, rootViewport } from "@/lib/seo";
@@ -17,6 +18,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={fontDisplay.variable}>
+      <head>
+        <CdnResourceHints />
+      </head>
       <body>
         <GoogleAnalytics />
         <SiteSchema />

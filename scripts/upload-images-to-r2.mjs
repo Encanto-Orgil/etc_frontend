@@ -24,6 +24,8 @@ const REPO_ROOT = path.resolve(FRONTEND_ROOT, "..");
 const IMAGES_DIR = path.join(FRONTEND_ROOT, "public", "images");
 
 const CACHE_CONTROL = "public, max-age=31536000, immutable";
+/** Hint for Cloudflare edge cache (honored when Cache Rules respect origin). */
+const CDN_CACHE_CONTROL = "public, max-age=31536000, immutable";
 const MIME = {
   ".avif": "image/avif",
   ".gif": "image/gif",
