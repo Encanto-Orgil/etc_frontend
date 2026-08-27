@@ -111,10 +111,106 @@ const BALLROOM_KEYWORDS = [
   "шинэ жилийн корпорат ёслол",
 ] as const;
 
+export const MALL_PAGE_TITLE =
+  "Central Mall | Premium Retail & Shopping in Ulaanbaatar, Mongolia — Encanto Trade Center";
+
+export const MALL_PAGE_DESCRIPTION =
+  "Six floors of premium retail at Central Mall in Ulaanbaatar — international luxury brands, gastronomy, and entertainment in a naturally lit atrium with 200+ stores, 8-level parking, and direct glass-bridge access to Encanto office and residence towers.";
+
+const MALL_KEYWORDS = [
+  ...DEFAULT_KEYWORDS,
+  "Central Mall",
+  "Central Mall Ulaanbaatar",
+  "Encanto Mall",
+  "Encanto Trade Center Mall",
+  "shopping mall Ulaanbaatar",
+  "shopping mall Mongolia",
+  "shopping center Ulaanbaatar",
+  "shopping center Mongolia",
+  "luxury mall Ulaanbaatar",
+  "luxury mall Mongolia",
+  "premium retail Ulaanbaatar",
+  "premium shopping Mongolia",
+  "retail space for lease Ulaanbaatar",
+  "retail space for rent Mongolia",
+  "retail leasing Ulaanbaatar",
+  "retail leasing Mongolia",
+  "mall tenant space Ulaanbaatar",
+  "store for rent Ulaanbaatar",
+  "commercial retail space Mongolia",
+  "flagship store Ulaanbaatar",
+  "luxury brands mall Ulaanbaatar",
+  "food court Ulaanbaatar",
+  "retail podium Ulaanbaatar",
+  "Bayanzurkh shopping mall",
+  "худалдааны төв Улаанбаатар",
+  "худалдааны төв",
+  "дэлгүүр түрээс",
+  "дэлгүүр түрээс Улаанбаатар",
+  "tenant space mall Mongolia",
+] as const;
+
+export const RESIDENCE_PAGE_TITLE =
+  "Encanto Trade Center - Residence | Luxury Apartments in Ulaanbaatar, Mongolia";
+
+export const RESIDENCE_PAGE_DESCRIPTION =
+  "A 34-floor luxury residential tower in Ulaanbaatar — panoramic skyline views, premium finishes, smart-home systems, concierge service, and direct access to Encanto Mall, Office, and Grand Ballroom. Reservations open on floors 10–30.";
+
+const RESIDENCE_KEYWORDS = [
+  ...DEFAULT_KEYWORDS,
+  "Encanto Residence",
+  "Encanto Trade Center - Residence",
+  "luxury apartments Ulaanbaatar",
+  "luxury apartments Mongolia",
+  "premium residence Ulaanbaatar",
+  "premium residence Mongolia",
+  "luxury condo Ulaanbaatar",
+  "new apartment Ulaanbaatar",
+  "new apartment Mongolia",
+  "apartment for sale Ulaanbaatar",
+  "apartment for sale Mongolia",
+  "skyline apartments Ulaanbaatar",
+  "smart home apartment Mongolia",
+  "high-rise residence Ulaanbaatar",
+  "panoramic view apartment Mongolia",
+  "Grade-A residence Ulaanbaatar",
+  "Bayanzurkh apartment",
+  "орон сууц Улаанбаатар",
+  "тансаг орон сууц",
+  "шинэ орон сууц",
+  "орон сууц худалдан авах",
+  "premium орон сууц",
+] as const;
+
+/** FAQ content for JSON-LD only — not shown on the residence page */
+const RESIDENCE_FAQ = [
+  {
+    q: "Are reservations open?",
+    a: "Yes. Reservations are open on floors 10–30 with Type A and Type B layouts, two units per floor.",
+  },
+  {
+    q: "When is completion scheduled?",
+    a: "Encanto Trade Center - Residence is scheduled for completion in Q4 2027.",
+  },
+  {
+    q: "What unit types are available?",
+    a: "Type A offers north, south, and east-facing orientations. Type B offers north and south-facing layouts.",
+  },
+  {
+    q: "Is parking included?",
+    a: "Yes. Accessible dedicated parking is available for every unit.",
+  },
+  {
+    q: "What amenities are included?",
+    a: "Residents enjoy concierge service, fitness center, sky lounge, smart-home systems, 24/7 security, and direct access to Encanto Mall, Office, and Grand Ballroom.",
+  },
+] as const;
+
 const TOWER_PAGE_TITLES: Partial<Record<string, string>> = {
   office: OFFICE_PAGE_TITLE,
-  mall: "Mall — Шилдэг брэндүүд нэг дор — Encanto Trade Center",
+  mall: MALL_PAGE_TITLE,
   ballroom: BALLROOM_PAGE_TITLE,
+  residence: RESIDENCE_PAGE_TITLE,
 };
 
 export function canonicalUrl(path: string) {
@@ -280,6 +376,28 @@ export function towerMetadata(tower: Tower): Metadata {
       path: "/ballroom",
       image: tower.heroImage,
       keywords: [...BALLROOM_KEYWORDS],
+      absoluteTitle: true,
+    });
+  }
+
+  if (tower.slug === "mall") {
+    return buildPageMetadata({
+      title: MALL_PAGE_TITLE,
+      description: MALL_PAGE_DESCRIPTION,
+      path: "/mall",
+      image: tower.heroImage,
+      keywords: [...MALL_KEYWORDS],
+      absoluteTitle: true,
+    });
+  }
+
+  if (tower.slug === "residence") {
+    return buildPageMetadata({
+      title: RESIDENCE_PAGE_TITLE,
+      description: RESIDENCE_PAGE_DESCRIPTION,
+      path: "/residence",
+      image: tower.heroImage,
+      keywords: [...RESIDENCE_KEYWORDS],
       absoluteTitle: true,
     });
   }
@@ -453,24 +571,38 @@ export function towerWebPageJsonLd(tower: Tower) {
   const pageUrl = absoluteUrl(`/${tower.slug}`);
   const isOffice = tower.slug === "office";
   const isBallroom = tower.slug === "ballroom";
+  const isMall = tower.slug === "mall";
+  const isResidence = tower.slug === "residence";
   const sectionLabel = isOffice
     ? "Office"
     : isBallroom
       ? "Ballroom"
-      : TOWER_PAGE_TITLES[tower.slug]?.split(" — ")[0] ??
-        TOWER_PAGE_TITLES[tower.slug]?.split(" | ")[0] ??
-        SITE_SECTION_NAV.find((item) => item.slug === tower.slug)?.label ??
-        tower.nameMn;
+      : isMall
+        ? "Mall"
+        : isResidence
+          ? "Residence"
+          : TOWER_PAGE_TITLES[tower.slug]?.split(" — ")[0] ??
+            TOWER_PAGE_TITLES[tower.slug]?.split(" | ")[0] ??
+            SITE_SECTION_NAV.find((item) => item.slug === tower.slug)?.label ??
+            tower.nameMn;
   const pageName = isOffice
     ? OFFICE_PAGE_TITLE
     : isBallroom
       ? BALLROOM_PAGE_TITLE
-      : TOWER_PAGE_TITLES[tower.slug] ?? `${sectionLabel} — ${SITE_NAME}`;
+      : isMall
+        ? MALL_PAGE_TITLE
+        : isResidence
+          ? RESIDENCE_PAGE_TITLE
+          : TOWER_PAGE_TITLES[tower.slug] ?? `${sectionLabel} — ${SITE_NAME}`;
   const pageDescription = isOffice
     ? OFFICE_PAGE_DESCRIPTION
     : isBallroom
       ? BALLROOM_PAGE_DESCRIPTION
-      : tower.summary;
+      : isMall
+        ? MALL_PAGE_DESCRIPTION
+        : isResidence
+          ? RESIDENCE_PAGE_DESCRIPTION
+          : tower.summary;
 
   return {
     "@context": "https://schema.org",
@@ -635,6 +767,236 @@ export function ballroomFaqJsonLd(
   return pageFaqJsonLd("/ballroom", faq);
 }
 
+export function mallFaqJsonLd(faq: readonly { q: string; a: string }[]) {
+  return pageFaqJsonLd("/mall", faq);
+}
+
+export function mallTowerJsonLd(
+  tower: Tower,
+  faq: readonly { q: string; a: string }[] = [],
+) {
+  const pageUrl = absoluteUrl("/mall");
+  const baseGraph = (towerWebPageJsonLd(tower)["@graph"] as Record<string, unknown>[]).map(
+    (node) => {
+      if (node["@type"] === "WebPage") {
+        return {
+          ...node,
+          about: { "@id": `${pageUrl}#shopping-center` },
+          mainEntity: { "@id": `${pageUrl}#shopping-center` },
+        };
+      }
+      return node;
+    },
+  );
+
+  const shoppingCenter = {
+    "@type": "ShoppingCenter",
+    "@id": `${pageUrl}#shopping-center`,
+    name: "Central Mall — Encanto Trade Center",
+    alternateName: [
+      "Encanto Mall",
+      "Encanto Trade Center Mall",
+      "Central Mall Ulaanbaatar",
+      "Luxury Shopping Ulaanbaatar",
+      "Premium Retail Mongolia",
+    ],
+    description: MALL_PAGE_DESCRIPTION,
+    url: pageUrl,
+    image: absoluteUrl(tower.heroImage),
+    address: postalAddressJsonLd(),
+    telephone: project.contactPhone,
+    email: project.contactEmail,
+    numberOfStores: 200,
+    knowsAbout: [
+      "International luxury brands",
+      "Premium retail",
+      "Gastronomy and dining",
+      "Entertainment and cinema",
+      "Food court",
+      "Family-friendly retail",
+      "Flagship stores",
+    ],
+    amenityFeature: [
+      { "@type": "LocationFeatureSpecification", name: "Central atrium", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Naturally lit passages", value: true },
+      { "@type": "LocationFeatureSpecification", name: "8-level parking", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Glass bridge to office tower", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Hypermarket B1–B2", value: true },
+    ],
+    containedInPlace: {
+      "@type": "Place",
+      name: SITE_NAME,
+      url: SITE_URL,
+      address: postalAddressJsonLd(),
+    },
+    areaServed: [
+      {
+        "@type": "City",
+        name: "Ulaanbaatar",
+        containedInPlace: {
+          "@type": "Country",
+          name: "Mongolia",
+        },
+      },
+      {
+        "@type": "Country",
+        name: "Mongolia",
+      },
+    ],
+    makesOffer: {
+      "@type": "Offer",
+      name: "Retail space & mall tenant leasing",
+      description:
+        "Premium retail and tenant space for lease at Central Mall — luxury brands, restaurants, food court, and service operators in Ulaanbaatar.",
+      url: `${pageUrl}#contact`,
+      businessFunction: "http://purl.org/goodrelations/v1#LeaseOut",
+      category: "Retail space for lease",
+      areaServed: {
+        "@type": "City",
+        name: "Ulaanbaatar",
+      },
+    },
+  };
+
+  const faqNode =
+    faq.length > 0
+      ? {
+          "@type": "FAQPage",
+          "@id": `${pageUrl}#faq`,
+          isPartOf: { "@id": `${pageUrl}#webpage` },
+          mainEntity: faq.map(({ q, a }) => ({
+            "@type": "Question",
+            name: q,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: a,
+            },
+          })),
+        }
+      : null;
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [...baseGraph, shoppingCenter, ...(faqNode ? [faqNode] : [])],
+  };
+}
+
+export function residenceFaqJsonLd(
+  faq: readonly { q: string; a: string }[] = RESIDENCE_FAQ,
+) {
+  return pageFaqJsonLd("/residence", faq);
+}
+
+export function residenceTowerJsonLd(
+  tower: Tower,
+  faq: readonly { q: string; a: string }[] = RESIDENCE_FAQ,
+) {
+  const pageUrl = absoluteUrl("/residence");
+  const baseGraph = (towerWebPageJsonLd(tower)["@graph"] as Record<string, unknown>[]).map(
+    (node) => {
+      if (node["@type"] === "WebPage") {
+        return {
+          ...node,
+          about: { "@id": `${pageUrl}#residence` },
+          mainEntity: { "@id": `${pageUrl}#residence` },
+        };
+      }
+      return node;
+    },
+  );
+
+  const apartmentComplex = {
+    "@type": "ApartmentComplex",
+    "@id": `${pageUrl}#residence`,
+    name: "Encanto Trade Center - Residence",
+    alternateName: [
+      "Encanto Residence",
+      "Luxury Apartments Ulaanbaatar",
+      "Premium Residence Mongolia",
+      "Skyline Apartments Ulaanbaatar",
+    ],
+    description: RESIDENCE_PAGE_DESCRIPTION,
+    url: pageUrl,
+    image: absoluteUrl(tower.heroImage),
+    address: postalAddressJsonLd(),
+    telephone: project.contactPhone,
+    email: project.contactEmail,
+    numberOfBedrooms: { "@type": "QuantitativeValue", minValue: 1 },
+    numberOfAccommodationUnits: 42,
+    knowsAbout: [
+      "Luxury residential living",
+      "Panoramic city views",
+      "Smart home systems",
+      "Concierge service",
+      "Premium interior finishes",
+      "High-rise apartments",
+    ],
+    amenityFeature: [
+      { "@type": "LocationFeatureSpecification", name: "Concierge service", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Fitness center", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Sky lounge", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Smart home system", value: true },
+      { "@type": "LocationFeatureSpecification", name: "24/7 security", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Dedicated parking", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Direct mall access", value: true },
+    ],
+    containedInPlace: {
+      "@type": "Place",
+      name: SITE_NAME,
+      url: SITE_URL,
+      address: postalAddressJsonLd(),
+    },
+    areaServed: [
+      {
+        "@type": "City",
+        name: "Ulaanbaatar",
+        containedInPlace: {
+          "@type": "Country",
+          name: "Mongolia",
+        },
+      },
+      {
+        "@type": "Country",
+        name: "Mongolia",
+      },
+    ],
+    makesOffer: {
+      "@type": "Offer",
+      name: "Luxury apartment reservations",
+      description:
+        "Premium residential apartments for reservation on floors 10–30 — Type A and Type B layouts with panoramic views in Ulaanbaatar.",
+      url: `${pageUrl}#contact`,
+      category: "Luxury residential apartments",
+      areaServed: {
+        "@type": "City",
+        name: "Ulaanbaatar",
+      },
+    },
+  };
+
+  const faqNode =
+    faq.length > 0
+      ? {
+          "@type": "FAQPage",
+          "@id": `${pageUrl}#faq`,
+          isPartOf: { "@id": `${pageUrl}#webpage` },
+          mainEntity: faq.map(({ q, a }) => ({
+            "@type": "Question",
+            name: q,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: a,
+            },
+          })),
+        }
+      : null;
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [...baseGraph, apartmentComplex, ...(faqNode ? [faqNode] : [])],
+  };
+}
+
 export function ballroomTowerJsonLd(
   tower: Tower,
   faq: readonly { q: string; a: string }[] = [],
@@ -792,17 +1154,28 @@ function towerHomeEntityJsonLd(tower: Tower): Record<string, unknown> {
         alternateName: [
           "Encanto Mall",
           "Encanto Trade Center Mall",
+          "Central Mall Ulaanbaatar",
           "Luxury Shopping Ulaanbaatar",
         ],
-        description: tower.summary,
+        description: MALL_PAGE_DESCRIPTION,
         url: pageUrl,
         image: absoluteUrl(tower.heroImage),
         address,
+        numberOfStores: 200,
         containedInPlace: {
           "@type": "Place",
           name: SITE_NAME,
           url: SITE_URL,
           address,
+        },
+        makesOffer: {
+          "@type": "Offer",
+          name: "Retail space & mall tenant leasing",
+          url: `${pageUrl}#contact`,
+          areaServed: {
+            "@type": "City",
+            name: "Ulaanbaatar",
+          },
         },
       };
     case "ballroom":
@@ -849,18 +1222,21 @@ function towerHomeEntityJsonLd(tower: Tower): Record<string, unknown> {
           "Luxury Apartments Ulaanbaatar",
           "Premium Residence Mongolia",
         ],
-        description: tower.summary,
+        description: RESIDENCE_PAGE_DESCRIPTION,
         url: pageUrl,
         image: absoluteUrl(tower.heroImage),
         address,
+        numberOfAccommodationUnits: 42,
         containedInPlace: {
           "@type": "Place",
           name: SITE_NAME,
           url: SITE_URL,
           address,
         },
-        offers: {
+        makesOffer: {
           "@type": "Offer",
+          name: "Luxury apartment reservations",
+          url: `${pageUrl}#contact`,
           category: "Luxury residential apartments",
           areaServed: {
             "@type": "City",
@@ -922,10 +1298,8 @@ export function sitemapEntries() {
 
   const towerPages = towers.map((tower) => ({
     path: `/${tower.slug}`,
-    changeFrequency: (tower.slug === "office" || tower.slug === "ballroom"
-      ? "weekly"
-      : "monthly") as "weekly" | "monthly",
-    priority: tower.slug === "office" || tower.slug === "ballroom" ? 0.95 : 0.8,
+    changeFrequency: "weekly" as const,
+    priority: 0.95,
   }));
 
   return [...staticPages, ...towerPages];

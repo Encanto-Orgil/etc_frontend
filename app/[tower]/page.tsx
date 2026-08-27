@@ -13,9 +13,12 @@ import JsonLd from "@/components/JsonLd";
 import { getTower, towers } from "@/lib/data";
 import { officeEn } from "@/lib/i18n/translations/officeEn";
 import { ballroomEn } from "@/lib/i18n/translations/ballroomEn";
+import { mallEn } from "@/lib/i18n/translations/mallEn";
 import {
   ballroomTowerJsonLd,
+  mallTowerJsonLd,
   officeTowerJsonLd,
+  residenceTowerJsonLd,
   towerMetadata,
   towerWebPageJsonLd,
 } from "@/lib/seo";
@@ -81,7 +84,12 @@ export default async function TowerPage({
   if (data.slug === "mall") {
     return (
       <>
-        {jsonLd}
+        <JsonLd
+          data={mallTowerJsonLd(
+            data,
+            mallEn.faq.map(({ q, a }) => ({ q, a })),
+          )}
+        />
         <MallPage tower={data} others={others} />
       </>
     );
@@ -90,7 +98,7 @@ export default async function TowerPage({
   if (data.slug === "residence") {
     return (
       <>
-        {jsonLd}
+        <JsonLd data={residenceTowerJsonLd(data)} />
         <ApartmentPage tower={data} others={others} />
       </>
     );
