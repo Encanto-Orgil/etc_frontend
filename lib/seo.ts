@@ -8,6 +8,13 @@ export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ??
   "https://encantotrade.mn";
 
+export const HOME_PAGE_TITLE =
+  "Encanto Trade Center — Luxury Office, Mall, Ballroom & Residence in Ulaanbaatar";
+
+/** Meta/OG only — keep under ~160 characters for search snippets */
+export const HOME_PAGE_DESCRIPTION =
+  "Mongolia's tallest steel-frame tower in Bayanzurkh, Ulaanbaatar — premium office, Central Mall, Grand Ballroom, and luxury residences at Encanto Trade Center.";
+
 const DEFAULT_OG_IMAGE = assetUrl("/images/renders/render-8.jpg");
 
 const DEFAULT_KEYWORDS = [
@@ -259,6 +266,18 @@ function buildTwitter({
   };
 }
 
+function buildAlternates(path: string): Metadata["alternates"] {
+  const url = canonicalUrl(path);
+  return {
+    canonical: url,
+    languages: {
+      en: url,
+      mn: url,
+      "x-default": url,
+    },
+  };
+}
+
 export function buildPageMetadata(input: PageMetaInput): Metadata {
   const {
     title,
@@ -279,9 +298,7 @@ export function buildPageMetadata(input: PageMetaInput): Metadata {
     title: absoluteTitle ? { absolute: title } : title,
     description,
     keywords: keywords ?? [...DEFAULT_KEYWORDS],
-    alternates: {
-      canonical: canonicalUrl(path),
-    },
+    alternates: buildAlternates(path),
     openGraph: buildOpenGraph(metaInput),
     twitter: buildTwitter(metaInput),
     robots: noIndex
@@ -296,7 +313,7 @@ export const rootMetadata: Metadata = {
     default: SITE_NAME,
     template: `%s — ${SITE_NAME}`,
   },
-  description: project.intro,
+  description: HOME_PAGE_DESCRIPTION,
   keywords: [...DEFAULT_KEYWORDS],
   authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
@@ -307,14 +324,14 @@ export const rootMetadata: Metadata = {
     telephone: false,
   },
   openGraph: buildOpenGraph({
-    title: SITE_NAME,
-    description: project.intro,
+    title: HOME_PAGE_TITLE,
+    description: HOME_PAGE_DESCRIPTION,
     path: "/",
     image: project.heroImage,
   }),
   twitter: buildTwitter({
-    title: SITE_NAME,
-    description: project.intro,
+    title: HOME_PAGE_TITLE,
+    description: HOME_PAGE_DESCRIPTION,
     image: project.heroImage,
   }),
   robots: {
@@ -327,9 +344,7 @@ export const rootMetadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  alternates: {
-    canonical: canonicalUrl("/"),
-  },
+  alternates: buildAlternates("/"),
 };
 
 export const rootViewport: Viewport = {
@@ -342,8 +357,8 @@ export const rootViewport: Viewport = {
 
 export function homeMetadata(): Metadata {
   return buildPageMetadata({
-    title: SITE_NAME,
-    description: project.intro,
+    title: HOME_PAGE_TITLE,
+    description: HOME_PAGE_DESCRIPTION,
     path: "/",
     image: project.heroImage,
     absoluteTitle: true,
