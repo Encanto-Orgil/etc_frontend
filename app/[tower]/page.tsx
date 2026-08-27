@@ -12,7 +12,10 @@ import ApartmentPage from "@/components/apartment/ApartmentPage";
 import JsonLd from "@/components/JsonLd";
 import { getTower, towers } from "@/lib/data";
 import { officeEn } from "@/lib/i18n/translations/officeEn";
+import { ballroomEn } from "@/lib/i18n/translations/ballroomEn";
 import {
+  ballroomFaqJsonLd,
+  ballroomTowerJsonLd,
   officeFaqJsonLd,
   officeTowerJsonLd,
   towerMetadata,
@@ -62,7 +65,12 @@ export default async function TowerPage({
   if (data.slug === "ballroom") {
     return (
       <>
-        {jsonLd}
+        <JsonLd data={ballroomTowerJsonLd(data)} />
+        <JsonLd
+          data={ballroomFaqJsonLd(
+            ballroomEn.faq.items.map(({ q, a }) => ({ q, a })),
+          )}
+        />
         <BallroomPage tower={data} others={others} />
       </>
     );

@@ -57,10 +57,64 @@ const OFFICE_KEYWORDS = [
   "оффис түрээс",
 ] as const;
 
+export const BALLROOM_PAGE_TITLE =
+  "Encanto Grand Ballroom | Luxury Event Venue in Ulaanbaatar, Mongolia";
+
+export const BALLROOM_PAGE_DESCRIPTION =
+  "A world-class 1,600 m² ballroom and luxury event hall in Ulaanbaatar — premium venue for weddings, galas, New Year celebrations, conferences, and corporate events with 7.6 m ceilings and Skyfold flexible halls.";
+
+const BALLROOM_KEYWORDS = [
+  ...DEFAULT_KEYWORDS,
+  "Encanto Grand Ballroom",
+  "Ballroom",
+  "ballroom Ulaanbaatar",
+  "ballroom Mongolia",
+  "Event hall",
+  "event hall Ulaanbaatar",
+  "event hall Mongolia",
+  "Event room",
+  "event room Ulaanbaatar",
+  "event room Mongolia",
+  "wedding venue Ulaanbaatar",
+  "wedding venue Mongolia",
+  "event venue Ulaanbaatar",
+  "event venue Mongolia",
+  "luxury ballroom Ulaanbaatar",
+  "luxury event hall Ulaanbaatar",
+  "luxury event venue Mongolia",
+  "gala venue Ulaanbaatar",
+  "conference venue Ulaanbaatar",
+  "corporate event venue Mongolia",
+  "banquet hall Ulaanbaatar",
+  "function hall Ulaanbaatar",
+  "хурим танхим",
+  "хурим танхим Улаанбаатар",
+  "ёслолын танхим",
+  "ёслолын танхим Улаанбаатар",
+  "event space Ulaanbaatar",
+  // New Year & year-end season (Dec–Jan peak search)
+  "New Year party venue Ulaanbaatar",
+  "New Year event venue Mongolia",
+  "New Year gala Ulaanbaatar",
+  "NYE venue Ulaanbaatar",
+  "corporate New Year party Ulaanbaatar",
+  "year end party venue Ulaanbaatar",
+  "holiday party venue Mongolia",
+  "Christmas party venue Ulaanbaatar",
+  "шинэ жилийн ёслол",
+  "шинэ жилийн ёслол танхим",
+  "шинэ жилийн танхим Улаанбаатар",
+  "шинэ жилийн баяр танхим",
+  "шинэ жилийн танхим түрээс",
+  "компанийн шинэ жилийн ёслол",
+  "жилийн төгсгөлийн ёслол танхим",
+  "шинэ жилийн корпорат ёслол",
+] as const;
+
 const TOWER_PAGE_TITLES: Partial<Record<string, string>> = {
   office: OFFICE_PAGE_TITLE,
   mall: "Mall — Шилдэг брэндүүд нэг дор — Encanto Trade Center",
-  ballroom: "Encanto Grand Ballroom",
+  ballroom: BALLROOM_PAGE_TITLE,
 };
 
 export function canonicalUrl(path: string) {
@@ -219,6 +273,17 @@ export function towerMetadata(tower: Tower): Metadata {
     });
   }
 
+  if (tower.slug === "ballroom") {
+    return buildPageMetadata({
+      title: BALLROOM_PAGE_TITLE,
+      description: BALLROOM_PAGE_DESCRIPTION,
+      path: "/ballroom",
+      image: tower.heroImage,
+      keywords: [...BALLROOM_KEYWORDS],
+      absoluteTitle: true,
+    });
+  }
+
   const customTitle = TOWER_PAGE_TITLES[tower.slug];
   const title = customTitle ?? `${tower.nameMn} — ${tower.tagline}`;
   const keywords = [
@@ -226,7 +291,6 @@ export function towerMetadata(tower: Tower): Metadata {
     tower.name,
     tower.nameMn,
     tower.kind === "mall" ? "luxury mall" : "",
-    tower.kind === "ballroom" ? "хурим танхим" : "",
     tower.kind === "apartment" ? "premium орон сууц" : "",
   ].filter(Boolean);
 
@@ -368,15 +432,25 @@ export function siteWideJsonLd() {
 export function towerWebPageJsonLd(tower: Tower) {
   const pageUrl = absoluteUrl(`/${tower.slug}`);
   const isOffice = tower.slug === "office";
+  const isBallroom = tower.slug === "ballroom";
   const sectionLabel = isOffice
     ? "Office"
-    : TOWER_PAGE_TITLES[tower.slug]?.split(" — ")[0] ??
-      SITE_SECTION_NAV.find((item) => item.slug === tower.slug)?.label ??
-      tower.nameMn;
+    : isBallroom
+      ? "Ballroom"
+      : TOWER_PAGE_TITLES[tower.slug]?.split(" — ")[0] ??
+        TOWER_PAGE_TITLES[tower.slug]?.split(" | ")[0] ??
+        SITE_SECTION_NAV.find((item) => item.slug === tower.slug)?.label ??
+        tower.nameMn;
   const pageName = isOffice
     ? OFFICE_PAGE_TITLE
-    : TOWER_PAGE_TITLES[tower.slug] ?? `${sectionLabel} — ${SITE_NAME}`;
-  const pageDescription = isOffice ? OFFICE_PAGE_DESCRIPTION : tower.summary;
+    : isBallroom
+      ? BALLROOM_PAGE_TITLE
+      : TOWER_PAGE_TITLES[tower.slug] ?? `${sectionLabel} — ${SITE_NAME}`;
+  const pageDescription = isOffice
+    ? OFFICE_PAGE_DESCRIPTION
+    : isBallroom
+      ? BALLROOM_PAGE_DESCRIPTION
+      : tower.summary;
 
   return {
     "@context": "https://schema.org",
@@ -474,10 +548,11 @@ export function officeTowerJsonLd(tower: Tower) {
   };
 }
 
-export function officeFaqJsonLd(
+export function pageFaqJsonLd(
+  path: string,
   faq: readonly { q: string; a: string }[],
 ) {
-  const pageUrl = absoluteUrl("/office");
+  const pageUrl = absoluteUrl(path);
 
   return {
     "@context": "https://schema.org",
@@ -491,6 +566,52 @@ export function officeFaqJsonLd(
         text: a,
       },
     })),
+  };
+}
+
+export function officeFaqJsonLd(faq: readonly { q: string; a: string }[]) {
+  return pageFaqJsonLd("/office", faq);
+}
+
+export function ballroomFaqJsonLd(
+  faq: readonly { q: string; a: string }[],
+) {
+  return pageFaqJsonLd("/ballroom", faq);
+}
+
+export function ballroomTowerJsonLd(tower: Tower) {
+  const pageUrl = absoluteUrl("/ballroom");
+  const baseGraph = towerWebPageJsonLd(tower)["@graph"] as Record<string, unknown>[];
+
+  const venue = {
+    "@type": "EventVenue",
+    "@id": `${pageUrl}#venue`,
+    name: "Encanto Grand Ballroom",
+    description: BALLROOM_PAGE_DESCRIPTION,
+    url: pageUrl,
+    image: absoluteUrl(tower.heroImage),
+    address: postalAddressJsonLd(),
+    maximumAttendeeCapacity: 1600,
+    amenityFeature: [
+      { "@type": "LocationFeatureSpecification", name: "Skyfold partition halls", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Bridal suite", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Professional AV & lighting", value: true },
+      { "@type": "LocationFeatureSpecification", name: "Guest parking", value: true },
+      { "@type": "LocationFeatureSpecification", name: "9th floor open terrace", value: true },
+    ],
+    areaServed: {
+      "@type": "City",
+      name: "Ulaanbaatar",
+      containedInPlace: {
+        "@type": "Country",
+        name: "Mongolia",
+      },
+    },
+  };
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [...baseGraph, venue],
   };
 }
 
@@ -519,10 +640,10 @@ export function sitemapEntries() {
 
   const towerPages = towers.map((tower) => ({
     path: `/${tower.slug}`,
-    changeFrequency: (tower.slug === "office" ? "weekly" : "monthly") as
-      | "weekly"
-      | "monthly",
-    priority: tower.slug === "office" ? 0.95 : 0.8,
+    changeFrequency: (tower.slug === "office" || tower.slug === "ballroom"
+      ? "weekly"
+      : "monthly") as "weekly" | "monthly",
+    priority: tower.slug === "office" || tower.slug === "ballroom" ? 0.95 : 0.8,
   }));
 
   return [...staticPages, ...towerPages];
