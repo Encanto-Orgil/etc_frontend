@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { fetchInquirySummary, type InquirySummary } from "@/lib/inquiryManagement";
+import { inquiryContactTitle } from "@/lib/inquiryDisplay";
 import styles from "./DashboardOverview.module.css";
 
 export default function InquiriesCard() {
@@ -57,8 +58,10 @@ export default function InquiriesCard() {
             renderItem={(item) => (
               <List.Item>
                 <List.Item.Meta
-                  title={item.name}
-                  description={`${item.interest_label} · ${item.phone} · ${dayjs(item.created_at).format("MMM D")}`}
+                  title={inquiryContactTitle(item)}
+                  description={`${
+                    item.is_office_leasing ? "Office Leasing" : item.interest_label
+                  } · ${item.phone} · ${dayjs(item.created_at).format("MMM D")}`}
                 />
                 <Tag color={item.is_handled ? "default" : "gold"}>
                   {item.is_handled ? "Handled" : "Pending"}

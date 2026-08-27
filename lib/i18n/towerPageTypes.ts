@@ -18,6 +18,7 @@ export type OfficeTranslations = {
   hero: {
     title: string;
     description: string;
+    leasingCta: string;
   };
   businessIntro: {
     eyebrow: string;
@@ -104,6 +105,30 @@ export type OfficeTranslations = {
     formLead: string;
     primaryContact: string;
     alsoAvailable: string;
+  };
+  leasingForm: {
+    companyName: string;
+    companyNameRequired: string;
+    contactPerson: string;
+    contactPersonRequired: string;
+    businessType: string;
+    email: string;
+    emailRequired: string;
+    emailInvalid: string;
+    telephone: string;
+    telephoneRequired: string;
+    altTelephone: string;
+    officeSize: string;
+    employees: string;
+    moveInDate: string;
+    durationYears: string;
+    otherEnquiries: string;
+    submit: string;
+    successToast: string;
+    errorToast: string;
+    doneTitle: string;
+    doneBody: string;
+    sendAgain: string;
   };
 };
 

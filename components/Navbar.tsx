@@ -72,6 +72,7 @@ export default function Navbar() {
           label,
           title: label,
           sectionId: item.sectionId,
+          slug: item.slug,
         };
       }),
     [pathname, t],
@@ -221,9 +222,19 @@ export default function Navbar() {
                 onClick={() => setOpen(false)}
                 className={`${styles.drawerLink} ${
                   isLinkActive(l.href, pathname, activeSection) ? styles.active : ""
-                }`}
+                } ${l.slug === "office" ? styles.drawerLinkOffice : ""}`}
               >
-                {l.label}
+                {l.slug === "office" ? (
+                  <span className={styles.drawerLinkStack}>
+                    <span className={styles.drawerLinkLabel}>{l.label}</span>
+                    <span className={styles.drawerOfficeNote}>
+                      <span className={styles.drawerOfficeDot} aria-hidden />
+                      {t.nav.officeLeasingNote}
+                    </span>
+                  </span>
+                ) : (
+                  l.label
+                )}
               </Link>
             ))}
           </nav>

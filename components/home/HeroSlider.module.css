@@ -100,6 +100,149 @@
   color: rgba(255, 255, 255, 0.78);
 }
 
+.leasingWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.leasingBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #f3e6c8;
+  background: rgba(201, 169, 98, 0.12);
+  border: 1px solid rgba(201, 169, 98, 0.35);
+  border-radius: 999px;
+}
+
+.leasingDot {
+  position: relative;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c9a962;
+  box-shadow: 0 0 10px rgba(201, 169, 98, 0.8);
+}
+
+.leasingDot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 169, 98, 0.55);
+  animation: leasingDotPulse 2s ease-out infinite;
+}
+
+@keyframes leasingDotPulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.ctaLeasing {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 15px 28px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #0c0c0e;
+  background: linear-gradient(135deg, #d4b872 0%, #c9a962 48%, #b8944f 100%);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 14px;
+  box-shadow:
+    0 10px 30px rgba(201, 169, 98, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: transform 0.3s var(--ease);
+  animation: leasingButtonPulse 2.8s ease-in-out infinite;
+}
+
+.ctaLeasing:hover {
+  transform: translateY(-2px);
+}
+
+.ctaLeasingGlow {
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 236, 190, 0.45), transparent 70%);
+  opacity: 0.6;
+  animation: leasingGlow 2.8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.ctaLeasingShimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 28%,
+    rgba(255, 255, 255, 0.42) 50%,
+    transparent 72%
+  );
+  transform: translateX(-130%);
+  animation: leasingShimmer 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes leasingButtonPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 10px 30px rgba(201, 169, 98, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+
+  50% {
+    box-shadow:
+      0 14px 40px rgba(201, 169, 98, 0.45),
+      0 0 0 4px rgba(201, 169, 98, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+}
+
+@keyframes leasingGlow {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes leasingShimmer {
+  0%,
+  18% {
+    transform: translateX(-130%);
+  }
+
+  45%,
+  100% {
+    transform: translateX(130%);
+  }
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -245,6 +388,24 @@
   .sub,
   .actions {
     display: none;
+  }
+
+  .leasingWrap {
+    margin-top: 18px;
+    gap: 12px;
+  }
+
+  .leasingBadge {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    padding: 7px 12px;
+  }
+
+  .ctaLeasing {
+    width: 100%;
+    max-width: 320px;
+    padding: 14px 20px;
+    font-size: 12px;
   }
 
   .scrollDown {

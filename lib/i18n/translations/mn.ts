@@ -8,6 +8,7 @@ export const mn: Translations = {
   nav: {
     project: "Төсөл",
     office: "Оффис",
+    officeLeasingNote: "Захиалга авч эхэлсэн",
     mall: "Молл",
     ballroom: "Ballroom",
     residences: "Орон сууц",
@@ -54,6 +55,8 @@ export const mn: Translations = {
       titleLine2: "Trade Center",
       subtitle:
         "Монголын хамгийн өндөр төмөр карказан барилга болох Encanto Trade Center нь худалдаа, үйлчилгээ, оффис, орон сууцыг нэг дор нэгтгэсэн шинэ үеийн цогцолбор юм.",
+      leasingBadge: "Оффис түрээс эхэллээ",
+      ctaLeasing: "Түрээсийн хүсэлт илгээх",
       ctaPrimary: "Уулзалт товлох",
       ctaSecondary: "Төслийн дэлгэрэнгүй",
       scrollDown: "Доош гүйлгэх",

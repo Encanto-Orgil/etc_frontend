@@ -60,6 +60,24 @@ export default function HeroSlider() {
             {hero.titleLine2}
           </h1>
           <p className={styles.sub}>{hero.subtitle}</p>
+
+          <motion.div
+            className={styles.leasingWrap}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <span className={styles.leasingBadge}>
+              <span className={styles.leasingDot} aria-hidden />
+              {hero.leasingBadge}
+            </span>
+            <Link href="/office#contact" className={styles.ctaLeasing}>
+              <span className={styles.ctaLeasingGlow} aria-hidden />
+              <span className={styles.ctaLeasingShimmer} aria-hidden />
+              {hero.ctaLeasing}
+            </Link>
+          </motion.div>
+
           <div className={styles.actions}>
             <Link href="/#contact" className={styles.ctaPrimary}>
               {hero.ctaPrimary}

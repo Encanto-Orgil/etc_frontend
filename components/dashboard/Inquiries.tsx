@@ -11,6 +11,11 @@ import {
   updateInquiry,
   type Inquiry,
 } from "@/lib/inquiryManagement";
+import {
+  formatLeasingDetails,
+  inquiryContactSubtitle,
+  inquiryContactTitle,
+} from "@/lib/inquiryDisplay";
 import styles from "./PropertyManagement.module.css";
 
 export default function Inquiries() {
@@ -55,27 +60,46 @@ export default function Inquiries() {
     {
       title: "Contact",
       key: "contact",
-      render: (_, record) => (
-        <div>
-          <strong>{record.name}</strong>
-          <div className={styles.muted}>{record.phone}</div>
-          {record.email ? <div className={styles.muted}>{record.email}</div> : null}
-        </div>
-      ),
+      render: (_, record) => {
+        const subtitle = inquiryContactSubtitle(record);
+        const leasingSummary = formatLeasingDetails(record.leasing_details);
+
+        return (
+          <div>
+            <strong>{inquiryContactTitle(record)}</strong>
+            {subtitle ? <div className={styles.muted}>{subtitle}</div> : null}
+            <div className={styles.muted}>{record.phone}</div>
+            {record.email ? <div className={styles.muted}>{record.email}</div> : null}
+            {leasingSummary ? <div className={styles.muted}>{leasingSummary}</div> : null}
+          </div>
+        );
+      },
     },
     {
       title: "Interest",
       dataIndex: "interest_label",
       render: (label: string, record) => (
-        <Tag>{label || INQUIRY_INTEREST_LABELS[record.interest]}</Tag>
+        <Space direction="vertical" size={4}>
+          <Tag color={record.is_office_leasing ? "gold" : undefined}>
+            {record.is_office_leasing ? "Office Leasing" : label || INQUIRY_INTEREST_LABELS[record.interest]}
+          </Tag>
+        </Space>
       ),
     },
     {
-      title: "Message",
+      title: "Notes",
       dataIndex: "message",
-      render: (value: string) => (
-        <span className={styles.muted}>{value || "—"}</span>
-      ),
+      render: (value: string, record) => {
+        const leasingSummary = formatLeasingDetails(record.leasing_details);
+        if (record.is_office_leasing) {
+          return (
+            <span className={styles.muted}>
+              {value?.trim() || leasingSummary || "—"}
+            </span>
+          );
+        }
+        return <span className={styles.muted}>{value || "—"}</span>;
+      },
     },
     {
       title: "Status",

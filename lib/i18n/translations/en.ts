@@ -33,6 +33,7 @@ export const en: Translations = {
   nav: {
     project: "Project",
     office: "Office",
+    officeLeasingNote: "Leasing now open",
     mall: "Mall",
     ballroom: "Ballroom",
     residences: "Residences",
@@ -79,6 +80,8 @@ export const en: Translations = {
       titleLine2: "Trade Center",
       subtitle:
         "A new-generation integrated business destination where commerce, lifestyle, and investment converge in one iconic development.",
+      leasingBadge: "Office leasing now open",
+      ctaLeasing: "Apply for Office Leasing",
       ctaPrimary: "Schedule Private Presentation",
       ctaSecondary: "Explore the Project",
       scrollDown: "Scroll Down",

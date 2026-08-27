@@ -358,6 +358,7 @@
   }
 
   .formColumn {
+    order: -1;
     position: static;
   }
 }

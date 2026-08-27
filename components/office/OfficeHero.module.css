@@ -75,6 +75,34 @@
   color: rgba(255, 255, 255, 0.78);
 }
 
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 24px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: 12px;
+  color: #0c0c0e;
+  background: #c9a962;
+  border: 1px solid #c9a962;
+  transition: transform 0.3s var(--ease), background 0.3s var(--ease);
+}
+
+.primary:hover {
+  background: #d4b872;
+  transform: translateY(-1px);
+}
+
 @media (max-width: 768px) {
   .bottom {
     padding-bottom: clamp(88px, 12vh, 120px);

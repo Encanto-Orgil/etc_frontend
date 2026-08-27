@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { officeHero } from "@/lib/officeContent";
 import { useTranslations } from "@/lib/i18n";
 import styles from "./OfficeHero.module.css";
@@ -20,6 +21,11 @@ export default function OfficeHero() {
         <div className={styles.glassPanel}>
           <h1 className={styles.title}>{copy.title}</h1>
           <p className={styles.description}>{copy.description}</p>
+          <div className={styles.actions}>
+            <Link href="#contact" className={styles.primary}>
+              {copy.leasingCta}
+            </Link>
+          </div>
         </div>
       </div>
     </section>

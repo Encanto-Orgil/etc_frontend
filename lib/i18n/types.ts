@@ -235,6 +235,7 @@ export type Translations = {
   nav: {
     project: string;
     office: string;
+    officeLeasingNote: string;
     mall: string;
     ballroom: string;
     residences: string;
@@ -275,6 +276,8 @@ export type Translations = {
       title: string;
       titleLine2: string;
       subtitle: string;
+      leasingBadge: string;
+      ctaLeasing: string;
       ctaPrimary: string;
       ctaSecondary: string;
       scrollDown: string;

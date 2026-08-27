@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { MailOutlined, PhoneOutlined } from "@ant-design/icons";
-import InquiryForm from "@/components/InquiryForm";
+import OfficeInquiryForm from "@/components/office/OfficeInquiryForm";
 import {
   getSalesContacts,
   salesInitials,
@@ -11,11 +11,10 @@ import {
   getOfficeSalesProfile,
   OFFICE_SALES_DEPARTMENT,
 } from "@/lib/officeSalesDisplay";
-import { useLocale, useTranslations } from "@/lib/i18n";
+import { useTranslations } from "@/lib/i18n";
 import styles from "./OfficeContactSection.module.css";
 
 export default function OfficeContactSection() {
-  const { locale } = useLocale();
   const copy = useTranslations().office.contact;
   const contacts = getSalesContacts("home");
   const featured = contacts.find((person) => person.scopes.includes("office")) ?? contacts[0];
@@ -127,7 +126,7 @@ export default function OfficeContactSection() {
                 <h3>{copy.formTitle}</h3>
                 <p>{copy.formLead}</p>
               </div>
-              <InquiryForm defaultInterest="office" locale={locale} />
+              <OfficeInquiryForm />
             </div>
           </div>
         </div>

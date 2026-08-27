@@ -2,6 +2,16 @@ import { authFetch } from "./auth";
 
 export type InquiryInterest = "office" | "mall" | "ballroom" | "apartment" | "general";
 
+export type OfficeLeasingDetails = {
+  company_name?: string;
+  business_type?: string;
+  alt_phone?: string;
+  office_size?: string;
+  employees?: string;
+  move_in_date?: string;
+  duration_years?: string;
+};
+
 export type Inquiry = {
   id: number;
   name: string;
@@ -9,7 +19,9 @@ export type Inquiry = {
   email: string;
   interest: InquiryInterest;
   interest_label: string;
+  is_office_leasing?: boolean;
   message: string;
+  leasing_details?: OfficeLeasingDetails;
   is_handled: boolean;
   created_at: string;
 };

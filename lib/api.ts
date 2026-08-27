@@ -1,12 +1,23 @@
 export const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000/api";
 
+export type OfficeLeasingDetails = {
+  company_name?: string;
+  business_type?: string;
+  alt_phone?: string;
+  office_size?: string;
+  employees?: string;
+  move_in_date?: string;
+  duration_years?: string;
+};
+
 export type InquiryPayload = {
   name: string;
   phone: string;
   email?: string;
   interest: "office" | "mall" | "ballroom" | "apartment" | "general";
   message?: string;
+  leasing_details?: OfficeLeasingDetails;
 };
 
 export async function submitInquiry(payload: InquiryPayload): Promise<void> {
