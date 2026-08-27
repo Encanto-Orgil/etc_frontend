@@ -17,7 +17,7 @@ import NewsSection from "@/components/home/NewsSection";
 import ContactSection from "@/components/home/ContactSection";
 import FloatingActions from "@/components/home/FloatingActions";
 import JsonLd from "@/components/JsonLd";
-import { homeListingJsonLd, homeMetadata } from "@/lib/seo";
+import { homeMetadata, homePageJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = homeMetadata();
 
@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <>
       <link rel="preload" as="image" href={heroPreload} fetchPriority="high" />
-      <JsonLd data={homeListingJsonLd()} />
+      <JsonLd data={homePageJsonLd()} />
       <HomeExperience>
         {/* Conversion funnel: Hero → Trust → Benefits → Location → Planning → Contact */}
         <HeroSlider />

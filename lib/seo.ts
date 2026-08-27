@@ -400,17 +400,37 @@ export function siteNavigationJsonLd() {
   }));
 }
 
+function towerEntityId(tower: Tower): string {
+  const pageUrl = absoluteUrl(`/${tower.slug}`);
+  switch (tower.kind) {
+    case "office":
+      return `${pageUrl}#listing`;
+    case "mall":
+      return `${pageUrl}#shopping-center`;
+    case "ballroom":
+      return `${pageUrl}#venue`;
+    case "apartment":
+      return `${pageUrl}#residence`;
+  }
+}
+
 export function mainSectionsItemListJsonLd() {
   return {
     "@type": "ItemList",
     "@id": `${SITE_URL}/#main-sections`,
-    name: `${SITE_NAME} — төслийн хэсгүүд`,
-    itemListElement: SITE_SECTION_NAV.map((item, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: item.label,
-      url: absoluteUrl(item.href),
-    })),
+    name: `${SITE_NAME} — Office, Mall, Ballroom & Residence`,
+    description:
+      "Premium office, retail mall, event ballroom, and luxury residences at Encanto Trade Center, Ulaanbaatar.",
+    itemListElement: SITE_SECTION_NAV.map((item, index) => {
+      const tower = towers.find((t) => t.slug === item.slug);
+      return {
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.label,
+        url: absoluteUrl(item.href),
+        ...(tower ? { item: { "@id": towerEntityId(tower) } } : {}),
+      };
+    }),
   };
 }
 
@@ -725,22 +745,174 @@ export function ballroomTowerJsonLd(
   };
 }
 
-export function homeListingJsonLd() {
-  return {
-    "@context": "https://schema.org",
+function towerHomeEntityJsonLd(tower: Tower): Record<string, unknown> {
+  const pageUrl = absoluteUrl(`/${tower.slug}`);
+  const address = postalAddressJsonLd();
+
+  switch (tower.kind) {
+    case "office":
+      return {
+        "@type": "RealEstateListing",
+        "@id": towerEntityId(tower),
+        name: "Premium Office Spaces — Encanto Trade Center",
+        alternateName: [
+          "Grade-A Office Ulaanbaatar",
+          "Luxury Office Mongolia",
+          "Encanto Office Tower",
+        ],
+        description: OFFICE_PAGE_DESCRIPTION,
+        url: pageUrl,
+        image: absoluteUrl(tower.heroImage),
+        address,
+        offers: {
+          "@type": "Offer",
+          businessFunction: "http://purl.org/goodrelations/v1#LeaseOut",
+          category: "Office space for rent",
+          areaServed: [
+            {
+              "@type": "City",
+              name: "Ulaanbaatar",
+              containedInPlace: {
+                "@type": "Country",
+                name: "Mongolia",
+              },
+            },
+            {
+              "@type": "Country",
+              name: "Mongolia",
+            },
+          ],
+        },
+      };
+    case "mall":
+      return {
+        "@type": "ShoppingCenter",
+        "@id": towerEntityId(tower),
+        name: "Central Mall — Encanto Trade Center",
+        alternateName: [
+          "Encanto Mall",
+          "Encanto Trade Center Mall",
+          "Luxury Shopping Ulaanbaatar",
+        ],
+        description: tower.summary,
+        url: pageUrl,
+        image: absoluteUrl(tower.heroImage),
+        address,
+        containedInPlace: {
+          "@type": "Place",
+          name: SITE_NAME,
+          url: SITE_URL,
+          address,
+        },
+      };
+    case "ballroom":
+      return {
+        "@type": "EventVenue",
+        "@id": towerEntityId(tower),
+        name: "Encanto Grand Ballroom",
+        alternateName: [
+          "Encanto Event Hall Ulaanbaatar",
+          "Encanto Event Room",
+          "Event Hall Ulaanbaatar",
+          "Luxury Ballroom Mongolia",
+        ],
+        description: BALLROOM_PAGE_DESCRIPTION,
+        url: pageUrl,
+        image: absoluteUrl(tower.heroImage),
+        address,
+        telephone: project.contactPhone,
+        email: project.contactEmail,
+        maximumAttendeeCapacity: 1600,
+        containedInPlace: {
+          "@type": "Place",
+          name: SITE_NAME,
+          url: SITE_URL,
+          address,
+        },
+        makesOffer: {
+          "@type": "Offer",
+          name: "Event hall & ballroom venue hire",
+          url: `${pageUrl}#contact`,
+          areaServed: {
+            "@type": "City",
+            name: "Ulaanbaatar",
+          },
+        },
+      };
+    case "apartment":
+      return {
+        "@type": "ApartmentComplex",
+        "@id": towerEntityId(tower),
+        name: "Encanto Trade Center - Residence",
+        alternateName: [
+          "Encanto Residence",
+          "Luxury Apartments Ulaanbaatar",
+          "Premium Residence Mongolia",
+        ],
+        description: tower.summary,
+        url: pageUrl,
+        image: absoluteUrl(tower.heroImage),
+        address,
+        containedInPlace: {
+          "@type": "Place",
+          name: SITE_NAME,
+          url: SITE_URL,
+          address,
+        },
+        offers: {
+          "@type": "Offer",
+          category: "Luxury residential apartments",
+          areaServed: {
+            "@type": "City",
+            name: "Ulaanbaatar",
+          },
+        },
+      };
+  }
+}
+
+export function homePageJsonLd() {
+  const towerEntities = towers.map(towerHomeEntityJsonLd);
+
+  const listing = {
     "@type": "RealEstateListing",
     "@id": `${SITE_URL}/#listing`,
     name: SITE_NAME,
+    alternateName: ["ETC", "Encanto Trade Center Ulaanbaatar"],
     description: project.intro,
     url: SITE_URL,
     image: absoluteUrl(project.heroImage),
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Улаанбаатар",
-      addressRegion: "Баянзүрх дүүрэг",
-      addressCountry: "MN",
+    address: postalAddressJsonLd(),
+    containsPlace: towers.map((tower) => ({ "@id": towerEntityId(tower) })),
+  };
+
+  const webPage = {
+    "@type": "WebPage",
+    "@id": `${SITE_URL}/#webpage`,
+    url: SITE_URL,
+    name: SITE_NAME,
+    description: project.intro,
+    inLanguage: ["en", "mn"],
+    isPartOf: {
+      "@id": `${SITE_URL}/#website`,
+    },
+    about: {
+      "@id": `${SITE_URL}/#listing`,
+    },
+    mainEntity: {
+      "@id": `${SITE_URL}/#main-sections`,
     },
   };
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [webPage, listing, ...towerEntities],
+  };
+}
+
+/** @deprecated Use homePageJsonLd — kept for backwards compatibility */
+export function homeListingJsonLd() {
+  return homePageJsonLd();
 }
 
 export function sitemapEntries() {
