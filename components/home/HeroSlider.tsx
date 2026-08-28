@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import OptimizedImage from "@/components/OptimizedImage";
-import { IMAGE_WIDTHS } from "@/lib/image";
+import { HERO_IMAGE_QUALITY } from "@/lib/image";
 import { useTranslations } from "@/lib/i18n";
 import styles from "./HeroSlider.module.css";
 
@@ -38,8 +38,8 @@ export default function HeroSlider() {
         <motion.div
           key={HERO_IMAGE}
           className={styles.slide}
-          initial={{ opacity: 0, scale: 1.05 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
         >
@@ -49,8 +49,8 @@ export default function HeroSlider() {
             fill
             priority
             fetchPriority="high"
-            sizes={`(max-width: 768px) 100vw, ${IMAGE_WIDTHS.hero}px`}
-            quality={75}
+            sizes="100vw"
+            quality={HERO_IMAGE_QUALITY}
             className={styles.slideImage}
           />
         </motion.div>

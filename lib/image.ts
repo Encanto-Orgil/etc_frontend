@@ -2,6 +2,9 @@
 
 export const DEFAULT_IMAGE_QUALITY = 80;
 
+/** Full-viewport hero — keep sharp on retina without serving raw CDN originals. */
+export const HERO_IMAGE_QUALITY = 92;
+
 const GALLERY_CDN_BASE = process.env.NEXT_PUBLIC_GALLERY_CDN_BASE?.replace(/\/$/, "") ?? "";
 
 /**
