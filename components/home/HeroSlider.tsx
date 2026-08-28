@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
+import { HERO_BLUR_DATA_URL } from "@/lib/heroBlurHash";
 import { heroBackgroundUrl } from "@/lib/image";
 import { useTranslations } from "@/lib/i18n";
 import styles from "./HeroSlider.module.css";
@@ -14,6 +15,7 @@ export default function HeroSlider() {
   const t = useTranslations();
   const hero = t.home.hero;
   const [light, setLight] = useState({ x: 50, y: 40 });
+  const [heroLoaded, setHeroLoaded] = useState(false);
   const heroAlt = `${hero.title} ${hero.titleLine2}`.trim();
 
   return (
@@ -34,24 +36,25 @@ export default function HeroSlider() {
         }}
         aria-hidden
       />
-      <AnimatePresence mode="sync">
-        <motion.div
-          key={HERO_IMAGE}
-          className={styles.slide}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <img
-            src={HERO_IMAGE_SRC}
-            alt={heroAlt}
-            className={styles.slideImage}
-            fetchPriority="high"
-            decoding="async"
-          />
-        </motion.div>
-      </AnimatePresence>
+      <div className={styles.slide}>
+        <img
+          src={HERO_BLUR_DATA_URL}
+          alt=""
+          aria-hidden
+          className={styles.slidePlaceholder}
+        />
+        <img
+          src={HERO_IMAGE_SRC}
+          alt={heroAlt}
+          ref={(img) => {
+            if (img?.complete) setHeroLoaded(true);
+          }}
+          className={`${styles.slideImage} ${heroLoaded ? styles.slideImageLoaded : ""}`}
+          fetchPriority="high"
+          decoding="async"
+          onLoad={() => setHeroLoaded(true)}
+        />
+      </div>
 
       <div className={styles.overlay} />
 

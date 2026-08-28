@@ -5,7 +5,7 @@
   height: 100dvh;
   min-height: 100svh;
   overflow: hidden;
-  background: var(--black);
+  background: #0d1520;
 }
 
 .slide {
@@ -13,6 +13,7 @@
   inset: 0;
 }
 
+.slidePlaceholder,
 .slideImage {
   position: absolute;
   inset: 0;
@@ -20,6 +21,20 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
+}
+
+.slidePlaceholder {
+  transform: scale(1.08);
+  filter: blur(12px);
+}
+
+.slideImage {
+  opacity: 0;
+  transition: opacity 0.65s var(--ease);
+}
+
+.slideImageLoaded {
+  opacity: 1;
 }
 
 .overlay {
@@ -424,5 +439,12 @@
   .tag {
     font-size: 8px;
     letter-spacing: 0.06em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slideImage {
+    transition: none;
+    opacity: 1;
   }
 }
