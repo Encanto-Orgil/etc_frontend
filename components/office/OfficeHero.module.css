@@ -9,9 +9,31 @@
 .bg {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
   transform: scale(1.04);
+}
+
+.bgPlaceholder,
+.bgImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.bgPlaceholder {
+  transform: scale(1.08);
+  filter: blur(12px);
+}
+
+.bgImage {
+  opacity: 0;
+  transition: opacity 0.65s var(--ease);
+}
+
+.bgImageLoaded {
+  opacity: 1;
 }
 
 .overlay {
