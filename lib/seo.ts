@@ -13,7 +13,7 @@ export const HOME_PAGE_TITLE =
 
 /** Meta/OG only — keep under ~160 characters for search snippets */
 export const HOME_PAGE_DESCRIPTION =
-  "Mongolia's tallest steel-frame tower in Bayanzurkh, Ulaanbaatar — premium office, Central Mall, Grand Ballroom, and luxury residences at Encanto Trade Center.";
+  "Mongolia's tallest steel-frame tower in Bayanzurkh, Ulaanbaatar — premium office, Encanto Trade Center Mall, Grand Ballroom, and luxury residences.";
 
 const DEFAULT_OG_IMAGE = assetUrl("/images/renders/render-8.jpg");
 
@@ -366,6 +366,7 @@ export function homeMetadata(): Metadata {
       ...DEFAULT_KEYWORDS,
       "35 давхар",
       "135 метр",
+      "Encanto Trade Center Mall",
       "Central Mall",
       "Encanto Trade Center - Residence",
     ],
