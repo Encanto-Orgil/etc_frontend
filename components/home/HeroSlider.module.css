@@ -11,8 +11,11 @@
 .slide {
   position: absolute;
   inset: 0;
-  background-size: cover;
-  background-position: center;
+}
+
+.slideImage {
+  object-fit: cover;
+  object-position: center;
 }
 
 .overlay {

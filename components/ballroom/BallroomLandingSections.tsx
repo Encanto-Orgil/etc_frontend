@@ -229,7 +229,11 @@ export function BallroomReservationForm({ onCheckAvailability }: { onCheckAvaila
           />
         </Form.Item>
         <Form.Item name="eventDate" label={copy.eventDate}>
-          <DatePicker size="large" className={formStyles.datePicker} popupClassName={formStyles.datePopup} />
+          <DatePicker
+            size="large"
+            className={formStyles.datePicker}
+            classNames={{ popup: { root: formStyles.datePopup } }}
+          />
         </Form.Item>
       </div>
       <Form.Item name="guestCount" label={copy.guestCount}>

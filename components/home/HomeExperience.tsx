@@ -1,12 +1,7 @@
 "use client";
 
 import { useEffect, type ReactNode } from "react";
-import Lenis from "lenis";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./HomePage.module.css";
-
-gsap.registerPlugin(ScrollTrigger);
 
 type Props = {
   children: ReactNode;
@@ -21,86 +16,108 @@ function shouldUseSmoothScroll() {
 
 export default function HomeExperience({ children }: Props) {
   useEffect(() => {
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    let lenis: Lenis | null = null;
+    let cancelled = false;
+    let lenis: { destroy: () => void } | null = null;
     let tick: ((time: number) => void) | null = null;
+    let gsap: typeof import("gsap").default | null = null;
+    let ScrollTrigger: typeof import("gsap/ScrollTrigger").ScrollTrigger | null = null;
 
-    if (shouldUseSmoothScroll()) {
-      lenis = new Lenis({
-        duration: 1.15,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smoothWheel: true,
-      });
+    void (async () => {
+      const [gsapMod, scrollTriggerMod, lenisMod] = await Promise.all([
+        import("gsap"),
+        import("gsap/ScrollTrigger"),
+        import("lenis"),
+      ]);
 
-      lenis.on("scroll", ScrollTrigger.update);
+      if (cancelled) return;
 
-      tick = (time: number) => {
-        lenis?.raf(time * 1000);
-      };
-      gsap.ticker.add(tick);
-      gsap.ticker.lagSmoothing(0);
-    }
+      const gsapInstance = gsapMod.default;
+      const scrollTrigger = scrollTriggerMod.ScrollTrigger;
+      gsapInstance.registerPlugin(scrollTrigger);
+      gsap = gsapInstance;
+      ScrollTrigger = scrollTrigger;
 
-    if (!prefersReduced) {
-      const revealEls = gsap.utils.toArray<HTMLElement>("[data-home-reveal]");
-      revealEls.forEach((el) => {
-        gsap.fromTo(
-          el,
-          { opacity: 0, y: 48 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: "power3.out",
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let lenisInstance: InstanceType<typeof lenisMod.default> | null = null;
+
+      if (shouldUseSmoothScroll()) {
+        lenisInstance = new lenisMod.default({
+          duration: 1.15,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smoothWheel: true,
+        });
+        lenis = lenisInstance;
+
+        lenisInstance.on("scroll", scrollTrigger.update);
+
+        tick = (time: number) => {
+          lenisInstance?.raf(time * 1000);
+        };
+        gsapInstance.ticker.add(tick);
+        gsapInstance.ticker.lagSmoothing(0);
+      }
+
+      if (!prefersReduced) {
+        const revealEls = gsapInstance.utils.toArray<HTMLElement>("[data-home-reveal]");
+        revealEls.forEach((el) => {
+          gsapInstance.fromTo(
+            el,
+            { opacity: 0, y: 48 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: el,
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+              },
+            },
+          );
+        });
+
+        const parallaxEls = gsapInstance.utils.toArray<HTMLElement>("[data-home-parallax]");
+        parallaxEls.forEach((el) => {
+          gsapInstance.to(el, {
+            yPercent: 12,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el.parentElement ?? el,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
+          });
+        });
+
+        const counters = gsapInstance.utils.toArray<HTMLElement>("[data-home-counter]");
+        counters.forEach((el) => {
+          const target = Number(el.dataset.homeCounter ?? "0");
+          const suffix = el.dataset.homeCounterSuffix ?? "";
+          const obj = { val: 0 };
+          gsapInstance.to(obj, {
+            val: target,
+            duration: 1.6,
+            ease: "power2.out",
             scrollTrigger: {
               trigger: el,
               start: "top 85%",
-              toggleActions: "play none none reverse",
+              once: true,
             },
-          },
-        );
-      });
-
-      const parallaxEls = gsap.utils.toArray<HTMLElement>("[data-home-parallax]");
-      parallaxEls.forEach((el) => {
-        gsap.to(el, {
-          yPercent: 12,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el.parentElement ?? el,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
+            onUpdate: () => {
+              el.textContent = `${Math.round(obj.val)}${suffix}`;
+            },
+          });
         });
-      });
-
-      const counters = gsap.utils.toArray<HTMLElement>("[data-home-counter]");
-      counters.forEach((el) => {
-        const target = Number(el.dataset.homeCounter ?? "0");
-        const suffix = el.dataset.homeCounterSuffix ?? "";
-        const obj = { val: 0 };
-        gsap.to(obj, {
-          val: target,
-          duration: 1.6,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 85%",
-            once: true,
-          },
-          onUpdate: () => {
-            el.textContent = `${Math.round(obj.val)}${suffix}`;
-          },
-        });
-      });
-    }
+      }
+    })();
 
     return () => {
-      if (tick) gsap.ticker.remove(tick);
+      cancelled = true;
+      if (tick && gsap) gsap.ticker.remove(tick);
       lenis?.destroy();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      ScrollTrigger?.getAll().forEach((t) => t.kill());
     };
   }, []);
 

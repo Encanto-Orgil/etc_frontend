@@ -3,16 +3,18 @@
 import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { heroBackgroundUrl } from "@/lib/image";
+import OptimizedImage from "@/components/OptimizedImage";
+import { IMAGE_WIDTHS } from "@/lib/image";
 import { useTranslations } from "@/lib/i18n";
 import styles from "./HeroSlider.module.css";
 
-const slideImage = heroBackgroundUrl("/images/renders/render-34.jpg");
+const HERO_IMAGE = "/images/renders/render-34.jpg";
 
 export default function HeroSlider() {
   const t = useTranslations();
   const hero = t.home.hero;
   const [light, setLight] = useState({ x: 50, y: 40 });
+  const heroAlt = `${hero.title} ${hero.titleLine2}`.trim();
 
   return (
     <section
@@ -34,14 +36,24 @@ export default function HeroSlider() {
       />
       <AnimatePresence mode="sync">
         <motion.div
-          key={slideImage}
+          key={HERO_IMAGE}
           className={styles.slide}
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-          style={{ backgroundImage: `url(${slideImage})` }}
-        />
+        >
+          <OptimizedImage
+            src={HERO_IMAGE}
+            alt={heroAlt}
+            fill
+            priority
+            fetchPriority="high"
+            sizes={`(max-width: 768px) 100vw, ${IMAGE_WIDTHS.hero}px`}
+            quality={75}
+            className={styles.slideImage}
+          />
+        </motion.div>
       </AnimatePresence>
 
       <div className={styles.overlay} />

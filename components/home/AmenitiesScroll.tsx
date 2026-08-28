@@ -1,5 +1,6 @@
 "use client";
 
+import OptimizedImage from "@/components/OptimizedImage";
 import { getAmenities, useLocale, useTranslations } from "@/lib/i18n";
 import shared from "./home.shared.module.css";
 import styles from "./AmenitiesScroll.module.css";
@@ -56,7 +57,21 @@ export default function AmenitiesScroll() {
                     : undefined
                 }
               >
-                <img src={item.image} alt={item.title} className={styles.image} loading="lazy" />
+                <div className={styles.imageWrap}>
+                  <OptimizedImage
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes={
+                      isFeatured
+                        ? "(max-width: 560px) 100vw, (max-width: 960px) 100vw, 50vw"
+                        : "(max-width: 560px) 100vw, (max-width: 960px) 50vw, 25vw"
+                    }
+                    placeholder={item.blurDataURL ? "blur" : "empty"}
+                    blurDataURL={item.blurDataURL}
+                    className={styles.image}
+                  />
+                </div>
                 <div className={styles.overlay} aria-hidden />
                 <div className={styles.cardBody}>
                   <span className={styles.index}>{String(index + 1).padStart(2, "0")}</span>

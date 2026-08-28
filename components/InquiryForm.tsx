@@ -159,7 +159,11 @@ export default function InquiryForm({
             <Select
               size="large"
               options={options}
-              popupClassName={theme === "dark" ? styles.selectDropdownDark : undefined}
+              classNames={
+                theme === "dark"
+                  ? { popup: { root: styles.selectDropdownDark } }
+                  : undefined
+              }
             />
           </Form.Item>
         )}

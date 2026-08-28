@@ -10,6 +10,7 @@ import {
 } from "../../ballroomContent";
 import { ballroomSkyfold as ballroomSkyfoldAssets } from "../../ballroomBrochure";
 import type { BallroomEventIcon } from "../types";
+import { AMENITY_BLUR_DATA_URLS } from "../../amenityBlurHashes";
 
 const catalogs: Record<Locale, Translations> = { en, mn };
 
@@ -182,6 +183,7 @@ export function getAmenities(locale: Locale) {
   return items.map((item, index) => ({
     title: item.title,
     image: amenityImages[index],
+    blurDataURL: AMENITY_BLUR_DATA_URLS[index],
   }));
 }
 
