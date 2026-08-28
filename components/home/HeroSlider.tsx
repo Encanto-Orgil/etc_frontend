@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import OptimizedImage from "@/components/OptimizedImage";
-import { HERO_IMAGE_QUALITY } from "@/lib/image";
+import { heroBackgroundUrl } from "@/lib/image";
 import { useTranslations } from "@/lib/i18n";
 import styles from "./HeroSlider.module.css";
 
 const HERO_IMAGE = "/images/renders/render-34.jpg";
+const HERO_IMAGE_SRC = heroBackgroundUrl(HERO_IMAGE);
 
 export default function HeroSlider() {
   const t = useTranslations();
@@ -43,15 +43,12 @@ export default function HeroSlider() {
           exit={{ opacity: 0 }}
           transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
         >
-          <OptimizedImage
-            src={HERO_IMAGE}
+          <img
+            src={HERO_IMAGE_SRC}
             alt={heroAlt}
-            fill
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-            quality={HERO_IMAGE_QUALITY}
             className={styles.slideImage}
+            fetchPriority="high"
+            decoding="async"
           />
         </motion.div>
       </AnimatePresence>
