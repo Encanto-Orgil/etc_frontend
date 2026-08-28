@@ -1,12 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { useLayoutEffect, useState } from "react";
 import type { IconType } from "react-icons";
 import { FaCalendarCheck, FaFacebookMessenger } from "react-icons/fa6";
 import { LuPhone } from "react-icons/lu";
 import { project } from "@/lib/data";
 import { useTranslations } from "@/lib/i18n";
 import styles from "./FloatingActions.module.css";
+
+const MOBILE_MQ = "(max-width: 768px)";
+/** 2nd section anchor — FAB shows once BrandStatement enters view */
+const REVEAL_SECTION_ID = "brand";
 
 type Action = {
   href: string;
@@ -15,8 +20,59 @@ type Action = {
   external?: boolean;
 };
 
+function useMobileFabVisible() {
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return !window.matchMedia(MOBILE_MQ).matches;
+  });
+
+  useLayoutEffect(() => {
+    const mq = window.matchMedia(MOBILE_MQ);
+    let raf = 0;
+
+    const update = () => {
+      if (!mq.matches) {
+        setVisible(true);
+        return;
+      }
+
+      const section = document.getElementById(REVEAL_SECTION_ID);
+      if (!section) {
+        setVisible(false);
+        return;
+      }
+
+      const top = section.getBoundingClientRect().top;
+      setVisible(top <= window.innerHeight * 0.92);
+    };
+
+    const waitForSection = () => {
+      if (!document.getElementById(REVEAL_SECTION_ID)) {
+        raf = requestAnimationFrame(waitForSection);
+        return;
+      }
+      update();
+    };
+
+    waitForSection();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    mq.addEventListener("change", update);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      mq.removeEventListener("change", update);
+    };
+  }, []);
+
+  return visible;
+}
+
 export default function FloatingActions() {
   const copy = useTranslations().home.floatingActions;
+  const visible = useMobileFabVisible();
 
   const actions: Action[] = [
     {
@@ -38,7 +94,11 @@ export default function FloatingActions() {
   ];
 
   return (
-    <div className={styles.wrap} aria-label={copy.ariaLabel}>
+    <div
+      className={`${styles.wrap} ${visible ? styles.wrapVisible : styles.wrapHidden}`}
+      aria-label={copy.ariaLabel}
+      aria-hidden={!visible}
+    >
       {actions.map((action) => {
         const Icon = action.icon;
         const className = styles.btn;

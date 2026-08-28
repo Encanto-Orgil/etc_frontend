@@ -7,6 +7,24 @@
   flex-direction: column;
   gap: 10px;
   align-items: flex-end;
+  transition:
+    opacity 0.35s var(--ease),
+    transform 0.35s var(--ease),
+    visibility 0.35s var(--ease);
+}
+
+.wrapVisible {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.wrapHidden {
+  opacity: 0;
+  transform: translateY(10px);
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .btn {
@@ -69,6 +87,12 @@
   max-width: 120px;
   opacity: 1;
 }
+@media (prefers-reduced-motion: reduce) {
+  .wrap {
+    transition: none;
+  }
+}
+
 @media (max-width: 768px) {
   .wrap {
     right: 12px;

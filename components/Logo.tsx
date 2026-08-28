@@ -31,8 +31,9 @@ export default function Logo({
         className={`${styles.img} ${variant === "muted" ? styles.muted : styles.white}`}
         style={{ height }}
         priority={priority}
-        fetchPriority={priority ? "high" : undefined}
-        loading={priority ? "eager" : "lazy"}
+        {...(priority
+          ? { fetchPriority: "high" as const, loading: "eager" as const }
+          : { loading: "lazy" as const, fetchPriority: "low" as const })}
       />
     </Link>
   );

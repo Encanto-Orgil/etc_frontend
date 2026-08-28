@@ -158,7 +158,7 @@ export default function Navbar() {
           <div className={styles.shine} aria-hidden />
           <div className={`${styles.inner} ${isLanding && scrolled ? styles.innerPill : ""}`}>
             <Logo
-              priority
+              priority={!isLanding}
               height={52}
               className={styles.logo}
               onClick={() => setOpen(false)}
