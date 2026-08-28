@@ -119,10 +119,10 @@ const BALLROOM_KEYWORDS = [
 ] as const;
 
 export const MALL_PAGE_TITLE =
-  "Central Mall | Premium Retail & Shopping in Ulaanbaatar, Mongolia — Encanto Trade Center";
+  "Encanto Trade Center Mall | Premium Retail & Shopping in Ulaanbaatar, Mongolia";
 
 export const MALL_PAGE_DESCRIPTION =
-  "Six floors of premium retail at Central Mall in Ulaanbaatar — international luxury brands, gastronomy, and entertainment in a naturally lit atrium with 200+ stores, 8-level parking, and direct glass-bridge access to Encanto office and residence towers.";
+  "Six floors of premium retail at Encanto Trade Center Mall in Ulaanbaatar — international luxury brands, gastronomy, and entertainment in a naturally lit atrium with 200+ stores, 8-level parking, and direct glass-bridge access to Encanto office and residence towers.";
 
 const MALL_KEYWORDS = [
   ...DEFAULT_KEYWORDS,
@@ -807,13 +807,19 @@ export function mallTowerJsonLd(
   const shoppingCenter = {
     "@type": "ShoppingCenter",
     "@id": `${pageUrl}#shopping-center`,
-    name: "Central Mall — Encanto Trade Center",
+    name: "Encanto Trade Center Mall",
     alternateName: [
       "Encanto Mall",
-      "Encanto Trade Center Mall",
+      "Central Mall",
       "Central Mall Ulaanbaatar",
       "Luxury Shopping Ulaanbaatar",
       "Premium Retail Mongolia",
+      "Shopping Center Ulaanbaatar",
+      "Shopping Center Mongolia",
+      "Shopping Center Bayanzurkh District",
+      "Shopping Center Ulaanbaatar Bayanzurkh District",
+      "Shopping Center Ulaanbaatar Bayanzurkh District",
+      "Central Shopping Center Ulaanbaatar",
     ],
     description: MALL_PAGE_DESCRIPTION,
     url: pageUrl,
@@ -862,7 +868,7 @@ export function mallTowerJsonLd(
       "@type": "Offer",
       name: "Retail space & mall tenant leasing",
       description:
-        "Premium retail and tenant space for lease at Central Mall — luxury brands, restaurants, food court, and service operators in Ulaanbaatar.",
+        "Premium retail and tenant space for lease at Encanto Trade Center Mall — luxury brands, restaurants, food court, and service operators in Ulaanbaatar.",
       url: `${pageUrl}#contact`,
       businessFunction: "http://purl.org/goodrelations/v1#LeaseOut",
       category: "Retail space for lease",
@@ -1165,10 +1171,10 @@ function towerHomeEntityJsonLd(tower: Tower): Record<string, unknown> {
       return {
         "@type": "ShoppingCenter",
         "@id": towerEntityId(tower),
-        name: "Central Mall — Encanto Trade Center",
+        name: "Encanto Trade Center Mall",
         alternateName: [
           "Encanto Mall",
-          "Encanto Trade Center Mall",
+          "Central Mall",
           "Central Mall Ulaanbaatar",
           "Luxury Shopping Ulaanbaatar",
         ],
