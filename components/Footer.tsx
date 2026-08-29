@@ -70,7 +70,6 @@ export default function Footer() {
               }}
             >
               {word}
-              {index < taglineWords.length - 1 ? "\u00a0" : ""}
             </span>
           ))}
         </h2>

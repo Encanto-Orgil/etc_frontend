@@ -405,6 +405,14 @@ export type Translations = {
     backToNews: string;
     readOriginal: string;
   };
+  notFound: {
+    code: string;
+    title: string;
+    description: string;
+    backHome: string;
+    explore: string;
+    contact: string;
+  };
   ballroom: BallroomTranslations;
   office: OfficeTranslations;
   mall: MallTranslations;

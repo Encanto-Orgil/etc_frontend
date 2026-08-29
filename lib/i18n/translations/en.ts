@@ -327,6 +327,15 @@ export const en: Translations = {
     backToNews: "← Back to news",
     readOriginal: "Read the original article",
   },
+  notFound: {
+    code: "404",
+    title: "Page not found",
+    description:
+      "The page you are looking for may have moved, been removed, or never existed. Explore Encanto Trade Center or return to the homepage.",
+    backHome: "Back to home",
+    explore: "Explore destinations",
+    contact: "Contact us",
+  },
 };
 
 export { amenityImages, galleryImages };

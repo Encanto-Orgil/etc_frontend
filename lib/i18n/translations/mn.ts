@@ -302,4 +302,13 @@ export const mn: Translations = {
     backToNews: "← Мэдээ рүү буцах",
     readOriginal: "Анхны мэдээг унших",
   },
+  notFound: {
+    code: "404",
+    title: "Хуудас олдсонгүй",
+    description:
+      "Таны хайж буй хуудас шилжсэн, устгагдсан эсвэл байхгүй байж магадгүй. Encanto Trade Center-ийг үзэх эсвэл нүүр хуудас руу буцаарай.",
+    backHome: "Нүүр хуудас руу",
+    explore: "Хэсгүүдийг үзэх",
+    contact: "Холбоо барих",
+  },
 };
