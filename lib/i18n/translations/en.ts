@@ -38,6 +38,7 @@ export const en: Translations = {
     ballroom: "Ballroom",
     residences: "Residences",
     location: "Location",
+    news: "News",
     contact: "Contact",
     bookTour: "Book Tour",
     openMenu: "Open menu",
@@ -262,6 +263,7 @@ export const en: Translations = {
       eyebrow: "Latest News",
       title: "Updates from Encanto.",
       headerNote: "Featured story and recent announcements from the project.",
+      viewAll: "View all news",
     },
     contact: {
       eyebrow: "Contact",
@@ -314,6 +316,17 @@ export const en: Translations = {
   office: officeEn,
   mall: mallEn,
   residence: residenceEn,
+  newsPage: {
+    eyebrow: "News",
+    title: "Updates from Encanto.",
+    lead: "Project announcements, leasing updates, and news from Mongolia's tallest building.",
+    empty: "No news articles published yet.",
+    backHome: "← Back to home",
+  },
+  newsArticle: {
+    backToNews: "← Back to news",
+    readOriginal: "Read the original article",
+  },
 };
 
 export { amenityImages, galleryImages };

@@ -240,6 +240,7 @@ export type Translations = {
     ballroom: string;
     residences: string;
     location: string;
+    news: string;
     contact: string;
     bookTour: string;
     openMenu: string;
@@ -355,6 +356,7 @@ export type Translations = {
       eyebrow: string;
       title: string;
       headerNote: string;
+      viewAll: string;
     };
     contact: {
       eyebrow: string;
@@ -391,6 +393,17 @@ export type Translations = {
       hoverLead: string;
       viewLabel: string;
     };
+  };
+  newsPage: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    empty: string;
+    backHome: string;
+  };
+  newsArticle: {
+    backToNews: string;
+    readOriginal: string;
   };
   ballroom: BallroomTranslations;
   office: OfficeTranslations;

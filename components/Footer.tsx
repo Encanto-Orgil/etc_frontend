@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { href: "/mall", key: "towerMall" as const },
   { href: "/ballroom", key: "towerBallroom" as const },
   { href: "/residence", key: "towerResidence" as const },
+  { href: "/news", key: "news" as const },
   { href: "/#contact", key: "contact" as const },
 ];
 

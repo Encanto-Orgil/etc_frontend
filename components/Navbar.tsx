@@ -78,6 +78,19 @@ export default function Navbar() {
     [pathname, t],
   );
 
+  const drawerLinks = useMemo(() => {
+    const newsLink = {
+      href: "/news",
+      label: t.nav.news,
+      title: t.nav.news,
+      slug: "news",
+      sectionId: undefined,
+    };
+    const locationIndex = links.findIndex((link) => link.slug === "location");
+    if (locationIndex === -1) return [...links, newsLink];
+    return [...links.slice(0, locationIndex), newsLink, ...links.slice(locationIndex)];
+  }, [links, t]);
+
   const contactHref = getContactHref(pathname);
   const ctaLabel = t.nav.contact;
   const CtaIcon = MailOutlined;
@@ -214,7 +227,7 @@ export default function Navbar() {
         <div className={styles.drawer}>
           <Logo height={52} onClick={() => setOpen(false)} className={styles.drawerLogo} />
           <nav className={styles.drawerNav} aria-label="Main navigation">
-            {links.map((l) => (
+            {drawerLinks.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}

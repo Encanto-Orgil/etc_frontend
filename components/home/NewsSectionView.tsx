@@ -98,7 +98,12 @@ export default function NewsSectionView({ items }: { items: NewsItem[] }) {
             <p className={shared.eyebrow}>{copy.eyebrow}</p>
             <h2 className={shared.title}>{copy.title}</h2>
           </div>
-          <p className={styles.headerNote}>{copy.headerNote}</p>
+          <div className={styles.headerAside}>
+            <p className={styles.headerNote}>{copy.headerNote}</p>
+            <Link href="/news" className={styles.viewAll}>
+              {copy.viewAll}
+            </Link>
+          </div>
         </div>
 
         <div className={styles.layout}>

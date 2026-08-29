@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import type { PublicSiteNewsDetail } from "@/lib/siteNewsManagement";
+import { useTranslations } from "@/lib/i18n";
 import styles from "./NewsArticleView.module.css";
 
 export default function NewsArticleView({ article }: { article: PublicSiteNewsDetail }) {
+  const copy = useTranslations().newsArticle;
+
   return (
     <article className={styles.page}>
       <div className={styles.hero}>
@@ -11,8 +16,8 @@ export default function NewsArticleView({ article }: { article: PublicSiteNewsDe
       </div>
 
       <div className={styles.container}>
-        <Link href="/#news" className={styles.backLink}>
-          ← Back to news
+        <Link href="/news" className={styles.backLink}>
+          {copy.backToNews}
         </Link>
 
         <header className={styles.header}>
@@ -35,7 +40,7 @@ export default function NewsArticleView({ article }: { article: PublicSiteNewsDe
         {article.external_url ? (
           <p className={styles.external}>
             <a href={article.external_url} target="_blank" rel="noreferrer">
-              Read the original article
+              {copy.readOriginal}
             </a>
           </p>
         ) : null}

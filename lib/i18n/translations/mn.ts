@@ -13,6 +13,7 @@ export const mn: Translations = {
     ballroom: "Ballroom",
     residences: "Орон сууц",
     location: "Байршил",
+    news: "Мэдээ",
     contact: "Холбоо барих",
     bookTour: "Танилцуулга захиалах",
     openMenu: "Цэс нээх",
@@ -237,6 +238,7 @@ export const mn: Translations = {
       eyebrow: "Сүүлийн мэдээ",
       title: "Encanto-ийн мэдээлэл",
       headerNote: "Төслийн онцлох мэдээ болон шинэ мэдээлэл.",
+      viewAll: "Бүх мэдээ үзэх",
     },
     contact: {
       eyebrow: "Холбоо барих",
@@ -289,4 +291,15 @@ export const mn: Translations = {
   office: officeMn,
   mall: mallMn,
   residence: residenceMn,
+  newsPage: {
+    eyebrow: "Мэдээ",
+    title: "Encanto-ийн мэдээлэл",
+    lead: "Төслийн зар мэдээ, түрээсийн мэдээлэл — Монголын хамгийн өндөр барилгаас.",
+    empty: "Одоогоор нийтлэгдсэн мэдээ байхгүй байна.",
+    backHome: "← Нүүр хуудас руу буцах",
+  },
+  newsArticle: {
+    backToNews: "← Мэдээ рүү буцах",
+    readOriginal: "Анхны мэдээг унших",
+  },
 };

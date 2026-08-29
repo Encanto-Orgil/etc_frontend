@@ -6,6 +6,31 @@
   margin-bottom: clamp(32px, 4vw, 48px);
 }
 
+.headerAside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+  justify-self: end;
+}
+
+.viewAll {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+  transition: opacity 0.25s var(--ease);
+}
+
+.viewAll:hover {
+  opacity: 0.72;
+}
+
 .headerNote {
   margin: 0;
   max-width: 34ch;
@@ -196,6 +221,10 @@
   .header {
     grid-template-columns: 1fr;
     align-items: start;
+  }
+
+  .headerAside {
+    align-items: flex-start;
   }
 
   .headerNote {

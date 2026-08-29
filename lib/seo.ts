@@ -9,17 +9,47 @@ export const SITE_URL =
   "https://encantotrade.mn";
 
 export const HOME_PAGE_TITLE =
-  "Encanto Trade Center — Luxury Office, Mall, Ballroom & Residence in Ulaanbaatar";
+  "Encanto Trade Center | Tallest Building in Mongolia — Ulaanbaatar";
 
 /** Meta/OG only — keep under ~160 characters for search snippets */
 export const HOME_PAGE_DESCRIPTION =
-  "Mongolia's tallest steel-frame tower in Bayanzurkh, Ulaanbaatar — premium office, Encanto Trade Center Mall, Grand Ballroom, and luxury residences.";
+  "Encanto Trade Center is the tallest building in Mongolia — a 135 m, 35-floor tower in Bayanzurkh, Ulaanbaatar with premium office, mall, ballroom & residences.";
+
+const TALLEST_BUILDING_KEYWORDS = [
+  "tallest building in Mongolia",
+  "tallest building in mongolia",
+  "tallest building Mongolia",
+  "highest building in Mongolia",
+  "tallest building in Ulaanbaatar",
+  "tallest skyscraper Mongolia",
+  "Mongolia tallest building",
+  "tallest tower Mongolia",
+  "tallest steel-frame building Mongolia",
+  "135 meter building Mongolia",
+  "35 floor building Ulaanbaatar",
+  "Монголын хамгийн өндөр барилга",
+  "хамгийн өндөр барилга",
+  "хамгийн өндөр барилга Монгол",
+] as const;
+
+/** FAQ for JSON-LD only — targets "tallest building in mongolia" featured snippets */
+const HOME_FAQ = [
+  {
+    q: "What is the tallest building in Mongolia?",
+    a: "Encanto Trade Center in Ulaanbaatar is the tallest building in Mongolia — a 135-meter, 35-floor steel-frame tower in Bayanzurkh District with premium office, Encanto Trade Center Mall, Grand Ballroom, and luxury residences.",
+  },
+  {
+    q: "How tall is Encanto Trade Center?",
+    a: "Encanto Trade Center stands 135 meters (443 feet) tall with 35 floors, making it the tallest building in Mongolia.",
+  },
+] as const;
 
 const DEFAULT_OG_IMAGE = assetUrl("/images/renders/render-8.jpg");
 
 const DEFAULT_KEYWORDS = [
   "Encanto Trade Center",
   "ETC",
+  ...TALLEST_BUILDING_KEYWORDS,
   "Баянзүрх",
   "Улаанбаатар",
   "оффис түрээс",
@@ -42,10 +72,10 @@ type PageMetaInput = {
 };
 
 export const OFFICE_PAGE_TITLE =
-  "Premium Office Spaces in Ulaanbaatar, Mongolia — Encanto Trade Center";
+  "Premium Office Spaces in Mongolia's Tallest Building — Encanto Trade Center";
 
 export const OFFICE_PAGE_DESCRIPTION =
-  "Mongolia's tallest Grade-A office tower — luxury premium workspaces with 4.5 m ceilings, YUANDA glass facade, FUJITEC smart elevators, and 1,500 parking spaces in Ulaanbaatar.";
+  "The tallest building in Mongolia — Grade-A office tower with 4.5 m ceilings, YUANDA glass facade, FUJITEC smart elevators, and 1,500 parking spaces in Ulaanbaatar.";
 
 const OFFICE_KEYWORDS = [
   ...DEFAULT_KEYWORDS,
@@ -485,9 +515,15 @@ export function organizationJsonLd() {
   return {
     "@type": "Organization",
     name: SITE_NAME,
+    alternateName: [
+      "ETC",
+      "Encantotrade.mn",
+      "Tallest building in Mongolia",
+      "Mongolia tallest building",
+    ],
     url: SITE_URL,
     logo: absoluteUrl("/images/encanto-logo.png"),
-    description: project.intro,
+    description: HOME_PAGE_DESCRIPTION,
     address: {
       "@type": "PostalAddress",
       addressLocality: "Улаанбаатар",
@@ -511,9 +547,13 @@ export function websiteJsonLd() {
     "@type": "WebSite",
     "@id": `${SITE_URL}/#website`,
     name: SITE_NAME,
-    alternateName: ["Encantotrade.mn", "ETC"],
+    alternateName: [
+      "Encantotrade.mn",
+      "ETC",
+      "Tallest building in Mongolia",
+    ],
     url: SITE_URL,
-    description: project.intro,
+    description: HOME_PAGE_DESCRIPTION,
     inLanguage: "mn",
     publisher: {
       "@id": `${SITE_URL}/#organization`,
@@ -554,7 +594,7 @@ export function mainSectionsItemListJsonLd() {
     "@id": `${SITE_URL}/#main-sections`,
     name: `${SITE_NAME} — Office, Mall, Ballroom & Residence`,
     description:
-      "Premium office, retail mall, event ballroom, and luxury residences at Encanto Trade Center, Ulaanbaatar.",
+      "The tallest building in Mongolia — premium office, retail mall, event ballroom, and luxury residences at Encanto Trade Center, Ulaanbaatar.",
     itemListElement: SITE_SECTION_NAV.map((item, index) => {
       const tower = towers.find((t) => t.slug === item.slug);
       return {
@@ -577,6 +617,7 @@ export function siteWideJsonLd() {
         "@id": `${SITE_URL}/#organization`,
       },
       websiteJsonLd(),
+      projectBuildingJsonLd(),
       ...siteNavigationJsonLd(),
       mainSectionsItemListJsonLd(),
     ],
@@ -677,6 +718,59 @@ function postalAddressJsonLd() {
   };
 }
 
+function projectBuildingJsonLd() {
+  return {
+    "@type": ["LandmarksOrHistoricalBuildings", "Place"] as const,
+    "@id": `${SITE_URL}/#building`,
+    name: SITE_NAME,
+    alternateName: [
+      "ETC",
+      "Encanto Trade Center Ulaanbaatar",
+      "Tallest building in Mongolia",
+      "Mongolia tallest building",
+      "Монголын хамгийн өндөр барилга",
+    ],
+    description: HOME_PAGE_DESCRIPTION,
+    url: SITE_URL,
+    image: absoluteUrl(project.heroImage),
+    address: postalAddressJsonLd(),
+    height: {
+      "@type": "QuantitativeValue",
+      value: 135,
+      unitCode: "MTR",
+      unitText: "meters",
+    },
+    additionalProperty: [
+      {
+        "@type": "PropertyValue",
+        name: "numberOfFloors",
+        value: 35,
+      },
+      {
+        "@type": "PropertyValue",
+        name: "buildingType",
+        value: "Steel-frame mixed-use tower",
+      },
+    ],
+  };
+}
+
+function homeFaqJsonLdNode() {
+  return {
+    "@type": "FAQPage",
+    "@id": `${SITE_URL}/#faq`,
+    isPartOf: { "@id": `${SITE_URL}/#webpage` },
+    mainEntity: HOME_FAQ.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: a,
+      },
+    })),
+  };
+}
+
 export function officeTowerJsonLd(
   tower: Tower,
   faq: readonly { q: string; a: string }[] = [],
@@ -703,6 +797,7 @@ export function officeTowerJsonLd(
       "Grade-A Office Ulaanbaatar",
       "Luxury Office Mongolia",
       "Encanto Office Tower",
+      "Tallest building in Mongolia",
     ],
     description: OFFICE_PAGE_DESCRIPTION,
     url: pageUrl,
@@ -1143,6 +1238,7 @@ function towerHomeEntityJsonLd(tower: Tower): Record<string, unknown> {
           "Grade-A Office Ulaanbaatar",
           "Luxury Office Mongolia",
           "Encanto Office Tower",
+          "Tallest building in Mongolia",
         ],
         description: OFFICE_PAGE_DESCRIPTION,
         url: pageUrl,
@@ -1276,8 +1372,13 @@ export function homePageJsonLd() {
     "@type": "RealEstateListing",
     "@id": `${SITE_URL}/#listing`,
     name: SITE_NAME,
-    alternateName: ["ETC", "Encanto Trade Center Ulaanbaatar"],
-    description: project.intro,
+    alternateName: [
+      "ETC",
+      "Encanto Trade Center Ulaanbaatar",
+      "Tallest building in Mongolia",
+      "Mongolia tallest building",
+    ],
+    description: HOME_PAGE_DESCRIPTION,
     url: SITE_URL,
     image: absoluteUrl(project.heroImage),
     address: postalAddressJsonLd(),
@@ -1288,14 +1389,14 @@ export function homePageJsonLd() {
     "@type": "WebPage",
     "@id": `${SITE_URL}/#webpage`,
     url: SITE_URL,
-    name: SITE_NAME,
-    description: project.intro,
+    name: HOME_PAGE_TITLE,
+    description: HOME_PAGE_DESCRIPTION,
     inLanguage: ["en", "mn"],
     isPartOf: {
       "@id": `${SITE_URL}/#website`,
     },
     about: {
-      "@id": `${SITE_URL}/#listing`,
+      "@id": `${SITE_URL}/#building`,
     },
     mainEntity: {
       "@id": `${SITE_URL}/#main-sections`,
@@ -1304,7 +1405,13 @@ export function homePageJsonLd() {
 
   return {
     "@context": "https://schema.org",
-    "@graph": [webPage, listing, ...towerEntities],
+    "@graph": [
+      webPage,
+      listing,
+      projectBuildingJsonLd(),
+      homeFaqJsonLdNode(),
+      ...towerEntities,
+    ],
   };
 }
 
@@ -1316,6 +1423,7 @@ export function homeListingJsonLd() {
 export function sitemapEntries() {
   const staticPages = [
     { path: "/", changeFrequency: "weekly" as const, priority: 1 },
+    { path: "/news", changeFrequency: "weekly" as const, priority: 0.85 },
   ];
 
   const towerPages = towers.map((tower) => ({
@@ -1344,5 +1452,27 @@ export function newsArticleMetadata(article: {
     path: `/news/${article.slug}`,
     image,
     absoluteTitle: true,
+  });
+}
+
+export const NEWS_PAGE_TITLE = "News & Updates — Encanto Trade Center";
+
+export const NEWS_PAGE_DESCRIPTION =
+  "Latest news and project updates from Encanto Trade Center — Mongolia's tallest building in Ulaanbaatar. Office leasing, mall, ballroom events, and residence announcements.";
+
+export function newsPageMetadata(): Metadata {
+  return buildPageMetadata({
+    title: NEWS_PAGE_TITLE,
+    description: NEWS_PAGE_DESCRIPTION,
+    path: "/news",
+    image: project.heroImage,
+    absoluteTitle: true,
+    keywords: [
+      ...DEFAULT_KEYWORDS,
+      "Encanto news",
+      "Encanto Trade Center updates",
+      "Ulaanbaatar real estate news",
+      "Mongolia building news",
+    ],
   });
 }
