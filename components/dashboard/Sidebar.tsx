@@ -17,7 +17,7 @@ import {
   SearchOutlined,
   ShopOutlined,
 } from "@ant-design/icons";
-import { Avatar, Badge, Dropdown, Layout, Menu } from "antd";
+import { Avatar, Dropdown, Layout, Menu } from "antd";
 import type { MenuProps } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import type { ReactNode } from "react";
@@ -64,10 +64,13 @@ const centroIcons: Record<string, ReactNode> = {
 
 function MenuLabel({ text, count }: { text: string; count?: number }) {
   if (!count || count <= 0) return <span>{text}</span>;
+  const display = count > 99 ? "99+" : String(count);
   return (
     <span className={styles.menuLabelInner}>
-      <span>{text}</span>
-      <Badge count={count} size="small" overflowCount={99} />
+      <span className={styles.menuLabelText}>{text}</span>
+      <span className={styles.menuCountBadge} aria-label={`${count} pending`}>
+        {display}
+      </span>
     </span>
   );
 }
