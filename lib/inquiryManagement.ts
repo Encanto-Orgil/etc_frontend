@@ -23,6 +23,10 @@ export type Inquiry = {
   message: string;
   leasing_details?: OfficeLeasingDetails;
   is_handled: boolean;
+  handled_memo?: string;
+  handled_by?: number | null;
+  handled_by_name?: string;
+  handled_at?: string | null;
   created_at: string;
 };
 
@@ -81,7 +85,10 @@ export function fetchInquiries(query?: Query) {
   });
 }
 
-export async function updateInquiry(id: number, payload: { is_handled: boolean }) {
+export async function updateInquiry(
+  id: number,
+  payload: { is_handled: boolean; handled_memo?: string },
+) {
   const res = await authFetch(`/dashboard/inquiries/${id}/`, {
     method: "PATCH",
     body: JSON.stringify(payload),

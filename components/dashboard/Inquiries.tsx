@@ -1,7 +1,18 @@
 "use client";
 
 import { ReloadOutlined } from "@ant-design/icons";
-import { Button, Card, Input, message, Select, Space, Spin, Table, Tag } from "antd";
+import {
+  Button,
+  Card,
+  Input,
+  Modal,
+  message,
+  Select,
+  Space,
+  Spin,
+  Table,
+  Tag,
+} from "antd";
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { useCallback, useEffect, useState } from "react";
@@ -24,6 +35,10 @@ export default function Inquiries() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("pending");
   const [interestFilter, setInterestFilter] = useState("all");
+  const [handleModalOpen, setHandleModalOpen] = useState(false);
+  const [handlingId, setHandlingId] = useState<number | null>(null);
+  const [memo, setMemo] = useState("");
+  const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -46,10 +61,38 @@ export default function Inquiries() {
     load();
   }, [load]);
 
-  const markHandled = async (id: number, isHandled: boolean) => {
+  const openHandleModal = (id: number) => {
+    setHandlingId(id);
+    setMemo("");
+    setHandleModalOpen(true);
+  };
+
+  const confirmHandled = async () => {
+    if (handlingId == null) return;
+    const trimmed = memo.trim();
+    if (!trimmed) {
+      message.error("Handled болгохдоо memo бичнэ үү.");
+      return;
+    }
+    setSaving(true);
     try {
-      await updateInquiry(id, { is_handled: isHandled });
-      message.success(isHandled ? "Marked as handled." : "Marked as pending.");
+      await updateInquiry(handlingId, { is_handled: true, handled_memo: trimmed });
+      message.success("Marked as handled.");
+      setHandleModalOpen(false);
+      setHandlingId(null);
+      setMemo("");
+      load();
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Update failed.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const markPending = async (id: number) => {
+    try {
+      await updateInquiry(id, { is_handled: false });
+      message.success("Marked as pending.");
       load();
     } catch (error) {
       message.error(error instanceof Error ? error.message : "Update failed.");
@@ -104,10 +147,23 @@ export default function Inquiries() {
     {
       title: "Status",
       dataIndex: "is_handled",
-      render: (isHandled: boolean) => (
-        <Tag color={isHandled ? "default" : "gold"}>
-          {isHandled ? "Handled" : "Pending"}
-        </Tag>
+      render: (isHandled: boolean, record) => (
+        <Space direction="vertical" size={4}>
+          <Tag color={isHandled ? "default" : "gold"}>
+            {isHandled ? "Handled" : "Pending"}
+          </Tag>
+          {isHandled && record.handled_by_name ? (
+            <span className={styles.muted}>
+              {record.handled_by_name}
+              {record.handled_at
+                ? ` · ${dayjs(record.handled_at).format("YYYY-MM-DD HH:mm")}`
+                : ""}
+            </span>
+          ) : null}
+          {isHandled && record.handled_memo ? (
+            <span className={styles.muted}>{record.handled_memo}</span>
+          ) : null}
+        </Space>
       ),
     },
     {
@@ -123,7 +179,10 @@ export default function Inquiries() {
           size="small"
           value={record.is_handled ? "handled" : "pending"}
           style={{ minWidth: 120 }}
-          onChange={(value) => markHandled(record.id, value === "handled")}
+          onChange={(value) => {
+            if (value === "handled") openHandleModal(record.id);
+            else markPending(record.id);
+          }}
           options={[
             { value: "pending", label: "Pending" },
             { value: "handled", label: "Handled" },
@@ -169,6 +228,29 @@ export default function Inquiries() {
       <Spin spinning={loading}>
         <Table rowKey="id" columns={columns} dataSource={inquiries} pagination={{ pageSize: 20 }} />
       </Spin>
+
+      <Modal
+        title="Mark as handled"
+        open={handleModalOpen}
+        onCancel={() => {
+          setHandleModalOpen(false);
+          setHandlingId(null);
+          setMemo("");
+        }}
+        onOk={confirmHandled}
+        confirmLoading={saving}
+        okText="Save"
+      >
+        <p className={styles.muted} style={{ marginBottom: 8 }}>
+          Ямар мэдээлэл өгсөн / юу хийснээ memo-д бичнэ үү.
+        </p>
+        <Input.TextArea
+          rows={4}
+          value={memo}
+          onChange={(e) => setMemo(e.target.value)}
+          placeholder="Жишээ: Утсаар холбогдож office tour товлов. 2026-10-01 14:00."
+        />
+      </Modal>
     </Card>
   );
 }
