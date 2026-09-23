@@ -4,6 +4,7 @@ import { ReloadOutlined } from "@ant-design/icons";
 import {
   Button,
   Card,
+  Descriptions,
   Input,
   Modal,
   message,
@@ -15,19 +16,26 @@ import {
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   fetchInquiries,
   INQUIRY_INTEREST_LABELS,
   updateInquiry,
   type Inquiry,
+  type OfficeLeasingDetails,
 } from "@/lib/inquiryManagement";
-import {
-  formatLeasingDetails,
-  inquiryContactSubtitle,
-  inquiryContactTitle,
-} from "@/lib/inquiryDisplay";
 import styles from "./PropertyManagement.module.css";
+import inquiryStyles from "./Inquiries.module.css";
+
+const LEASING_LABELS: { key: keyof OfficeLeasingDetails; label: string }[] = [
+  { key: "company_name", label: "Company" },
+  { key: "business_type", label: "Business type" },
+  { key: "alt_phone", label: "Alt. phone" },
+  { key: "office_size", label: "Office size" },
+  { key: "employees", label: "Employees" },
+  { key: "move_in_date", label: "Move-in date" },
+  { key: "duration_years", label: "Duration (years)" },
+];
 
 export default function Inquiries() {
   const [loading, setLoading] = useState(true);
@@ -35,21 +43,24 @@ export default function Inquiries() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("pending");
   const [interestFilter, setInterestFilter] = useState("all");
-  const [handleModalOpen, setHandleModalOpen] = useState(false);
-  const [handlingId, setHandlingId] = useState<number | null>(null);
+  const [selected, setSelected] = useState<Inquiry | null>(null);
   const [memo, setMemo] = useState("");
+  const [memoMode, setMemoMode] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      setInquiries(
-        await fetchInquiries({
-          search: search || undefined,
-          status: statusFilter === "all" ? undefined : statusFilter,
-          interest: interestFilter === "all" ? undefined : interestFilter,
-        }),
-      );
+      const data = await fetchInquiries({
+        search: search || undefined,
+        status: statusFilter === "all" ? undefined : statusFilter,
+        interest: interestFilter === "all" ? undefined : interestFilter,
+      });
+      setInquiries(data);
+      setSelected((current) => {
+        if (!current) return null;
+        return data.find((item) => item.id === current.id) ?? null;
+      });
     } catch (error) {
       message.error(error instanceof Error ? error.message : "Failed to load inquiries.");
     } finally {
@@ -61,14 +72,14 @@ export default function Inquiries() {
     load();
   }, [load]);
 
-  const openHandleModal = (id: number) => {
-    setHandlingId(id);
+  const closeDetail = () => {
+    setSelected(null);
     setMemo("");
-    setHandleModalOpen(true);
+    setMemoMode(false);
   };
 
   const confirmHandled = async () => {
-    if (handlingId == null) return;
+    if (!selected) return;
     const trimmed = memo.trim();
     if (!trimmed) {
       message.error("Handled болгохдоо memo бичнэ үү.");
@@ -76,12 +87,11 @@ export default function Inquiries() {
     }
     setSaving(true);
     try {
-      await updateInquiry(handlingId, { is_handled: true, handled_memo: trimmed });
+      await updateInquiry(selected.id, { is_handled: true, handled_memo: trimmed });
       message.success("Marked as handled.");
-      setHandleModalOpen(false);
-      setHandlingId(null);
       setMemo("");
-      load();
+      setMemoMode(false);
+      await load();
     } catch (error) {
       message.error(error instanceof Error ? error.message : "Update failed.");
     } finally {
@@ -89,105 +99,74 @@ export default function Inquiries() {
     }
   };
 
-  const markPending = async (id: number) => {
+  const markPending = async () => {
+    if (!selected) return;
+    setSaving(true);
     try {
-      await updateInquiry(id, { is_handled: false });
+      await updateInquiry(selected.id, { is_handled: false });
       message.success("Marked as pending.");
-      load();
+      setMemoMode(false);
+      setMemo("");
+      await load();
     } catch (error) {
       message.error(error instanceof Error ? error.message : "Update failed.");
+    } finally {
+      setSaving(false);
     }
   };
+
+  const leasingRows = useMemo(() => {
+    if (!selected?.leasing_details) return [];
+    return LEASING_LABELS.flatMap(({ key, label }) => {
+      const value = selected.leasing_details?.[key]?.trim();
+      return value ? [{ label, value }] : [];
+    });
+  }, [selected]);
 
   const columns: ColumnsType<Inquiry> = [
     {
       title: "Contact",
       key: "contact",
-      render: (_, record) => {
-        const subtitle = inquiryContactSubtitle(record);
-        const leasingSummary = formatLeasingDetails(record.leasing_details);
-
-        return (
-          <div>
-            <strong>{inquiryContactTitle(record)}</strong>
-            {subtitle ? <div className={styles.muted}>{subtitle}</div> : null}
-            <div className={styles.muted}>{record.phone}</div>
-            {record.email ? <div className={styles.muted}>{record.email}</div> : null}
-            {leasingSummary ? <div className={styles.muted}>{leasingSummary}</div> : null}
-          </div>
-        );
-      },
+      ellipsis: true,
+      render: (_, record) => (
+        <div className={inquiryStyles.contactCell}>
+          <strong>{record.name}</strong>
+          <span className={styles.muted}>{record.phone}</span>
+          {record.email ? <span className={styles.muted}>{record.email}</span> : null}
+        </div>
+      ),
     },
     {
       title: "Interest",
       dataIndex: "interest_label",
+      width: 140,
       render: (label: string, record) => (
-        <Space direction="vertical" size={4}>
-          <Tag color={record.is_office_leasing ? "gold" : undefined}>
-            {record.is_office_leasing ? "Office Leasing" : label || INQUIRY_INTEREST_LABELS[record.interest]}
-          </Tag>
-        </Space>
+        <Tag color={record.is_office_leasing ? "gold" : undefined}>
+          {record.is_office_leasing
+            ? "Office Leasing"
+            : label || INQUIRY_INTEREST_LABELS[record.interest]}
+        </Tag>
       ),
-    },
-    {
-      title: "Notes",
-      dataIndex: "message",
-      render: (value: string, record) => {
-        const leasingSummary = formatLeasingDetails(record.leasing_details);
-        if (record.is_office_leasing) {
-          return (
-            <span className={styles.muted}>
-              {value?.trim() || leasingSummary || "—"}
-            </span>
-          );
-        }
-        return <span className={styles.muted}>{value || "—"}</span>;
-      },
     },
     {
       title: "Status",
       dataIndex: "is_handled",
-      render: (isHandled: boolean, record) => (
-        <Space direction="vertical" size={4}>
-          <Tag color={isHandled ? "default" : "gold"}>
-            {isHandled ? "Handled" : "Pending"}
-          </Tag>
-          {isHandled && record.handled_by_name ? (
-            <span className={styles.muted}>
-              {record.handled_by_name}
-              {record.handled_at
-                ? ` · ${dayjs(record.handled_at).format("YYYY-MM-DD HH:mm")}`
-                : ""}
-            </span>
-          ) : null}
-          {isHandled && record.handled_memo ? (
-            <span className={styles.muted}>{record.handled_memo}</span>
-          ) : null}
-        </Space>
+      width: 110,
+      render: (isHandled: boolean) => (
+        <Tag color={isHandled ? "default" : "gold"}>
+          {isHandled ? "Handled" : "Pending"}
+        </Tag>
       ),
     },
     {
       title: "Submitted",
       dataIndex: "created_at",
-      render: (value) => dayjs(value).format("YYYY-MM-DD HH:mm"),
-    },
-    {
-      title: "Actions",
-      key: "actions",
-      render: (_, record) => (
-        <Select
-          size="small"
-          value={record.is_handled ? "handled" : "pending"}
-          style={{ minWidth: 120 }}
-          onChange={(value) => {
-            if (value === "handled") openHandleModal(record.id);
-            else markPending(record.id);
-          }}
-          options={[
-            { value: "pending", label: "Pending" },
-            { value: "handled", label: "Handled" },
-          ]}
-        />
+      width: 150,
+      className: inquiryStyles.submittedCol,
+      render: (value: string) => (
+        <span className={inquiryStyles.submittedDate}>
+          {dayjs(value).format("YYYY-MM-DD HH:mm")}
+        </span>
       ),
     },
   ];
@@ -217,7 +196,10 @@ export default function Inquiries() {
           onChange={setInterestFilter}
           options={[
             { value: "all", label: "All interests" },
-            ...Object.entries(INQUIRY_INTEREST_LABELS).map(([value, label]) => ({ value, label })),
+            ...Object.entries(INQUIRY_INTEREST_LABELS).map(([value, label]) => ({
+              value,
+              label,
+            })),
           ]}
         />
         <Button icon={<ReloadOutlined />} onClick={load}>
@@ -226,30 +208,139 @@ export default function Inquiries() {
       </Space>
 
       <Spin spinning={loading}>
-        <Table rowKey="id" columns={columns} dataSource={inquiries} pagination={{ pageSize: 20 }} />
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={inquiries}
+          pagination={{ pageSize: 20 }}
+          rowClassName={inquiryStyles.clickableRow}
+          onRow={(record) => ({
+            onClick: () => {
+              setSelected(record);
+              setMemo("");
+              setMemoMode(false);
+            },
+          })}
+        />
       </Spin>
 
       <Modal
-        title="Mark as handled"
-        open={handleModalOpen}
-        onCancel={() => {
-          setHandleModalOpen(false);
-          setHandlingId(null);
-          setMemo("");
-        }}
-        onOk={confirmHandled}
-        confirmLoading={saving}
-        okText="Save"
+        title={selected ? `Inquiry · ${selected.name}` : "Inquiry"}
+        open={Boolean(selected)}
+        onCancel={closeDetail}
+        width={640}
+        footer={
+          selected ? (
+            <Space wrap>
+              <Button onClick={closeDetail}>Close</Button>
+              {selected.is_handled ? (
+                <Button loading={saving} onClick={markPending}>
+                  Reopen as pending
+                </Button>
+              ) : memoMode ? (
+                <>
+                  <Button
+                    onClick={() => {
+                      setMemoMode(false);
+                      setMemo("");
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="primary" loading={saving} onClick={confirmHandled}>
+                    Save handled
+                  </Button>
+                </>
+              ) : (
+                <Button type="primary" onClick={() => setMemoMode(true)}>
+                  Mark as handled
+                </Button>
+              )}
+            </Space>
+          ) : null
+        }
       >
-        <p className={styles.muted} style={{ marginBottom: 8 }}>
-          Ямар мэдээлэл өгсөн / юу хийснээ memo-д бичнэ үү.
-        </p>
-        <Input.TextArea
-          rows={4}
-          value={memo}
-          onChange={(e) => setMemo(e.target.value)}
-          placeholder="Жишээ: Утсаар холбогдож office tour товлов. 2026-10-01 14:00."
-        />
+        {selected ? (
+          <div className={inquiryStyles.detailBody}>
+            <Descriptions column={1} size="small" bordered>
+              <Descriptions.Item label="Name">{selected.name}</Descriptions.Item>
+              <Descriptions.Item label="Phone">{selected.phone}</Descriptions.Item>
+              {selected.email ? (
+                <Descriptions.Item label="Email">{selected.email}</Descriptions.Item>
+              ) : null}
+              <Descriptions.Item label="Interest">
+                <Tag color={selected.is_office_leasing ? "gold" : undefined}>
+                  {selected.is_office_leasing
+                    ? "Office Leasing"
+                    : selected.interest_label ||
+                      INQUIRY_INTEREST_LABELS[selected.interest]}
+                </Tag>
+              </Descriptions.Item>
+              <Descriptions.Item label="Submitted">
+                {dayjs(selected.created_at).format("YYYY-MM-DD HH:mm")}
+              </Descriptions.Item>
+              <Descriptions.Item label="Status">
+                <Tag color={selected.is_handled ? "default" : "gold"}>
+                  {selected.is_handled ? "Handled" : "Pending"}
+                </Tag>
+              </Descriptions.Item>
+            </Descriptions>
+
+            {selected.message?.trim() ? (
+              <div className={inquiryStyles.section}>
+                <div className={inquiryStyles.sectionTitle}>Message</div>
+                <p className={inquiryStyles.sectionText}>{selected.message}</p>
+              </div>
+            ) : null}
+
+            {leasingRows.length > 0 ? (
+              <div className={inquiryStyles.section}>
+                <div className={inquiryStyles.sectionTitle}>Office leasing details</div>
+                <Descriptions column={1} size="small" bordered>
+                  {leasingRows.map((row) => (
+                    <Descriptions.Item key={row.label} label={row.label}>
+                      {row.value}
+                    </Descriptions.Item>
+                  ))}
+                </Descriptions>
+              </div>
+            ) : null}
+
+            {selected.is_handled ? (
+              <div className={inquiryStyles.section}>
+                <div className={inquiryStyles.sectionTitle}>Handled</div>
+                <Descriptions column={1} size="small" bordered>
+                  {selected.handled_by_name ? (
+                    <Descriptions.Item label="By">{selected.handled_by_name}</Descriptions.Item>
+                  ) : null}
+                  {selected.handled_at ? (
+                    <Descriptions.Item label="When">
+                      {dayjs(selected.handled_at).format("YYYY-MM-DD HH:mm")}
+                    </Descriptions.Item>
+                  ) : null}
+                  {selected.handled_memo ? (
+                    <Descriptions.Item label="Memo">{selected.handled_memo}</Descriptions.Item>
+                  ) : null}
+                </Descriptions>
+              </div>
+            ) : null}
+
+            {memoMode && !selected.is_handled ? (
+              <div className={inquiryStyles.section}>
+                <div className={inquiryStyles.sectionTitle}>Handled memo</div>
+                <p className={styles.muted} style={{ marginBottom: 8 }}>
+                  Ямар мэдээлэл өгсөн / юу хийснээ memo-д бичнэ үү.
+                </p>
+                <Input.TextArea
+                  rows={4}
+                  value={memo}
+                  onChange={(e) => setMemo(e.target.value)}
+                  placeholder="Жишээ: Утсаар холбогдож office tour товлов. 2026-10-01 14:00."
+                />
+              </div>
+            ) : null}
+          </div>
+        ) : null}
       </Modal>
     </Card>
   );

@@ -1,0 +1,51 @@
+.clickableRow {
+  cursor: pointer;
+}
+
+.contactCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.contactCell strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.submittedCol {
+  white-space: nowrap;
+}
+
+.submittedDate {
+  display: inline-block;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.detailBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionTitle {
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--dash-strong, #111);
+}
+
+.sectionText {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.55;
+  color: var(--dash-muted, #666);
+}
