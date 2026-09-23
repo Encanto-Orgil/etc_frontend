@@ -2,10 +2,34 @@
   cursor: pointer;
 }
 
+.stripedRow {
+  background: #fafafa;
+}
+
+.stripedRow:hover > td {
+  background: #f3f3f3 !important;
+}
+
+.compactTable :global(.ant-table-thead > tr > th) {
+  padding: 8px 10px !important;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.compactTable :global(.ant-table-tbody > tr > td) {
+  padding: 8px 10px !important;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+.compactTable :global(.ant-table-tbody > tr:hover > td) {
+  background: #f5f5f5 !important;
+}
+
 .contactCell {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   min-width: 0;
 }
 
@@ -13,6 +37,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 13px;
 }
 
 .submittedCol {
@@ -23,6 +48,7 @@
   display: inline-block;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+  font-size: 12px;
 }
 
 .detailBody {

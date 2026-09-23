@@ -217,11 +217,17 @@ export default function Inquiries() {
 
       <Spin spinning={loading}>
         <Table
+          size="small"
           rowKey="id"
           columns={columns}
           dataSource={inquiries}
-          pagination={{ pageSize: 20 }}
-          rowClassName={inquiryStyles.clickableRow}
+          pagination={{ pageSize: 20, size: "small" }}
+          className={inquiryStyles.compactTable}
+          rowClassName={(_, index) =>
+            `${inquiryStyles.clickableRow} ${
+              index % 2 === 1 ? inquiryStyles.stripedRow : ""
+            }`
+          }
           onRow={(record) => ({
             onClick: () => {
               setSelected(record);

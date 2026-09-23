@@ -10,6 +10,8 @@ import {
   GlobalOutlined,
   InboxOutlined,
   LogoutOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
   MessageOutlined,
   MoreOutlined,
   ReadOutlined,
@@ -37,6 +39,7 @@ import {
   type DashboardProjectId,
 } from "@/lib/dashboardProjects";
 import { useDashboardProject } from "@/components/dashboard/DashboardProjectProvider";
+import { useSidebarCollapse } from "@/components/dashboard/SidebarCollapseContext";
 import { fetchInquirySummary } from "@/lib/inquiryManagement";
 import { fetchBallroomSummary } from "@/lib/ballroomManagement";
 import { fetchSupportTicketSummary } from "@/lib/supportManagement";
@@ -62,8 +65,16 @@ const centroIcons: Record<string, ReactNode> = {
   "/dashboard/centro/pages": <FileTextOutlined />,
 };
 
-function MenuLabel({ text, count }: { text: string; count?: number }) {
-  if (!count || count <= 0) return <span>{text}</span>;
+function MenuLabel({
+  text,
+  count,
+  collapsed,
+}: {
+  text: string;
+  count?: number;
+  collapsed?: boolean;
+}) {
+  if (collapsed || !count || count <= 0) return <span>{text}</span>;
   const display = count > 99 ? "99+" : String(count);
   return (
     <span className={styles.menuLabelInner}>
@@ -78,6 +89,7 @@ function MenuLabel({ text, count }: { text: string; count?: number }) {
 export default function Sidebar({ user }: { user: AuthUser }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { collapsed, setCollapsed, toggleCollapsed } = useSidebarCollapse();
   const { projectId, setProject } = useDashboardProject();
   const activeProjectId = getProjectIdFromPathname(pathname) ?? projectId;
   const isCentro = activeProjectId === "encanto-centro";
@@ -122,12 +134,24 @@ export default function Sidebar({ user }: { user: AuthUser }) {
       {
         key: "/dashboard/inquiries",
         icon: <FormOutlined />,
-        label: <MenuLabel text="Inquiries" count={navCounts.inquiries} />,
+        label: (
+          <MenuLabel
+            text="Inquiries"
+            count={navCounts.inquiries}
+            collapsed={collapsed}
+          />
+        ),
       },
       {
         key: "/dashboard/support",
         icon: <MessageOutlined />,
-        label: <MenuLabel text="Support Tickets" count={navCounts.support} />,
+        label: (
+          <MenuLabel
+            text="Support Tickets"
+            count={navCounts.support}
+            collapsed={collapsed}
+          />
+        ),
       },
       ...DASHBOARD_MANAGEMENT_GROUPS.filter(
         (group) => group.key !== "admin-management" || user.is_superuser,
@@ -138,15 +162,26 @@ export default function Sidebar({ user }: { user: AuthUser }) {
         children: group.items.map((item) => ({
           key: item.key,
           label:
-            group.key === "ballroom-management" && item.key === "/dashboard/ballroom/bookings" ? (
-              <MenuLabel text={item.label} count={navCounts.pendingBookings} />
+            group.key === "ballroom-management" &&
+            item.key === "/dashboard/ballroom/bookings" ? (
+              <MenuLabel
+                text={item.label}
+                count={navCounts.pendingBookings}
+                collapsed={collapsed}
+              />
             ) : (
               item.label
             ),
         })),
       })),
     ],
-    [user.is_superuser, navCounts.inquiries, navCounts.support, navCounts.pendingBookings],
+    [
+      user.is_superuser,
+      navCounts.inquiries,
+      navCounts.support,
+      navCounts.pendingBookings,
+      collapsed,
+    ],
   );
 
   const centroItems = useMemo<MenuItem[]>(
@@ -208,39 +243,68 @@ export default function Sidebar({ user }: { user: AuthUser }) {
   };
 
   return (
-    <Sider className={styles.sider} width={260}>
+    <Sider
+      className={`${styles.sider} ${collapsed ? styles.siderCollapsed : ""}`}
+      width={260}
+      collapsedWidth={72}
+      collapsible
+      collapsed={collapsed}
+      onCollapse={setCollapsed}
+      trigger={null}
+    >
       <div className={styles.siderInner}>
-        <Dropdown menu={{ items: projectMenuItems }} trigger={["click"]}>
-          <button type="button" className={styles.teamSwitcher}>
-            <span className={styles.teamAvatar}>{currentProject.avatar}</span>
-            <span className={styles.teamCopy}>
-              <strong>{currentProject.label}</strong>
-            </span>
-            <DownOutlined className={styles.teamChevron} />
+        <div className={styles.siderTop}>
+          <Dropdown menu={{ items: projectMenuItems }} trigger={["click"]}>
+            <button type="button" className={styles.teamSwitcher} title={currentProject.label}>
+              <span className={styles.teamAvatar}>{currentProject.avatar}</span>
+              {!collapsed ? (
+                <>
+                  <span className={styles.teamCopy}>
+                    <strong>{currentProject.label}</strong>
+                  </span>
+                  <DownOutlined className={styles.teamChevron} />
+                </>
+              ) : null}
+            </button>
+          </Dropdown>
+          <button
+            type="button"
+            className={styles.collapseButton}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            onClick={toggleCollapsed}
+          >
+            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </button>
-        </Dropdown>
+        </div>
 
-        <button type="button" className={styles.findButton}>
-          <SearchOutlined />
-          <span>Find...</span>
-          <kbd>F</kbd>
-        </button>
+        {!collapsed ? (
+          <button type="button" className={styles.findButton}>
+            <SearchOutlined />
+            <span>Find...</span>
+            <kbd>F</kbd>
+          </button>
+        ) : (
+          <button type="button" className={styles.findButtonCollapsed} title="Find...">
+            <SearchOutlined />
+          </button>
+        )}
 
         <nav className={styles.navArea} aria-label="Dashboard navigation">
           <Menu
             className={styles.menu}
             mode="inline"
+            inlineCollapsed={collapsed}
             items={menuItems}
             selectedKeys={selectedKeys}
-            openKeys={isCentro ? undefined : openKeys}
-            onOpenChange={isCentro ? undefined : setOpenKeys}
+            openKeys={collapsed || isCentro ? undefined : openKeys}
+            onOpenChange={collapsed || isCentro ? undefined : setOpenKeys}
             onClick={onMenuClick}
           />
         </nav>
 
         <div className={styles.userRow}>
           <Avatar className={styles.userAvatar}>{displayName.slice(0, 1).toUpperCase()}</Avatar>
-          <span className={styles.userName}>{displayName}</span>
+          {!collapsed ? <span className={styles.userName}>{displayName}</span> : null}
           <Dropdown menu={userMenu} placement="topRight" trigger={["click"]}>
             <button type="button" className={styles.footerIcon} aria-label="Open user menu">
               <MoreOutlined />
