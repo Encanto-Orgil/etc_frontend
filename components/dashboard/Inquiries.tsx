@@ -149,6 +149,14 @@ export default function Inquiries() {
       ),
     },
     {
+      title: "Message",
+      dataIndex: "message",
+      ellipsis: true,
+      render: (value: string) => (
+        <span className={styles.muted}>{value?.trim() || "—"}</span>
+      ),
+    },
+    {
       title: "Status",
       dataIndex: "is_handled",
       width: 110,
