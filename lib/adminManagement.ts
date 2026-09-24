@@ -11,6 +11,7 @@ export type DashboardStaffUser = {
   is_superuser: boolean;
   is_active: boolean;
   role_label: string;
+  avatar_url?: string;
   last_login: string | null;
   date_joined: string;
 };
@@ -115,4 +116,22 @@ export function updateDashboardStaffUser(
 
 export function revokeDashboardStaffUser(id: number) {
   return remove(`/dashboard/admin/users/${id}/`, "Failed to revoke dashboard access.");
+}
+
+export async function uploadDashboardStaffAvatar(id: number, file: File) {
+  const body = new FormData();
+  body.append("avatar", file);
+  return fetchOne<DashboardStaffUser>(
+    `/dashboard/admin/users/${id}/avatar/`,
+    { method: "POST", body },
+    "Failed to upload profile photo.",
+  );
+}
+
+export async function deleteDashboardStaffAvatar(id: number) {
+  return fetchOne<DashboardStaffUser>(
+    `/dashboard/admin/users/${id}/avatar/`,
+    { method: "DELETE" },
+    "Failed to remove profile photo.",
+  );
 }

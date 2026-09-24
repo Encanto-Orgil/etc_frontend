@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  CameraOutlined,
   DeleteOutlined,
   EditOutlined,
   PlusOutlined,
@@ -10,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import {
   Alert,
+  Avatar,
   Button,
   Card,
   Form,
@@ -21,6 +23,7 @@ import {
   Switch,
   Table,
   Tag,
+  Upload,
   message,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
@@ -31,10 +34,12 @@ import type { AuthUser } from "@/lib/auth";
 import { getMe } from "@/lib/auth";
 import {
   createDashboardStaffUser,
+  deleteDashboardStaffAvatar,
   fetchDashboardAdminSummary,
   fetchDashboardStaffUsers,
   revokeDashboardStaffUser,
   updateDashboardStaffUser,
+  uploadDashboardStaffAvatar,
 } from "@/lib/adminManagement";
 import type { DashboardAdminSummary, DashboardStaffUser } from "@/lib/adminManagement";
 import styles from "./AdminManagement.module.css";
@@ -49,6 +54,13 @@ type UserFormValues = {
   is_active?: boolean;
 };
 
+function userInitials(user: Pick<DashboardStaffUser, "full_name" | "username">) {
+  const name = (user.full_name || user.username || "?").trim();
+  const parts = name.split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+  return name.slice(0, 2).toUpperCase();
+}
+
 export default function AdminManagement() {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
@@ -58,6 +70,7 @@ export default function AdminManagement() {
   const [search, setSearch] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<DashboardStaffUser | null>(null);
+  const [avatarBusy, setAvatarBusy] = useState(false);
   const [form] = Form.useForm<UserFormValues>();
 
   const load = useCallback(async () => {
@@ -118,6 +131,40 @@ export default function AdminManagement() {
     setModalOpen(true);
   };
 
+  const refreshEditingUser = (next: DashboardStaffUser) => {
+    setEditingUser(next);
+    setUsers((prev) => prev.map((row) => (row.id === next.id ? next : row)));
+  };
+
+  const onUploadAvatar = async (file: File) => {
+    if (!editingUser) return false;
+    setAvatarBusy(true);
+    try {
+      const next = await uploadDashboardStaffAvatar(editingUser.id, file);
+      refreshEditingUser(next);
+      message.success("Profile зураг хадгаллаа.");
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Зураг хадгалахад алдаа гарлаа.");
+    } finally {
+      setAvatarBusy(false);
+    }
+    return false;
+  };
+
+  const onRemoveAvatar = async () => {
+    if (!editingUser) return;
+    setAvatarBusy(true);
+    try {
+      const next = await deleteDashboardStaffAvatar(editingUser.id);
+      refreshEditingUser(next);
+      message.success("Profile зураг устгалаа.");
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : "Зураг устгахад алдаа гарлаа.");
+    } finally {
+      setAvatarBusy(false);
+    }
+  };
+
   const saveUser = async () => {
     const values = await form.validateFields();
     try {
@@ -130,7 +177,8 @@ export default function AdminManagement() {
           is_active: values.is_active !== false,
         };
         if (values.password) payload.password = values.password;
-        await updateDashboardStaffUser(editingUser.id, payload);
+        const next = await updateDashboardStaffUser(editingUser.id, payload);
+        refreshEditingUser(next);
         message.success("Хэрэглэгч шинэчлэгдлээ.");
       } else {
         await createDashboardStaffUser({
@@ -156,9 +204,18 @@ export default function AdminManagement() {
         title: "Хэрэглэгч",
         key: "user",
         render: (_, row) => (
-          <div>
-            <strong>{row.full_name}</strong>
-            <div style={{ color: "#888", fontSize: 12 }}>@{row.username}</div>
+          <div className={styles.userCell}>
+            <Avatar
+              size={40}
+              src={row.avatar_url || undefined}
+              className={styles.userAvatar}
+            >
+              {userInitials(row)}
+            </Avatar>
+            <div>
+              <strong>{row.full_name}</strong>
+              <div className={styles.userMeta}>@{row.username}</div>
+            </div>
           </div>
         ),
       },
@@ -282,6 +339,40 @@ export default function AdminManagement() {
         okText="Хадгалах"
         destroyOnClose
       >
+        {editingUser ? (
+          <div className={styles.avatarEditor}>
+            <Avatar
+              size={72}
+              src={editingUser.avatar_url || undefined}
+              className={styles.userAvatar}
+            >
+              {userInitials(editingUser)}
+            </Avatar>
+            <div className={styles.avatarActions}>
+              <div className={styles.avatarHint}>Profile зураг</div>
+              <Space wrap>
+                <Upload
+                  accept="image/jpeg,image/png,image/gif,image/webp"
+                  showUploadList={false}
+                  beforeUpload={(file) => {
+                    void onUploadAvatar(file);
+                    return false;
+                  }}
+                >
+                  <Button icon={<CameraOutlined />} loading={avatarBusy}>
+                    {editingUser.avatar_url ? "Зураг солих" : "Зураг нэмэх"}
+                  </Button>
+                </Upload>
+                {editingUser.avatar_url ? (
+                  <Button danger loading={avatarBusy} onClick={() => void onRemoveAvatar()}>
+                    Устгах
+                  </Button>
+                ) : null}
+              </Space>
+            </div>
+          </div>
+        ) : null}
+
         <Form form={form} layout="vertical">
           {!editingUser ? (
             <>

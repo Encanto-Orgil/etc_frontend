@@ -63,6 +63,48 @@
   margin-bottom: 12px;
 }
 
+.userCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.userAvatar {
+  background: #111 !important;
+  color: #fff !important;
+  flex-shrink: 0;
+}
+
+.userMeta {
+  color: #888;
+  font-size: 12px;
+}
+
+.avatarEditor {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 12px 14px;
+  border: 1px solid #ececec;
+  border-radius: 12px;
+  background: #fafafa;
+}
+
+.avatarActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.avatarHint {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
 @media (max-width: 900px) {
   .metricGrid {
     grid-template-columns: 1fr;
