@@ -26,6 +26,7 @@ export type Inquiry = {
   handled_memo?: string;
   handled_by?: number | null;
   handled_by_name?: string;
+  handled_by_avatar_url?: string;
   handled_at?: string | null;
   created_at: string;
 };

@@ -75,3 +75,16 @@
   line-height: 1.55;
   color: var(--dash-muted, #666);
 }
+
+.handledBy {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.handledByAvatar {
+  background: #111111 !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  flex-shrink: 0;
+}

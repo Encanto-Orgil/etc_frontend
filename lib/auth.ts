@@ -9,6 +9,7 @@ export type AuthUser = {
   is_staff: boolean;
   is_superuser: boolean;
   role: "staff" | "tenant" | "user";
+  avatar_url?: string;
   tenant?: {
     id: number;
     name: string;
@@ -219,6 +220,35 @@ export async function getMe(): Promise<AuthUser | null> {
   const res = await authFetch("/auth/me/");
   if (res.status === 401 || res.status === 403) return null;
   if (!res.ok) return null;
+  const data = await res.json();
+  return data.user as AuthUser;
+}
+
+export async function uploadMyAvatar(file: File): Promise<AuthUser> {
+  const body = new FormData();
+  body.append("avatar", file);
+  const res = await authFetch("/auth/me/avatar/", {
+    method: "POST",
+    body,
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(
+      typeof data.detail === "string" ? data.detail : "Profile зураг хадгалахад алдаа гарлаа.",
+    );
+  }
+  const data = await res.json();
+  return data.user as AuthUser;
+}
+
+export async function deleteMyAvatar(): Promise<AuthUser> {
+  const res = await authFetch("/auth/me/avatar/", { method: "DELETE" });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(
+      typeof data.detail === "string" ? data.detail : "Profile зураг устгахад алдаа гарлаа.",
+    );
+  }
   const data = await res.json();
   return data.user as AuthUser;
 }

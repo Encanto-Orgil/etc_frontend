@@ -303,7 +303,9 @@ export default function Sidebar({ user }: { user: AuthUser }) {
         </nav>
 
         <div className={styles.userRow}>
-          <Avatar className={styles.userAvatar}>{displayName.slice(0, 1).toUpperCase()}</Avatar>
+          <Avatar className={styles.userAvatar} src={user.avatar_url || undefined}>
+            {displayName.slice(0, 1).toUpperCase()}
+          </Avatar>
           {!collapsed ? <span className={styles.userName}>{displayName}</span> : null}
           <Dropdown menu={userMenu} placement="topRight" trigger={["click"]}>
             <button type="button" className={styles.footerIcon} aria-label="Open user menu">

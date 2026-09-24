@@ -2,6 +2,7 @@
 
 import { ReloadOutlined } from "@ant-design/icons";
 import {
+  Avatar,
   Button,
   Card,
   Descriptions,
@@ -325,7 +326,18 @@ export default function Inquiries() {
                 <div className={inquiryStyles.sectionTitle}>Handled</div>
                 <Descriptions column={1} size="small" bordered>
                   {selected.handled_by_name ? (
-                    <Descriptions.Item label="By">{selected.handled_by_name}</Descriptions.Item>
+                    <Descriptions.Item label="By">
+                      <span className={inquiryStyles.handledBy}>
+                        <Avatar
+                          size={28}
+                          src={selected.handled_by_avatar_url || undefined}
+                          className={inquiryStyles.handledByAvatar}
+                        >
+                          {selected.handled_by_name.slice(0, 1).toUpperCase()}
+                        </Avatar>
+                        <span>{selected.handled_by_name}</span>
+                      </span>
+                    </Descriptions.Item>
                   ) : null}
                   {selected.handled_at ? (
                     <Descriptions.Item label="When">
