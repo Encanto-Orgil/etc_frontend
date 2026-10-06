@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { fetchOfficeStackingPlan } from "@/lib/api";
 import {
+  formatAreaSqm,
   getOfficeUnitStatusMeta,
   type OfficeFloor,
   type OfficeUnit,
@@ -11,7 +12,7 @@ import {
 import { availableCount } from "@/lib/officeZones";
 import OfficeFacadeStack from "./OfficeFacadeStack";
 import OfficeUnitModal from "./OfficeUnitModal";
-import { useTranslations } from "@/lib/i18n";
+import { useLocale, useTranslations } from "@/lib/i18n";
 import styles from "./OfficeStackingPlan.module.css";
 
 const UNIT_ORDER = ["A", "B", "C", "D"];
@@ -24,6 +25,7 @@ function sortUnits(units: OfficeUnit[]) {
 
 export default function OfficeStackingPlan() {
   const stackingCopy = useTranslations().office.stackingIntro;
+  const areaUnit = useLocale().locale === "mn" ? "м²" : "m²";
   const [data, setData] = useState<Awaited<ReturnType<typeof fetchOfficeStackingPlan>>>(null);
   const [loading, setLoading] = useState(true);
   const [selectedFloor, setSelectedFloor] = useState<number | null>(null);
@@ -137,7 +139,7 @@ export default function OfficeStackingPlan() {
                         <>
                           <div className={styles.chipTop}>
                             <strong>{unit.unit_code}</strong>
-                            <span>{unit.area_sqm} sqm</span>
+                            <span>{formatAreaSqm(unit.area_sqm, areaUnit)}</span>
                           </div>
                           <span style={{ color: meta.color }}>{meta.label}</span>
                           {isAvailable ? (

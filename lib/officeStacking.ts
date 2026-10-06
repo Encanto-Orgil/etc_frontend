@@ -50,6 +50,16 @@ export function isSoldOutFloor(floor: OfficeFloor): boolean {
   );
 }
 
+export function formatAreaSqm(value: string | number, unitLabel = "m²"): string {
+  const numeric = typeof value === "number" ? value : Number(String(value).replace(/,/g, ""));
+  if (!Number.isFinite(numeric)) return `${value} ${unitLabel}`;
+  const text = new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(numeric);
+  return `${text} ${unitLabel}`;
+}
+
 export function getOfficeUnitStatusMeta(floor: OfficeFloor, unit: OfficeUnit) {
   if (
     unit.status === "unavailable" &&

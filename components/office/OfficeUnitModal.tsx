@@ -4,7 +4,8 @@ import { Modal } from "antd";
 import { PhoneOutlined, MailOutlined, ClockCircleOutlined } from "@ant-design/icons";
 import InquiryForm from "@/components/InquiryForm";
 import type { OfficeFloor, OfficeUnit } from "@/lib/officeStacking";
-import { STATUS_META } from "@/lib/officeStacking";
+import { formatAreaSqm, STATUS_META } from "@/lib/officeStacking";
+import { useLocale } from "@/lib/i18n";
 import { buildOfficeInquiryMessage, officeSales } from "@/lib/officeSales";
 import styles from "./OfficeUnitModal.module.css";
 
@@ -16,11 +17,13 @@ type Props = {
 };
 
 export default function OfficeUnitModal({ open, onClose, floor, unit }: Props) {
+  const areaUnit = useLocale().locale === "mn" ? "м²" : "m²";
   if (!floor || !unit) return null;
 
   const floorLabel = floor.label || `Floor ${floor.floor_number}`;
   const statusMeta = STATUS_META[unit.status];
-  const defaultMessage = buildOfficeInquiryMessage(floorLabel, unit.unit_code, unit.area_sqm);
+  const areaLabel = formatAreaSqm(unit.area_sqm, areaUnit);
+  const defaultMessage = buildOfficeInquiryMessage(floorLabel, unit.unit_code, areaLabel);
   const initials = officeSales.name
     .split(/\s+/)
     .slice(0, 2)
@@ -45,7 +48,7 @@ export default function OfficeUnitModal({ open, onClose, floor, unit }: Props) {
         <h2 className={styles.title}>
           {floorLabel} · Office {unit.unit_code}
         </h2>
-        <p className={styles.meta}>{unit.area_sqm} sqm · Office Tower</p>
+        <p className={styles.meta}>{areaLabel} · Office Tower</p>
       </div>
 
       <div className={styles.salesCard}>
